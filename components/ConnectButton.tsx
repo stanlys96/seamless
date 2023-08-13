@@ -5,8 +5,14 @@ import { useState } from "react";
 import { SwitchNetwork } from "./SwitchNetwork";
 
 export const ConnectButton = () => {
-  const { account, deactivate, activateBrowserWallet, chainId, switchNetwork } =
-    useEthers();
+  const {
+    account,
+    deactivate,
+    activateBrowserWallet,
+    chainId,
+    switchNetwork,
+    isLoading,
+  } = useEthers();
   const etherBalance = useEtherBalance(account);
   const [dropdownActive, setDropdownActive] = useState(false);
   const chainSupported = supportedChains.includes(chainId ?? 0);
@@ -14,7 +20,7 @@ export const ConnectButton = () => {
     .find((data) => data.chainId === chainId)
     ?.tokenData.find((data) => data.native);
 
-  if (!chainSupported)
+  if (!chainSupported && !isLoading)
     return (
       <div className="flex gap-x-2">
         <a className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg flex justify-center items-center">
