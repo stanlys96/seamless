@@ -10,7 +10,7 @@ import {
 import useSWR from "swr";
 import { axiosStrapi, fetcher } from "@/utils/axios";
 import { useEffect } from "react";
-import { formatUnits } from "@ethersproject/units";
+import { formatEther, formatUnits } from "@ethersproject/units";
 import { bankData, chainData } from "@/utils/helper";
 import { MainLayout } from "@/layouts/Main";
 import { utils } from "ethers";
@@ -130,7 +130,7 @@ export default function HomePage() {
         .put(`/api/transaction-histories/${transactionData?.data.id ?? ""}`, {
           data: {
             transaction_hash: state.receipt?.transactionHash,
-            gas_price: state.receipt?.effectiveGasPrice.toString(),
+            gas_price: formatEther(state.receipt?.effectiveGasPrice ?? "0x0"),
             transaction_success: true,
           },
         })
