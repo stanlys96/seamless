@@ -2,12 +2,12 @@
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { useState } from "react";
 import { ConnectButton } from "@/components";
-import { useEtherBalance, useEthers } from "@usedapp/core";
+import { useEtherBalance, useEthers, useTokenBalance } from "@usedapp/core";
 import useSWR from "swr";
 import { fetcher } from "@/utils/axios";
 import { useEffect } from "react";
-import { formatEther } from "@ethersproject/units";
-import { chainData, tokenData } from "@/utils/helper";
+import { formatEther, formatUnits } from "@ethersproject/units";
+import { chainData } from "@/utils/helper";
 
 export default function HomePage() {
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
@@ -15,17 +15,34 @@ export default function HomePage() {
   const [previousValue, setPreviousValue] = useState("");
   const [idrValue, setIdrValue] = useState("");
   const [tokenModal, setTokenModal] = useState(false);
-  const [currentSelectedToken, setCurrentSelectedToken] = useState({
-    id: 3,
-    name: "USDC",
-    imgUrl: "/img/usdc.svg",
-  });
-  const { data } = useSWR("/markets?vs_currency=idr&ids=ethereum", fetcher);
+
   const currentChain = chainData.find((data) => data.chainId === chainId);
-  const etherBalance = useEtherBalance(account);
-  const insufficientBalance =
-    parseFloat(cryptoValue ?? "0") >
-    parseFloat(formatEther(etherBalance ?? "0x0").slice(0, 8));
+  const [currentSelectedToken, setCurrentSelectedToken] = useState(
+    currentChain?.tokenData.find((data) => data.name === "USDC")
+  );
+  const { data } = useSWR(
+    `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
+    fetcher
+  );
+  const nativeBalance = useEtherBalance(account);
+  const tokenBalance = useTokenBalance(
+    currentSelectedToken?.contractAddress,
+    account
+  );
+  const usedBalance = currentSelectedToken?.native
+    ? parseFloat(
+        formatUnits(
+          nativeBalance ?? "0x00",
+          currentSelectedToken?.decimals
+        ).slice(0, 8)
+      )
+    : parseFloat(
+        formatUnits(
+          tokenBalance ?? "0x00",
+          currentSelectedToken?.decimals
+        ).slice(0, 8)
+      );
+  const insufficientBalance = parseFloat(cryptoValue ?? "0") > usedBalance;
 
   useEffect(() => {
     if (data) {
@@ -36,11 +53,17 @@ export default function HomePage() {
       const thisValue = !cryptoValue ? usedValue : cryptoValue;
       const idr = (
         data.data[0].current_price * parseFloat(thisValue ?? "0")
-      ).toLocaleString("id-ID");
+      ).toLocaleString("en-US");
       setIdrValue(idr === "NaN" ? "0" : idr);
       setPreviousValue(cryptoValue);
     }
   }, [data, cryptoValue]);
+
+  useEffect(() => {
+    setCurrentSelectedToken(
+      currentChain?.tokenData.find((data) => data.name === "USDC")
+    );
+  }, [chainId]);
   return (
     <div className="main-container">
       <svg
@@ -64,9 +87,6 @@ export default function HomePage() {
           <p className="font-bold">Seamless</p>
           <a className="font-bold cursor-pointer">Transaction History</a>
         </div>
-        {/* <button className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg">
-          Connect Wallet
-        </button> */}
         <ConnectButton />
       </div>
       <div className="min-h-[80vh] w-full flex justify-center items-center">
@@ -105,13 +125,12 @@ export default function HomePage() {
               </button>
             </div>
             <p className="text-gray">
-              Bal: {`${formatEther(etherBalance ?? "0x0").slice(0, 8)}`}
+              Bal: {`${usedBalance} ${currentSelectedToken?.name}`}
             </p>
           </div>
           <div
             className={`rounded-b to-container flex items-center justify-between px-3 py-[14px] sm:py-4 ${
-              parseFloat(cryptoValue ?? "0") >
-              parseFloat(formatEther(etherBalance ?? "0x0").slice(0, 8))
+              parseFloat(cryptoValue ?? "0") > usedBalance
                 ? "border-l border-r border-b border-red"
                 : "border-l border-r border-b border-primaryGray"
             }`}
@@ -130,7 +149,7 @@ export default function HomePage() {
                   // if value is not blank, then test the regex
 
                   if (e.target.value === "" || re.test(e.target.value)) {
-                    setCryptoValue(e.target.value);
+                    setCryptoValue(e.target.value.replaceAll(",", "."));
                   }
                 }}
                 className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
@@ -152,14 +171,14 @@ export default function HomePage() {
                   <div className="relative flex h-fit w-fit">
                     <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
                       <img
-                        src={currentSelectedToken.imgUrl}
+                        src={currentSelectedToken?.imgUrl ?? ""}
                         width="100%"
                         height="100%"
                       />
                     </div>
                   </div>
                   <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
-                    {currentSelectedToken.name}
+                    {currentSelectedToken?.name ?? ""}
                   </span>
                 </span>
                 <AiOutlineArrowDown />
@@ -188,7 +207,7 @@ export default function HomePage() {
               <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
                 <span className="flex items-center relative h-fit w-fit mr-2">
                   <img
-                    className="skt-w h-6 w-6 rounded-full"
+                    className="skt-w mr-1 h-6 w-6 rounded-full"
                     src="img/indo2.png"
                     width="100%"
                     height="100%"
@@ -249,9 +268,9 @@ export default function HomePage() {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="h-5 w-5 cursor-pointer text-socket-primary"
                   >
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -265,34 +284,35 @@ export default function HomePage() {
                 <div className="relative border-gray p-6 pb-4">
                   <div>
                     <div className="noScrollbar -mx-2 flex overflow-x-auto sm:flex-wrap">
-                      {tokenData.map((token, idx) => (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentSelectedToken({
-                              ...token,
-                            });
-                            setTokenModal(false);
-                          }}
-                          key={token.id}
-                          className={`m-1 transition duration-400 flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
-                            currentSelectedToken.id === token.id
-                              ? "bg-layer3 hover:border-layer3"
-                              : "hover:border-transparent hover:bg-mainGray2"
-                          }`}
-                        >
-                          <div className="skt-w rounded-full overflow-hidden h-6 w-6 mr-1.5">
-                            <img
-                              src={token.imgUrl}
-                              width="100%"
-                              height="100%"
-                            />
-                          </div>
-                          <span className="pt-px font-medium uppercase text-socket-primary sm:text-lg">
-                            {token.name}
-                          </span>
-                        </button>
-                      ))}
+                      {currentChain?.tokenData &&
+                        currentChain?.tokenData.map((token, idx) => (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentSelectedToken({
+                                ...token,
+                              });
+                              setTokenModal(false);
+                            }}
+                            key={token.id}
+                            className={`m-1 transition duration-400 flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
+                              currentSelectedToken?.id === token.id
+                                ? "bg-layer3 hover:border-layer3"
+                                : "hover:border-transparent hover:bg-mainGray2"
+                            }`}
+                          >
+                            <div className="skt-w rounded-full overflow-hidden h-6 w-6 mr-1.5">
+                              <img
+                                src={token.imgUrl}
+                                width="100%"
+                                height="100%"
+                              />
+                            </div>
+                            <span className="pt-px font-medium uppercase text-socket-primary sm:text-lg">
+                              {token.name}
+                            </span>
+                          </button>
+                        ))}
                     </div>
                   </div>
                 </div>

@@ -10,6 +10,9 @@ export const ConnectButton = () => {
   const etherBalance = useEtherBalance(account);
   const [dropdownActive, setDropdownActive] = useState(false);
   const chainSupported = supportedChains.includes(chainId ?? 0);
+  const currentNative = chainData
+    .find((data) => data.chainId === chainId)
+    ?.tokenData.find((data) => data.native);
 
   if (!chainSupported)
     return (
@@ -26,14 +29,10 @@ export const ConnectButton = () => {
   else if (account)
     return (
       <div className="flex gap-x-2">
-        <button
-          className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
-          onClick={() => deactivate()}
-        >
-          {`${formatEther(etherBalance ?? "0x0").slice(
-            0,
-            8
-          )} ETH ${account.slice(0, 15)}...`}
+        <button className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg">
+          {`${formatEther(etherBalance ?? "0x0").slice(0, 8)} ${
+            currentNative?.name
+          } ${account.slice(0, 15)}...`}
         </button>
         <SwitchNetwork
           setDropdownActive={setDropdownActive}

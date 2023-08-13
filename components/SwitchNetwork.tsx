@@ -10,7 +10,6 @@ interface Props {
 export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const { chainId, switchNetwork } = useEthers();
   const chainSupported = supportedChains.includes(chainId ?? 0);
-  console.log(chainSupported, "<<<");
   return (
     <div className="relative">
       <button
