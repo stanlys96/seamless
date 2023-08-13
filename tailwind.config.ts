@@ -31,6 +31,7 @@ const config: Config = {
         purple: "rgb(119,32,233)",
         theGray: "rgb(23,23,33)",
         layer3: "rgb(38,38,54)",
+        darkGray: "#334054",
       },
     },
   },

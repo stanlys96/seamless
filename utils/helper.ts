@@ -250,4 +250,55 @@ export const chainData = [
       },
     ],
   },
+  {
+    id: 6,
+    chainId: Goerli.chainId,
+    name: "Goerli",
+    imgUrl: "/img/Ether.svg",
+    tokenData: [
+      {
+        ...ethTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+      {
+        ...daiTokenData,
+        contractAddress: "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844",
+      },
+      {
+        ...usdcTokenData,
+        contractAddress: "0x0d6B12630Db150559822bb5297227C107332A8bf",
+      },
+      {
+        ...usdtTokenData,
+        contractAddress: "0x509Ee0d083DdF8AC028f2a56731412edD63223B9",
+      },
+      {
+        ...wbtcTokenData,
+        contractAddress: "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05",
+      },
+      {
+        ...wethTokenData,
+        contractAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+      },
+    ],
+  },
+];
+
+export const bankData = [
+  {
+    id: 1,
+    name: "BCA",
+    imgUrl: "/img/bca.png",
+  },
+  {
+    id: 2,
+    name: "BRI",
+    imgUrl: "/img/bri.png",
+  },
+  {
+    id: 3,
+    name: "BNI",
+    imgUrl: "/img/bni.png",
+  },
 ];
