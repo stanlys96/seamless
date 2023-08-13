@@ -341,3 +341,14 @@ export const chainHelper = [
     name: "Optimism",
   },
 ];
+
+export const allTokenData = [
+  ethTokenData,
+  daiTokenData,
+  usdcTokenData,
+  usdtTokenData,
+  wbtcTokenData,
+  wethTokenData,
+  maticTokenData,
+  bnbTokenData,
+];

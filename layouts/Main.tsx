@@ -10,14 +10,14 @@ export const MainLayout = ({ children }: Props) => {
   const router = useRouter();
   return (
     <div className="main-container relative">
-      <div className="min-h-[10vh] absolute w-full flex justify-between p-5 items-center">
+      <div className="min-h-[10vh] navbar absolute w-full flex justify-between p-5 items-center">
         <div className="flex gap-x-4 items-center">
           <a
             onClick={(e) => {
               e.preventDefault();
               router.push("/");
             }}
-            className="font-bold text-xl text-gray cursor-pointer"
+            className="font-bold text-xl text-gray cursor-pointer mr-2"
           >
             Seamless
           </a>

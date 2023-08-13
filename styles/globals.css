@@ -30,6 +30,11 @@ body {
   max-height: 100vh;
 }
 
+.navbar {
+  display: flex;
+  padding: 15px 100px;
+}
+
 .main-container .bg {
   max-height: 100vh;
   background-color: rgb(28, 28, 40);

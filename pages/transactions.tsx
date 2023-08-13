@@ -4,10 +4,10 @@ import useSWR from "swr";
 import { fetcherStrapi } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { useEthers } from "@usedapp/core";
-import { chainHelper } from "@/utils/helper";
+import { allTokenData, chainHelper } from "@/utils/helper";
 
 export default function TransactionPage() {
-  const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
+  const { account } = useEthers();
   const [userTransactions, setUserTransactions] = useState<any>([]);
   const { data: transactionsData } = useSWR(
     "/api/transaction-histories",
@@ -32,9 +32,7 @@ export default function TransactionPage() {
   }, [transactionsData, account]);
   return (
     <MainLayout>
-      <div className="pt-[15vh] max-w-[1200px] mx-auto font-bold text-xl">
-        Transactions
-      </div>
+      <div className="pt-[15vh] px-[100px] font-bold text-xl">Transactions</div>
       <div className="overflow-clip mt-5 px-[100px] rounded-lg border-none border-socket-primary sm:border">
         <div className="sm:overflow-x-auto">
           <div className="hidden w-max min-w-full border-b border-socket-primary bg-socket-layers-1 py-3.5 pl-8 pr-5 font-medium capitalize text-socket-primary sm:overflow-x-auto lg:flex">
@@ -88,9 +86,8 @@ export default function TransactionPage() {
                       <div className="skt-w rounded-full overflow-hidden w-5 h-5">
                         <img
                           src={
-                            chainHelper.find(
-                              (data) =>
-                                data.chainId === userData.attributes.chain
+                            allTokenData.find(
+                              (data) => data.name === userData.attributes.token
                             )?.imgUrl
                           }
                           width="100%"
