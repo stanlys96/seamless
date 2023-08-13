@@ -5,8 +5,10 @@ import { fetcherStrapi } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData } from "@/utils/helper";
+import { useRouter } from "next/router";
 
 export default function TransactionPage() {
+  const router = useRouter();
   const { account } = useEthers();
   const [userTransactions, setUserTransactions] = useState<any>([]);
   const { data: transactionsData } = useSWR(
@@ -269,12 +271,15 @@ export default function TransactionPage() {
             No Transactions
           </h1>
           <p className="my-2 max-w-[460px] text-center text-socket-secondary lg:text-lg">
-            You haven't made any transaction yet. Tap on the button to start
-            transaction
+            You haven&apos;t made any transaction yet. Tap on the button to
+            start transaction
           </p>
           <a
-            className="mt-4 flex items-center rounded px-8 py-4 font-medium text-socket-btn-primary bg-pink hover:bg-socket-btn-primary-hover"
-            href="/"
+            className="mt-4 cursor-pointer flex items-center rounded px-8 py-4 font-medium text-socket-btn-primary bg-pink hover:bg-socket-btn-primary-hover"
+            onClick={(e) => {
+              e.preventDefault();
+              router.push("/");
+            }}
           >
             Start Transaction{" "}
           </a>
