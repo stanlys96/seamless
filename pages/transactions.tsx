@@ -24,7 +24,8 @@ export default function TransactionPage() {
       setUserTransactions(
         transactionsResult.filter(
           (transaction: any) =>
-            transaction.attributes.wallet_address === account
+            transaction.attributes.wallet_address.toLowerCase() ===
+            account?.toLowerCase()
         )
       );
     }
