@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.main-container {
+  min-height: 100vh;
+}
+
+.main-container .bg {
+  max-height: 100vh;
+  background-color: rgb(28, 28, 40);
+  z-index: -1;
+}
+
+.primary-container {
+  border: 1px solid rgb(34, 34, 38);
+  background-color: rgb(23, 23, 33);
+}
+
+.from-container {
+  background-color: rgb(28, 28, 40);
+  border-bottom: 1px solid rgb(34, 34, 48);
+}
+
+.to-container {
+  background-color: rgb(28, 28, 40);
+}
+
+.transfer-input {
+  background-color: transparent;
+}
+
+.transfer-input:focus {
+  display: none;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin-right: 2rem;
+  padding-right: 2rem;
+}
+
+.transfer-btn {
+  background-color: rgb(119, 32, 233);
+}
+
+.middle-btn {
+  background-color: rgb(38, 38, 54);
+  border-color: rgb(28, 28, 40);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
