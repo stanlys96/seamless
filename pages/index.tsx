@@ -81,6 +81,20 @@ export default function HomePage() {
           fill="#1E1E2A99"
         ></path>
       </svg>
+      <div
+        className="absolute bottom-[50px] -left-[50px] hidden h-[310px] w-[310px] rounded-full lg:block"
+        style={{
+          background: "rgba(127, 31, 255, 0.15)",
+          filter: "blur(217.107px)",
+        }}
+      ></div>
+      <div
+        className="absolute bottom-[210px] right-[144px] hidden h-[428px] w-[428px] rounded-full lg:block"
+        style={{
+          background: "rgba(255, 31, 179, 0.16)",
+          filter: "blur(299.784px)",
+        }}
+      ></div>
 
       <div className="min-h-[10vh] flex justify-between p-5 items-center">
         <div className="flex gap-x-4">
