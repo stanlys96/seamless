@@ -162,7 +162,7 @@ export default function HomePage() {
 
   return (
     <MainLayout>
-      <div className="pt-[15vh]">
+      <div className="pt-[15vh] text-white the-container">
         <div className="min-h-[80vh] w-full flex justify-center items-center">
           <div className="primary-container rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]">
             <p className="font-bold text-xl">Transfer</p>

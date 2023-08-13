@@ -28,6 +28,7 @@ body {
 
 .main-container {
   max-height: 100vh;
+  color: white;
 }
 
 .navbar {
@@ -89,4 +90,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.the-container {
+  color: white;
 }

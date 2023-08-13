@@ -9,7 +9,7 @@ interface Props {
 export const MainLayout = ({ children }: Props) => {
   const router = useRouter();
   return (
-    <div className="main-container relative">
+    <div className="main-container relative text-white">
       <div className="min-h-[10vh] z-50 navbar absolute w-full flex justify-between p-5 items-center">
         <div className="flex gap-x-4 items-center">
           <a
