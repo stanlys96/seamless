@@ -1,7 +1,6 @@
 "use client";
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { useState } from "react";
-import { ConnectButton } from "@/components";
 import {
   useEtherBalance,
   useEthers,
@@ -9,15 +8,18 @@ import {
   useSendTransaction,
 } from "@usedapp/core";
 import useSWR from "swr";
-import { fetcher } from "@/utils/axios";
+import { axiosStrapi, fetcher } from "@/utils/axios";
 import { useEffect } from "react";
 import { formatUnits } from "@ethersproject/units";
 import { bankData, chainData } from "@/utils/helper";
 import { MainLayout } from "@/layouts/Main";
 import { utils } from "ethers";
 import { Bars } from "react-loader-spinner";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 export default function HomePage() {
+  const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
   const { sendTransaction, state } = useSendTransaction();
@@ -30,16 +32,25 @@ export default function HomePage() {
   const [bankAccountValue, setBankAccountValue] = useState("");
   const [bankAccountName, setBankAccountName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [transactionData, setTransactionData] = useState<any>();
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     id: 1,
     name: "BCA",
     imgUrl: "/img/bca.png",
   });
+  const [transactionLoading, setTransactionLoading] = useState(false);
 
   const currentChain = chainData.find((data) => data.chainId === chainId);
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
     currentChain?.tokenData.find((data) => data.name === "USDC")
   );
+  const resetAllFields = () => {
+    setCryptoValue("");
+    setPreviousValue("");
+    setBankAccountName("");
+    setBankAccountValue("");
+    setPhoneNumber("");
+  };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
@@ -86,9 +97,62 @@ export default function HomePage() {
   }, [chainId]);
 
   useEffect(() => {
+    console.log(state, "<<< state");
+    if (state.status.toLowerCase() === "mining" && !transactionLoading) {
+      setTransactionLoading(true);
+      axiosStrapi
+        .post("/api/transaction-histories", {
+          data: {
+            wallet_address: account,
+            token: currentSelectedToken?.name,
+            chain: chainId?.toString(),
+            bank_name: currentSelectedBank.name,
+            bank_account_number: bankAccountValue,
+            status: "Waiting",
+            bank_account_name: bankAccountName,
+            phone_number: phoneNumber,
+            token_value: cryptoValue,
+            idr_value: idrValue,
+            transaction_success: false,
+            wallet_destination: depositAddress,
+          },
+        })
+        .then((res) => {
+          setTransactionData(res.data);
+          console.log(res.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    if (state.status.toLowerCase() === "success") {
+      axiosStrapi
+        .put(`/api/transaction-histories/${transactionData?.data.id ?? ""}`, {
+          data: {
+            transaction_hash: state.receipt?.transactionHash,
+            gas_price: state.receipt?.effectiveGasPrice.toString(),
+            transaction_success: true,
+          },
+        })
+        .then((res) => {
+          console.log(res, "???");
+        })
+        .catch((e) => {
+          console.log(e, "<<< E");
+        });
+      resetAllFields();
+      setTransactionData(null);
+      setTransactionLoading(false);
+      Swal.fire(
+        "Success!",
+        "Transaction successful! Please wait for our admin to contact you.",
+        "success"
+      );
+    }
     if (
       state.status.toLowerCase() === "none" ||
-      state.status.toLowerCase() === "success"
+      state.status.toLowerCase() === "success" ||
+      state.status.toLowerCase() === "exception"
     ) {
       setLoading(false);
     } else {
@@ -98,14 +162,7 @@ export default function HomePage() {
 
   return (
     <MainLayout>
-      <div>
-        <div className="min-h-[10vh] flex justify-between p-5 items-center">
-          <div className="flex gap-x-4 items-center">
-            <p className="font-bold text-xl text-gray">Seamless</p>
-            <a className="font-bold cursor-pointer">Transaction History</a>
-          </div>
-          <ConnectButton />
-        </div>
+      <div className="pt-[15vh]">
         <div className="min-h-[80vh] w-full flex justify-center items-center">
           <div className="primary-container rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]">
             <p className="font-bold text-xl">Transfer</p>
@@ -324,6 +381,20 @@ export default function HomePage() {
                     return;
                   }
                   if (insufficientBalance) return;
+                  if (
+                    !cryptoValue ||
+                    !phoneNumber ||
+                    !bankAccountName ||
+                    !bankAccountValue ||
+                    cryptoValue === "."
+                  ) {
+                    Swal.fire(
+                      "Not done!",
+                      "Please fill all the necessary fields",
+                      "warning"
+                    );
+                    return;
+                  }
                   const tx = await sendTransaction({
                     to: depositAddress,
                     value: utils.parseUnits(
@@ -332,7 +403,10 @@ export default function HomePage() {
                     ),
                   });
                   console.log(tx, "<<< tx");
-                } catch (e) {}
+                } catch (e) {
+                  console.log(e);
+                  setLoading(false);
+                }
               }}
               className={`mt-5 rounded font-bold ${
                 loading

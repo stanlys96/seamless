@@ -1,0 +1,12 @@
+{
+  "wallet_address": "account",
+  "token": "currentSelectedToken?.name",
+  "chain": "chainId?.toString()",
+  "bank_name": "currentSelectedBank.name",
+  "bank_account_number": "bankAccountValue",
+  "transaction_hash": "state.receipt?.transactionHash",
+  "status": "Waiting",
+  "bank_account_name": "bankAccountName",
+  "gas_price": "state.receipt?.effectiveGasPrice.toString()",
+  "phone_number": "phoneNumber"
+}

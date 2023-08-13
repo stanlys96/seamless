@@ -302,3 +302,42 @@ export const bankData = [
     imgUrl: "/img/bni.png",
   },
 ];
+
+export const chainHelper = [
+  {
+    id: 1,
+    chainId: "5",
+    imgUrl: "/img/eth.svg",
+    name: "Goerli",
+  },
+  {
+    id: 2,
+    chainId: "1",
+    imgUrl: "/img/eth.svg",
+    name: "Ethereum",
+  },
+  {
+    id: 3,
+    chainId: "137",
+    imgUrl: "/img/matic.svg",
+    name: "Polygon",
+  },
+  {
+    id: 4,
+    chainId: "56",
+    imgUrl: "/img/bnb.svg",
+    name: "BSC",
+  },
+  {
+    id: 5,
+    chainId: "42161",
+    imgUrl: "/img/Arbitrum.svg",
+    name: "Arbitrum",
+  },
+  {
+    id: 6,
+    chainId: "10",
+    imgUrl: "/img/Optimism.svg",
+    name: "Optimism",
+  },
+];

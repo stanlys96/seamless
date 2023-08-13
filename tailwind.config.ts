@@ -22,6 +22,7 @@ const config: Config = {
         gray: "#222230",
         mainGray2: "rgb(28,28,40)",
         layer3: "rgb(38,38,54)",
+        "socket-primary": "rgb(34,34,48)",
       },
       backgroundColor: {
         main: "#171721",
@@ -32,6 +33,9 @@ const config: Config = {
         theGray: "rgb(23,23,33)",
         layer3: "rgb(38,38,54)",
         darkGray: "#334054",
+        "socket-layers-1": "rgb(23,23,33)",
+        "socket-layers-2": "rgb(28,28,40)",
+        "socket-layers-3": "rgb(38,38,54)",
       },
     },
   },

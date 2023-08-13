@@ -1,10 +1,38 @@
+"use client";
+import { ConnectButton } from "@/components";
+import { useRouter } from "next/router";
+
 interface Props {
   children: any;
 }
 
 export const MainLayout = ({ children }: Props) => {
+  const router = useRouter();
   return (
-    <div className="main-container">
+    <div className="main-container relative">
+      <div className="min-h-[10vh] absolute w-full flex justify-between p-5 items-center">
+        <div className="flex gap-x-4 items-center">
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              router.push("/");
+            }}
+            className="font-bold text-xl text-gray cursor-pointer"
+          >
+            Seamless
+          </a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              router.push("/transactions");
+            }}
+            className="font-bold cursor-pointer"
+          >
+            Transaction History
+          </a>
+        </div>
+        <ConnectButton />
+      </div>
       <svg
         className="bg absolute"
         width="1440"

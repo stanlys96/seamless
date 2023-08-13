@@ -5,3 +5,13 @@ export const axiosCustom = axios.create({
 });
 
 export const fetcher = (url: string) => axiosCustom.get(url).then((res) => res);
+
+export const axiosStrapi = axios.create({
+  baseURL: "https://seamless-cms-production.up.railway.app",
+  headers: {
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`,
+  },
+});
+
+export const fetcherStrapi = (url: string) =>
+  axiosStrapi.get(url).then((res) => res);
