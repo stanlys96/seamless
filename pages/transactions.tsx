@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { fetcherStrapi } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { useEthers } from "@usedapp/core";
-import { allTokenData, chainHelper } from "@/utils/helper";
+import { allTokenData, chainData } from "@/utils/helper";
 
 export default function TransactionPage() {
   const { account } = useEthers();
@@ -110,9 +110,10 @@ export default function TransactionPage() {
                       <div className="skt-w rounded-full overflow-hidden w-5 h-5">
                         <img
                           src={
-                            chainHelper.find(
+                            chainData.find(
                               (data) =>
-                                data.chainId === userData.attributes.chain
+                                data.chainId.toString() ===
+                                userData.attributes.chain.toString()
                             )?.imgUrl
                           }
                           width="100%"
@@ -121,8 +122,10 @@ export default function TransactionPage() {
                       </div>
                       <span className="pl-1">
                         {
-                          chainHelper.find(
-                            (data) => data.chainId === userData.attributes.chain
+                          chainData.find(
+                            (data) =>
+                              data.chainId.toString() ===
+                              userData.attributes.chain.toString()
                           )?.name
                         }
                       </span>
