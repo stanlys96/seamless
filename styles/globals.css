@@ -27,7 +27,7 @@ body {
 }
 
 .main-container {
-  max-height: 100vh;
+  min-height: 80vh;
   color: white;
 }
 
@@ -37,7 +37,7 @@ body {
 }
 
 .main-container .bg {
-  max-height: 100vh;
+  min-height: 80vh;
   background-color: rgb(28, 28, 40);
   z-index: -1;
 }
