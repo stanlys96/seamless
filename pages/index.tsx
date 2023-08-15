@@ -6,19 +6,22 @@ import {
   useEthers,
   useTokenBalance,
   useSendTransaction,
+  useContractFunction,
 } from "@usedapp/core";
 import useSWR from "swr";
 import { axiosStrapi, fetcher } from "@/utils/axios";
+import erc20Abi from "../contracts/erc20-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
 import { bankData, chainData } from "@/utils/helper";
 import { MainLayout } from "@/layouts/Main";
-import { utils } from "ethers";
+import { Contract, utils } from "ethers";
 import { Bars } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 
 export default function HomePage() {
+  const erc20Interface = new utils.Interface(erc20Abi);
   const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
@@ -44,6 +47,17 @@ export default function HomePage() {
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
     currentChain?.tokenData.find((data) => data.name === "USDC")
   );
+  const erc20Contract = new Contract(
+    currentSelectedToken?.contractAddress ??
+      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    erc20Interface
+  );
+
+  const { send: transferToken, state: transferTokenState } =
+    useContractFunction(erc20Contract, "transfer", {
+      transactionName: "Transfer ERC20 Token",
+    });
+
   const resetAllFields = () => {
     setCryptoValue("");
     setPreviousValue("");
@@ -97,8 +111,8 @@ export default function HomePage() {
   }, [chainId]);
 
   useEffect(() => {
-    console.log(state, "<<< state");
-    if (state.status.toLowerCase() === "mining" && !transactionLoading) {
+    const tempState = currentSelectedToken?.native ? state : transferTokenState;
+    if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
       setTransactionLoading(true);
       axiosStrapi
         .post("/api/transaction-histories", {
@@ -125,12 +139,14 @@ export default function HomePage() {
           console.log(e);
         });
     }
-    if (state.status.toLowerCase() === "success") {
+    if (tempState.status.toLowerCase() === "success") {
       axiosStrapi
         .put(`/api/transaction-histories/${transactionData?.data.id ?? ""}`, {
           data: {
-            transaction_hash: state.receipt?.transactionHash,
-            gas_price: formatEther(state.receipt?.effectiveGasPrice ?? "0x0"),
+            transaction_hash: tempState.receipt?.transactionHash,
+            gas_price: formatEther(
+              tempState.receipt?.effectiveGasPrice ?? "0x0"
+            ),
             transaction_success: true,
           },
         })
@@ -150,15 +166,15 @@ export default function HomePage() {
       );
     }
     if (
-      state.status.toLowerCase() === "none" ||
-      state.status.toLowerCase() === "success" ||
-      state.status.toLowerCase() === "exception"
+      tempState.status.toLowerCase() === "none" ||
+      tempState.status.toLowerCase() === "success" ||
+      tempState.status.toLowerCase() === "exception"
     ) {
       setLoading(false);
     } else {
       setLoading(true);
     }
-  }, [state]);
+  }, [state, transferTokenState]);
 
   return (
     <MainLayout>
@@ -395,14 +411,25 @@ export default function HomePage() {
                     );
                     return;
                   }
-                  const tx = await sendTransaction({
-                    to: depositAddress,
-                    value: utils.parseUnits(
-                      cryptoValue,
-                      currentSelectedToken?.decimals
-                    ),
-                  });
-                  console.log(tx, "<<< tx");
+                  if (currentSelectedToken?.native) {
+                    const tx = await sendTransaction({
+                      to: depositAddress,
+                      value: utils.parseUnits(
+                        cryptoValue,
+                        currentSelectedToken?.decimals
+                      ),
+                    });
+                    console.log(tx, "<<< tx");
+                  } else {
+                    const tx = await transferToken(
+                      depositAddress,
+                      utils.parseUnits(
+                        cryptoValue,
+                        currentSelectedToken?.decimals
+                      )
+                    );
+                    console.log(tx, "<<< TX!!!");
+                  }
                 } catch (e) {
                   console.log(e);
                   setLoading(false);

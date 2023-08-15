@@ -22,7 +22,7 @@ export const daiTokenData = {
   imgUrl: "/img/dai.svg",
   coingecko: "dai",
   native: false,
-  decimals: 6,
+  decimals: 18,
 };
 
 export const usdcTokenData = {
@@ -263,7 +263,7 @@ export const chainData = [
       },
       {
         ...daiTokenData,
-        contractAddress: "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844",
+        contractAddress: "0xb93cba7013f4557cDFB590fD152d24Ef4063485f",
       },
       {
         ...usdcTokenData,
@@ -271,7 +271,7 @@ export const chainData = [
       },
       {
         ...usdtTokenData,
-        contractAddress: "0x509Ee0d083DdF8AC028f2a56731412edD63223B9",
+        contractAddress: "0xfad6367E97217cC51b4cd838Cc086831f81d38C2",
       },
       {
         ...wbtcTokenData,
