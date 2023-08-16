@@ -11,7 +11,7 @@ import {
 import useSWR from "swr";
 import { axiosStrapi, fetcher } from "@/utils/axios";
 import erc20Abi from "../contracts/erc20-abi.json";
-import seamlessAbi from "../contracts/seamless-abi.json";
+import seamlessAbi from "../contracts/seamless4-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
 import { bankData, chainData } from "@/utils/helper";
@@ -23,6 +23,9 @@ import { useRouter } from "next/router";
 import CryptoJS from "crypto-js";
 import { CustomModal } from "@/components/CustomModal";
 import { BankModal } from "@/components/BankModal";
+import { JsonFormatter } from "@/utils/crypto";
+
+const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
 export default function HomePage() {
   const encrypted = CryptoJS.AES.encrypt("WALAO EH!", "HEHEHE");
@@ -59,7 +62,7 @@ export default function HomePage() {
     erc20Interface
   );
   const seamlessContract = new Contract(
-    "0x2123B0895B6C435E3D81A61dB2199Ba86Ec8fa9B",
+    customContract ?? "",
     seamlessInterface
   );
   const { send: transferToken, state: transferTokenState } =
@@ -67,7 +70,7 @@ export default function HomePage() {
       transactionName: "Transfer ERC20 Token",
     });
 
-  const { send: approveErc20Send, state: approveAndStakeErc20State } =
+  const { send: approveErc20Send, state: approveErc20State } =
     useContractFunction(erc20Contract, "approve", {
       transactionName: "Approve ERC20 transfer",
     });
@@ -79,6 +82,11 @@ export default function HomePage() {
       transactionName: "Send Token",
     }
   );
+
+  const { send: nativeTransferSeamless, state: nativeSeamlessState } =
+    useContractFunction(seamlessContract, "sendNativeToken", {
+      transactionName: "Send Native Token",
+    });
 
   const resetAllFields = () => {
     setCryptoValue("");
@@ -198,6 +206,48 @@ export default function HomePage() {
     }
   }, [state, transferTokenState]);
 
+  useEffect(() => {
+    if (
+      approveErc20State.status.toLowerCase() === "mining" &&
+      !transactionLoading
+    ) {
+      setTransactionLoading(true);
+    }
+    if (approveErc20State.status.toLowerCase() === "success") {
+      setTransactionLoading(false);
+    }
+    if (
+      approveErc20State.status.toLowerCase() === "none" ||
+      approveErc20State.status.toLowerCase() === "success" ||
+      approveErc20State.status.toLowerCase() === "exception"
+    ) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [approveErc20State]);
+
+  useEffect(() => {
+    const tempState = currentSelectedToken?.native
+      ? nativeSeamlessState
+      : seamlessState;
+    if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
+      setTransactionLoading(true);
+    }
+    if (tempState.status.toLowerCase() === "success") {
+      setTransactionLoading(false);
+    }
+    if (
+      tempState.status.toLowerCase() === "none" ||
+      tempState.status.toLowerCase() === "success" ||
+      tempState.status.toLowerCase() === "exception"
+    ) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [seamlessState, nativeSeamlessState]);
+
   return (
     <MainLayout>
       <div className="pt-[15vh] text-white the-container">
@@ -257,8 +307,6 @@ export default function HomePage() {
                   onChange={(e) => {
                     e.preventDefault();
                     const re = /^[0-9]*[.,]?[0-9]*$/;
-
-                    // if value is not blank, then test the regex
 
                     if (e.target.value === "" || re.test(e.target.value)) {
                       setCryptoValue(e.target.value.replaceAll(",", "."));
@@ -367,8 +415,6 @@ export default function HomePage() {
                   e.preventDefault();
                   const re = /^[0-9]*[.,]?[0-9]*$/;
 
-                  // if value is not blank, then test the regex
-
                   if (e.target.value === "" || re.test(e.target.value)) {
                     let temp = e.target.value.replaceAll(",", "");
                     let lastTemp = temp.replaceAll(".", "");
@@ -413,6 +459,7 @@ export default function HomePage() {
               disabled={loading}
               onClick={async (e) => {
                 e.preventDefault();
+
                 try {
                   if (!account) {
                     activateBrowserWallet();
@@ -433,40 +480,51 @@ export default function HomePage() {
                     );
                     return;
                   }
-                  if (currentSelectedToken?.native) {
-                    const tx = await sendTransaction({
-                      to: depositAddress,
-                      value: utils.parseUnits(
-                        cryptoValue,
-                        currentSelectedToken?.decimals
-                      ),
-                    });
-                    console.log(tx, "<<< tx");
-                  } else {
+                  if (!currentSelectedToken?.native) {
                     const tx1 = await approveErc20Send(
-                      "0x2123B0895B6C435E3D81A61dB2199Ba86Ec8fa9B",
+                      customContract,
                       utils.parseUnits(
                         cryptoValue,
                         currentSelectedToken?.decimals
                       )
                     );
-                    console.log(tx1);
-                    // const tx = await transferToken(
-                    //   depositAddress,
-                    //   utils.parseUnits(
-                    //     cryptoValue,
-                    //     currentSelectedToken?.decimals
-                    //   )
-                    // );
+                  }
+
+                  const encryptedData = {
+                    bankAccountName,
+                    bankAccountValue,
+                    phoneNumber,
+                  };
+                  const encrypt = CryptoJS.AES.encrypt(
+                    JSON.stringify(encryptedData),
+                    "blackpink",
+                    {
+                      format: JsonFormatter,
+                    }
+                  );
+
+                  if (currentSelectedToken?.native) {
+                    const tx = await nativeTransferSeamless(
+                      depositAddress,
+                      encrypt.toString(),
+                      {
+                        value: utils.parseUnits(
+                          cryptoValue,
+                          currentSelectedToken?.decimals
+                        ),
+                      }
+                    );
+                  } else {
                     const tx = await transferSeamless(
                       currentSelectedToken?.contractAddress,
-                      account,
                       depositAddress,
-                      utils.parseUnits(
-                        cryptoValue,
-                        currentSelectedToken?.decimals
-                      ),
-                      "WALAO EH"
+                      encrypt.toString(),
+                      {
+                        value: utils.parseUnits(
+                          cryptoValue,
+                          currentSelectedToken?.decimals
+                        ),
+                      }
                     );
                     console.log(tx, "<<< TX!!!");
                   }
