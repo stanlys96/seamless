@@ -140,60 +140,69 @@ export default function HomePage() {
     );
   }, [chainId]);
 
+  const addToTransactionHistory = () => {
+    axiosStrapi
+      .post("/api/transaction-histories", {
+        data: {
+          wallet_address: account,
+          token: currentSelectedToken?.name,
+          chain: chainId?.toString(),
+          bank_name: currentSelectedBank.name,
+          bank_account_number: bankAccountValue,
+          status: "Waiting",
+          bank_account_name: bankAccountName,
+          phone_number: phoneNumber,
+          token_value: cryptoValue,
+          idr_value: idrValue,
+          transaction_success: false,
+          wallet_destination: depositAddress,
+        },
+      })
+      .then((res) => {
+        setTransactionData(res.data);
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const updateTransactionHistory = (tempState: any) => {
+    axiosStrapi
+      .put(`/api/transaction-histories/${transactionData?.data.id ?? ""}`, {
+        data: {
+          transaction_hash: tempState.receipt?.transactionHash,
+          gas_price: formatEther(tempState.receipt?.effectiveGasPrice ?? "0x0"),
+          transaction_success: true,
+          block_confirmation:
+            tempState.receipt?.confirmations.toString() ?? "0",
+        },
+      })
+      .then((res) => {
+        console.log(res, "???");
+      })
+      .catch((e) => {
+        console.log(e, "<<< E");
+      });
+    resetAllFields();
+    setTransactionData(null);
+    setTransactionLoading(false);
+    Swal.fire(
+      "Success!",
+      "Transaction successful! Please wait for our admin to contact you.",
+      "success"
+    );
+  };
+
   useEffect(() => {
     const tempState = currentSelectedToken?.native ? state : transferTokenState;
     if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
       setTransactionLoading(true);
-      axiosStrapi
-        .post("/api/transaction-histories", {
-          data: {
-            wallet_address: account,
-            token: currentSelectedToken?.name,
-            chain: chainId?.toString(),
-            bank_name: currentSelectedBank.name,
-            bank_account_number: bankAccountValue,
-            status: "Waiting",
-            bank_account_name: bankAccountName,
-            phone_number: phoneNumber,
-            token_value: cryptoValue,
-            idr_value: idrValue,
-            transaction_success: false,
-            wallet_destination: depositAddress,
-          },
-        })
-        .then((res) => {
-          setTransactionData(res.data);
-          console.log(res.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      addToTransactionHistory();
     }
     if (tempState.status.toLowerCase() === "success") {
-      axiosStrapi
-        .put(`/api/transaction-histories/${transactionData?.data.id ?? ""}`, {
-          data: {
-            transaction_hash: tempState.receipt?.transactionHash,
-            gas_price: formatEther(
-              tempState.receipt?.effectiveGasPrice ?? "0x0"
-            ),
-            transaction_success: true,
-          },
-        })
-        .then((res) => {
-          console.log(res, "???");
-        })
-        .catch((e) => {
-          console.log(e, "<<< E");
-        });
-      resetAllFields();
-      setTransactionData(null);
-      setTransactionLoading(false);
-      Swal.fire(
-        "Success!",
-        "Transaction successful! Please wait for our admin to contact you.",
-        "success"
-      );
+      updateTransactionHistory(tempState);
+      console.log(tempState, "<<< tempState");
     }
     if (
       tempState.status.toLowerCase() === "none" ||
@@ -228,23 +237,30 @@ export default function HomePage() {
   }, [approveErc20State]);
 
   useEffect(() => {
-    const tempState = currentSelectedToken?.native
-      ? nativeSeamlessState
-      : seamlessState;
-    if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
-      setTransactionLoading(true);
-    }
-    if (tempState.status.toLowerCase() === "success") {
-      setTransactionLoading(false);
-    }
-    if (
-      tempState.status.toLowerCase() === "none" ||
-      tempState.status.toLowerCase() === "success" ||
-      tempState.status.toLowerCase() === "exception"
-    ) {
-      setLoading(false);
-    } else {
-      setLoading(true);
+    try {
+      const tempState = currentSelectedToken?.native
+        ? nativeSeamlessState
+        : seamlessState;
+      if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
+        setTransactionLoading(true);
+        addToTransactionHistory();
+      }
+      if (tempState.status.toLowerCase() === "success") {
+        setTransactionLoading(false);
+        updateTransactionHistory(tempState);
+        console.log(tempState, "<<< tempState");
+      }
+      if (
+        tempState.status.toLowerCase() === "none" ||
+        tempState.status.toLowerCase() === "success" ||
+        tempState.status.toLowerCase() === "exception"
+      ) {
+        setLoading(false);
+      } else {
+        setLoading(true);
+      }
+    } catch (e) {
+      console.log(e, "<<< E!!");
     }
   }, [seamlessState, nativeSeamlessState]);
 
@@ -514,6 +530,7 @@ export default function HomePage() {
                         ),
                       }
                     );
+                    console.log(tx, "<<<");
                   } else {
                     const tx = await transferSeamless(
                       currentSelectedToken?.contractAddress,
