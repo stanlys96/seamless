@@ -62,7 +62,7 @@ export default function HomePage() {
     erc20Interface
   );
   const seamlessContract = new Contract(
-    customContract ?? "",
+    customContract ?? "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     seamlessInterface
   );
   const { send: transferToken, state: transferTokenState } =
