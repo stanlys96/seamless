@@ -104,3 +104,7 @@ input[type="number"] {
     padding: 15px 25px;
   }
 }
+
+.dropdown-top {
+  z-index: 100;
+}

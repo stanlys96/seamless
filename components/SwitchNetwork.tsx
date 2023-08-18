@@ -11,7 +11,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const { chainId, switchNetwork } = useEthers();
   const chainSupported = supportedChains.includes(chainId ?? 0);
   return (
-    <div className="relative">
+    <div className="relative z-100">
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -23,7 +23,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
       >
         {chainSupported ? (
           <div>
-            <div className="text-socket-tag-green-text absolute bottom-1 right-1 items-center justify-center rounded-full bg-white pt-[0.5px] sm:bottom-1.5 sm:right-0.5 sm:h-4 sm:w-4">
+            <div className="z-100 text-socket-tag-green-text absolute bottom-1 right-1 items-center justify-center rounded-full bg-white pt-[0.5px] sm:bottom-1.5 sm:right-0.5 sm:h-4 sm:w-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -67,7 +67,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
         )}
       </button>
       <div
-        className={`absolute right-0 top-14 w-[240px] rounded-lg border border-gray bg-main p-3 ${
+        className={`absolute dropdown-top right-0 top-14 w-[240px] rounded-lg border border-gray bg-main p-3 ${
           dropdownActive ? "block" : "hidden"
         }`}
       >
