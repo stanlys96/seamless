@@ -313,7 +313,7 @@ export default function HomePage() {
                   : "border-l border-r border-b border-primaryGray"
               }`}
             >
-              <div className="relative flex w-full items-center overflow-hidden">
+              <div className="relative flex w-fit items-center overflow-hidden">
                 <input
                   onKeyDown={(evt) => {
                     ["e", "E", "+", "-"].includes(evt.key) &&

@@ -1,7 +1,7 @@
 import { useEthers, useEtherBalance } from "@usedapp/core";
 import { formatEther } from "@ethersproject/units";
 import { chainData, supportedChains } from "@/utils/helper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SwitchNetwork } from "./SwitchNetwork";
 
 export const ConnectButton = () => {
@@ -19,6 +19,12 @@ export const ConnectButton = () => {
   const currentNative = chainData
     .find((data) => data.chainId === chainId)
     ?.tokenData.find((data) => data.native);
+
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
 
   if (!chainSupported && !isLoading)
     return (
@@ -38,7 +44,7 @@ export const ConnectButton = () => {
         <button className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg">
           {`${formatEther(etherBalance ?? "0x0").slice(0, 8)} ${
             currentNative?.name
-          } ${account.slice(0, 15)}...`}
+          } ${windowWidth > 768 ? account.slice(0, 15) + "..." : ""}`}
         </button>
         <SwitchNetwork
           setDropdownActive={setDropdownActive}

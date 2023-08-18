@@ -1,6 +1,8 @@
 "use client";
 import { ConnectButton } from "@/components";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { MdOutlineEventNote } from "react-icons/md";
 
 interface Props {
   children: any;
@@ -8,6 +10,10 @@ interface Props {
 
 export const MainLayout = ({ children }: Props) => {
   const router = useRouter();
+  const [windowWidth, setWindowWidth] = useState(0);
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
   return (
     <div className="main-container relative text-white">
       <div className="z-50 navbar absolute w-full flex justify-between p-5 items-center">
@@ -21,15 +27,27 @@ export const MainLayout = ({ children }: Props) => {
           >
             Seamless
           </a>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/transactions");
-            }}
-            className="font-bold cursor-pointer"
-          >
-            Transaction History
-          </a>
+          {windowWidth > 768 ? (
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/transactions");
+              }}
+              className="font-bold cursor-pointer"
+            >
+              Transaction History
+            </a>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/transactions");
+              }}
+              className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
+            >
+              <MdOutlineEventNote />
+            </button>
+          )}
         </div>
         <ConnectButton />
       </div>
