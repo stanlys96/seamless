@@ -40,10 +40,10 @@ export default function TransactionPage() {
     <MainLayout>
       {userTransactions.length > 0 ? (
         <div>
-          <div className="pt-[15vh] px-[100px] font-bold text-xl">
+          <div className="pt-[15vh] px-[20px] md:px-[100px] font-bold text-xl">
             Transactions
           </div>
-          <div className="overflow-clip mt-5 px-[100px] rounded-lg border-none border-socket-primary sm:border">
+          <div className="overflow-clip mt-5 px-[20px] md:px-[100px] rounded-lg border-none border-socket-primary sm:border">
             <div className="sm:overflow-x-auto">
               <div className="hidden w-max min-w-full border-b border-socket-primary bg-socket-layers-1 py-3.5 pl-8 pr-5 font-medium capitalize text-socket-primary sm:overflow-x-auto lg:flex">
                 <div className="mr-10 min-w-[350px] flex-[1.3] flex-shrink-0 pr-8 lg:pr-4">
@@ -221,7 +221,7 @@ export default function TransactionPage() {
                         </div>
                         <div>
                           <span className="flex items-center font-semibold capitalize text-socket-primary">
-                            Refuel Bridge
+                            Transfer
                             <div className="mx-2 h-1 w-1 rounded-full bg-gray-400"></div>
                             <span className="flex items-center text-sm font-medium text-socket-success">
                               <div className="mr-[7px]">
@@ -242,9 +242,13 @@ export default function TransactionPage() {
                             </span>
                           </span>
                           <div className="items-center whitespace-nowrap text-sm font-medium text-socket-secondary">
-                            <span>0.004 ETH</span>
+                            <span>
+                              {" "}
+                              {userData.attributes.token_value}{" "}
+                              {userData.attributes.token}
+                            </span>
                             <span className="px-2">-</span>
-                            <span>10.8559MATIC</span>
+                            <span>{userData.attributes.idr_value} IDR</span>
                           </div>
                         </div>
                       </div>

@@ -313,7 +313,7 @@ export default function HomePage() {
                   : "border-l border-r border-b border-primaryGray"
               }`}
             >
-              <div className="relative flex w-fit items-center overflow-hidden">
+              <div className="relative flex w-[35vw] items-center overflow-hidden">
                 <input
                   onKeyDown={(evt) => {
                     ["e", "E", "+", "-"].includes(evt.key) &&
@@ -335,7 +335,7 @@ export default function HomePage() {
                 />
                 <div className="invisible absolute w-fit text-xl font-bold"></div>
               </div>
-              <span>
+              <span className="-z-1">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -353,7 +353,7 @@ export default function HomePage() {
                         />
                       </div>
                     </div>
-                    <span className="z-50 cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-center items-center gap-x-1">
+                    <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-center items-center gap-x-1">
                       {currentSelectedToken?.name ?? ""}
                       <AiOutlineArrowDown />
                     </span>
