@@ -1,6 +1,8 @@
 import { chainData, supportedChains } from "@/utils/helper";
 import { useEthers } from "@usedapp/core";
 import { AiOutlineArrowDown } from "react-icons/ai";
+import { useSelector } from "react-redux";
+import { RootState } from "../stores";
 
 interface Props {
   setDropdownActive: (param1: any) => void;
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
+  const theme = useSelector((state: RootState) => state.theme);
   const { chainId, switchNetwork } = useEthers();
   const chainSupported = supportedChains.includes(chainId ?? 0);
   return (
@@ -19,7 +22,9 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
         }}
         className={`h-9 rounded ${
           chainSupported ? "bg-[#262636]" : "bg-pink"
-        } px-2 font-semibold text-white sm:h-[48px] sm:text-lg flex gap-x-1 items-center`}
+        } px-2 font-semibold ${
+          theme.theme === "light" ? "bg-button-light" : ""
+        } sm:h-[48px] sm:text-lg flex gap-x-1 items-center`}
       >
         {chainSupported ? (
           <div>
@@ -67,9 +72,9 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
         )}
       </button>
       <div
-        className={`absolute dropdown-top right-0 top-14 w-[240px] rounded-lg border border-gray bg-main p-3 ${
-          dropdownActive ? "block" : "hidden"
-        }`}
+        className={`absolute dropdown-top right-0 top-14 w-[240px] rounded-lg border border-gray transition ${
+          theme.theme === "light" ? "bg-button-light" : "bg-button-dark"
+        } p-3 ${dropdownActive ? "block" : "hidden"}`}
       >
         {chainData.map((data, idx) => (
           <button
@@ -80,11 +85,21 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
               await switchNetwork(data.chainId);
             }}
             className={`${
-              chainId === data.chainId ? "bg-mainGray" : "hover:bg-mainGray2"
-            } flex w-full items-center justify-between rounded p-2 text-sm font-medium text-socket-primary transition duration-500 `}
+              chainId === data.chainId
+                ? `${theme.theme === "dark" ? "bg-mainGray" : "bg-white"}`
+                : `${
+                    theme.theme === "dark"
+                      ? `hover:bg-mainGray2`
+                      : "hover:bg-gray"
+                  }`
+            } flex w-full items-center justify-between rounded p-2 text-sm font-medium transition`}
           >
             <div className="flex items-center">
-              <div className="skt-w rounded-full overflow-hidden mr-2 w-6 h-6 text-white">
+              <div
+                className={`skt-w rounded-full overflow-hidden mr-2 w-6 h-6 transition  ${
+                  theme.theme === "light" ? "text-black" : "text-white"
+                }`}
+              >
                 <img src={data.imgUrl} width="100%" height="100%" />
               </div>
               {data.name}

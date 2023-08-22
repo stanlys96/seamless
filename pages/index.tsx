@@ -322,7 +322,7 @@ export default function HomePage() {
               className={`${
                 parseFloat(cryptoValue ?? "0") > usedBalance
                   ? "border-t border-transparent"
-                  : "border-t border-lightGray"
+                  : "border-t border-transparent"
               }`}
             >
               <div
@@ -414,7 +414,7 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b border-lightGray`}
+              } border-b border-bot`}
             >
               <input
                 onKeyDown={(evt) => {
@@ -443,7 +443,7 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              }  border-b border-lightGray`}
+              }  border-b border-bot`}
             >
               <input
                 value={bankAccountName}
@@ -459,7 +459,7 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b border-lightGray`}
+              } border-b border-bot`}
             >
               <input
                 onKeyDown={(evt) => {

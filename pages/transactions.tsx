@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData } from "@/utils/helper";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/stores";
 
 function sortById(a: any, b: any) {
   return a.id - b.id;
 }
 
 export default function TransactionPage() {
+  const theme = useSelector((state: RootState) => state.theme);
   const router = useRouter();
   const { account } = useEthers();
   const [userTransactions, setUserTransactions] = useState<any>([]);
@@ -40,12 +43,22 @@ export default function TransactionPage() {
     <MainLayout>
       {userTransactions.length > 0 ? (
         <div>
-          <div className="px-[20px] md:px-[100px] font-bold text-xl">
+          <div
+            className={`px-[20px] md:px-[100px] font-bold text-xl ${
+              theme.theme === "light" ? "text-black" : "text-white"
+            }`}
+          >
             Transactions
           </div>
           <div className="overflow-clip mt-5 px-[20px] md:px-[100px] rounded-lg border-none border-socket-primary sm:border">
             <div className="sm:overflow-x-auto">
-              <div className="hidden w-max min-w-full border-b border-socket-primary bg-socket-layers-1 py-3.5 pl-8 pr-5 font-medium capitalize text-socket-primary sm:overflow-x-auto lg:flex">
+              <div
+                className={`hidden w-max min-w-full border-b border-socket-primary ${
+                  theme.theme === "light"
+                    ? "primary-container"
+                    : "bg-socket-layers-1"
+                } py-3.5 pl-8 pr-5 font-medium capitalize text-socket-primary sm:overflow-x-auto lg:flex`}
+              >
                 <div className="mr-10 min-w-[350px] flex-[1.3] flex-shrink-0 pr-8 lg:pr-4">
                   Transaction status
                 </div>
@@ -61,7 +74,13 @@ export default function TransactionPage() {
                     key={idx}
                     className="grid grid-cols-1 md:grid-cols-2 md:gap-3 lg:grid-cols-1 lg:gap-0"
                   >
-                    <button className="mb-2 hidden w-max min-w-full justify-between rounded border border-socket-primary bg-socket-layers-1 px-2 py-3 text-left hover:bg-socket-layers-2 disabled:hover:bg-socket-layers-1 sm:mb-0 sm:rounded-none sm:border-b sm:py-4 sm:pl-8 sm:pr-5 sm:last:border-0 lg:flex">
+                    <button
+                      className={`mb-2 hidden w-max min-w-full justify-between rounded ${
+                        theme.theme === "light"
+                          ? "primary-container border border-orange"
+                          : "bg-socket-layers-1 border border-socket-primary"
+                      }  px-2 py-3 text-left hover:bg-socket-layers-2 disabled:hover:bg-socket-layers-1 sm:mb-0 sm:rounded-none sm:border-b sm:py-4 sm:pl-8 sm:pr-5 sm:last:border-0 lg:flex`}
+                    >
                       <div className="mr-10 flex min-w-[350px] flex-[1.3] flex-shrink-0 items-center pr-8 lg:pr-4">
                         <div>
                           <span className="flex items-center text-xl font-semibold capitalize text-socket-primary">

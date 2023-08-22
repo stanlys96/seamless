@@ -219,6 +219,14 @@ input[type="number"] {
 
 .border-bot {
   border-bottom-width: 1px;
-  border-color: #f2f3f9 !important;
+  border-color: #222230 !important;
   border-style: solid;
+}
+
+.bg-button-light {
+  background-image: linear-gradient(to right, #fed47d, #ff9d9d);
+}
+
+.bg-button-dark {
+  background-color: #171721;
 }

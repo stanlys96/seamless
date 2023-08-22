@@ -49,7 +49,9 @@ export const ConnectButton = () => {
         } transition duration-500 flex gap-x-2`}
       >
         <button
-          className={`h-9 rounded bg-[#262636] px-4 font-semibold ${
+          className={`h-9 rounded ${
+            theme.theme === "light" ? "bg-button-light" : "bg-[#262636]"
+          } ] px-4 font-semibold ${
             theme.theme === "light" ? "text-dark" : "text-light"
           } sm:h-[48px] transition duration-500  sm:text-lg`}
         >
