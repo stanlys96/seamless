@@ -1,4 +1,6 @@
 import { AppProps } from "next/app";
+import { store } from "@/src/stores";
+import { Provider } from "react-redux";
 import "../styles/globals.css";
 
 import {
@@ -36,9 +38,11 @@ const config: Config = {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <DAppProvider config={config}>
-        <Component {...pageProps} />
-      </DAppProvider>
+      <Provider store={store}>
+        <DAppProvider config={config}>
+          <Component {...pageProps} />
+        </DAppProvider>
+      </Provider>
     </>
   );
 }

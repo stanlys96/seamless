@@ -3,8 +3,11 @@ import { formatEther } from "@ethersproject/units";
 import { chainData, supportedChains } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import { SwitchNetwork } from "./SwitchNetwork";
+import { useSelector } from "react-redux";
+import { RootState } from "../stores";
 
 export const ConnectButton = () => {
+  const theme = useSelector((state: RootState) => state.theme);
   const {
     account,
     deactivate,
@@ -40,8 +43,16 @@ export const ConnectButton = () => {
     );
   else if (account)
     return (
-      <div className="flex gap-x-2">
-        <button className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg">
+      <div
+        className={`${
+          theme.theme === "light" ? "text-dark" : "text-light"
+        } transition flex gap-x-2`}
+      >
+        <button
+          className={`h-9 rounded bg-[#262636] px-4 font-semibold ${
+            theme.theme === "light" ? "text-dark" : "text-light"
+          } sm:h-[48px] transition duration-500 sm:text-lg`}
+        >
           {`${formatEther(etherBalance ?? "0x0").slice(0, 8)} ${
             currentNative?.name
           } ${windowWidth > 768 ? account.slice(0, 15) + "..." : ""}`}

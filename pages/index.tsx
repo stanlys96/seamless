@@ -15,20 +15,22 @@ import seamlessAbi from "../contracts/seamless4-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
 import { bankData, chainData } from "@/utils/helper";
-import { MainLayout } from "@/layouts/Main";
+import { MainLayout } from "@/src/layouts/Main";
 import { Contract, utils } from "ethers";
 import { Bars } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import CryptoJS from "crypto-js";
-import { CustomModal } from "@/components/CustomModal";
-import { BankModal } from "@/components/BankModal";
+import { CustomModal } from "@/src/components/CustomModal";
+import { BankModal } from "@/src/components/BankModal";
 import { JsonFormatter } from "@/utils/crypto";
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/stores";
 
 const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
 export default function HomePage() {
-  const encrypted = CryptoJS.AES.encrypt("WALAO EH!", "HEHEHE");
+  const theme = useSelector((state: RootState) => state.theme);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const router = useRouter();
@@ -266,15 +268,25 @@ export default function HomePage() {
 
   return (
     <MainLayout>
-      <div className="pt-[15vh] text-white the-container">
+      <div className="the-container">
         <div className="min-h-[80vh] w-full flex justify-center items-center">
-          <div className="primary-container rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]">
+          <div
+            className={`${
+              theme.theme === "light"
+                ? "primary-container"
+                : "primary-container-dark"
+            } transition duration-500 rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
+          >
             <p className="font-bold text-xl">Transfer</p>
             <div
-              className={`rounded-t p-2 from-container mt-2 flex justify-between  ${
+              className={`rounded-t p-2 ${
+                theme.theme === "light"
+                  ? "from-container"
+                  : "from-container-dark"
+              } mt-2 flex justify-between  ${
                 insufficientBalance
                   ? "border-l border-t border-r border-red"
-                  : "border-l border-t border-r border-primaryGray"
+                  : "border-l border-t border-r border-transparent"
               }`}
             >
               <div className="flex">
@@ -307,64 +319,80 @@ export default function HomePage() {
               </p>
             </div>
             <div
-              className={`rounded-b to-container flex items-center justify-between px-3 py-[14px] sm:py-4 ${
+              className={`${
                 parseFloat(cryptoValue ?? "0") > usedBalance
-                  ? "border-l border-r border-b border-red"
-                  : "border-l border-r border-b border-primaryGray"
+                  ? "border-t border-transparent"
+                  : "border-t border-lightGray"
               }`}
             >
-              <div className="relative flex w-[35vw] items-center overflow-hidden">
-                <input
-                  onKeyDown={(evt) => {
-                    ["e", "E", "+", "-"].includes(evt.key) &&
-                      evt.preventDefault();
-                  }}
-                  value={cryptoValue}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    const re = /^[0-9]*[.,]?[0-9]*$/;
+              <div
+                className={`rounded-b ${
+                  theme.theme === "light" ? "to-container" : "to-container-dark"
+                } flex items-center justify-between px-3 py-[14px] sm:py-4 ${
+                  parseFloat(cryptoValue ?? "0") > usedBalance
+                    ? "border-l border-r border-b border-red"
+                    : "border-l border-r border-b border-transparent"
+                }`}
+              >
+                <div className="relative flex w-[35vw] items-center overflow-hidden">
+                  <input
+                    onKeyDown={(evt) => {
+                      ["e", "E", "+", "-"].includes(evt.key) &&
+                        evt.preventDefault();
+                    }}
+                    value={cryptoValue}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      const re = /^[0-9]*[.,]?[0-9]*$/;
 
-                    if (e.target.value === "" || re.test(e.target.value)) {
-                      setCryptoValue(e.target.value.replaceAll(",", "."));
-                    }
-                  }}
-                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                  placeholder="0.0"
-                  spellCheck={false}
-                  type="text"
-                />
-                <div className="invisible absolute w-fit text-xl font-bold"></div>
-              </div>
-              <span className="-z-1">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setTokenModal(true);
-                  }}
-                  className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent"
-                >
-                  <span className="flex items-center">
-                    <div className="relative flex h-fit w-fit">
-                      <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
-                        <img
-                          src={currentSelectedToken?.imgUrl ?? ""}
-                          width="100%"
-                          height="100%"
-                        />
+                      if (e.target.value === "" || re.test(e.target.value)) {
+                        setCryptoValue(e.target.value.replaceAll(",", "."));
+                      }
+                    }}
+                    className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                    placeholder="0.0"
+                    spellCheck={false}
+                    type="text"
+                  />
+                  <div className="invisible absolute w-fit text-xl font-bold"></div>
+                </div>
+                <span className="-z-1">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTokenModal(true);
+                    }}
+                    className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent"
+                  >
+                    <span className="flex items-center">
+                      <div className="relative flex h-fit w-fit">
+                        <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
+                          <img
+                            src={currentSelectedToken?.imgUrl ?? ""}
+                            width="100%"
+                            height="100%"
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-center items-center gap-x-1">
-                      {currentSelectedToken?.name ?? ""}
-                      <AiOutlineArrowDown />
+                      <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-center items-center gap-x-1">
+                        {currentSelectedToken?.name ?? ""}
+                        <AiOutlineArrowDown />
+                      </span>
                     </span>
-                  </span>
-                </button>
-              </span>
+                  </button>
+                </span>
+              </div>
             </div>
-            <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn">
+            <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
               <AiOutlineArrowDown />
             </a>
-            <div className="rounded-t p-2 from-container -mt-2.5 flex gap-x-1 items-center">
+            <div
+              className={`rounded-t p-2 ${
+                theme.theme === "light"
+                  ? "from-container border-bot"
+                  : "from-container-dark border-bot"
+              } -mt-2.5 flex gap-x-1 items-center`}
+            >
               <p className="text-gray">To:</p>
               <div
                 onClick={(e) => {
@@ -383,7 +411,11 @@ export default function HomePage() {
                 <AiOutlineArrowDown />
               </div>
             </div>
-            <div className="px-3 py-[14px] to-container border-l border-r border-b border-gray">
+            <div
+              className={`px-3 py-[14px] ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } border-b border-lightGray`}
+            >
               <input
                 onKeyDown={(evt) => {
                   ["e", "E", "+", "-"].includes(evt.key) &&
@@ -408,7 +440,11 @@ export default function HomePage() {
                 type="text"
               />
             </div>
-            <div className="px-3 py-[14px] to-container border-l border-r border-b border-gray">
+            <div
+              className={`px-3 py-[14px] ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              }  border-b border-lightGray`}
+            >
               <input
                 value={bankAccountName}
                 onChange={(e) => {
@@ -420,7 +456,11 @@ export default function HomePage() {
                 type="text"
               />
             </div>
-            <div className="px-3 py-[14px] to-container border-l border-r border-b border-gray">
+            <div
+              className={`px-3 py-[14px] ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } border-b border-lightGray`}
+            >
               <input
                 onKeyDown={(evt) => {
                   ["e", "E", "+", "-"].includes(evt.key) &&
@@ -443,7 +483,11 @@ export default function HomePage() {
                 type="text"
               />
             </div>
-            <div className="rounded-b to-container px-3 py-[14px] flex justify-between items-center">
+            <div
+              className={`rounded-b ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } px-3 py-[14px] flex justify-between items-center`}
+            >
               <input
                 value={idrValue}
                 onChange={(e) => {
@@ -550,14 +594,14 @@ export default function HomePage() {
                   setLoading(false);
                 }
               }}
-              className={`mt-5 rounded font-bold ${
+              className={`mt-5 text-dark rounded font-bold ${
                 loading
                   ? "bg-darkGray cursor-not-allowed"
                   : !account
-                  ? "bg-purple"
+                  ? "mainBtn"
                   : insufficientBalance
                   ? "bg-red/30 cursor-not-allowed"
-                  : "bg-purple"
+                  : "mainBtn"
               } w-full leading-[24px] px-4 py-[13px] flex items-center justify-center`}
             >
               {loading ? (

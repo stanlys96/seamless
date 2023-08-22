@@ -16,6 +16,8 @@ const config: Config = {
       colors: {
         gray: "#98A2B3",
         red: "red",
+        black: "#000000",
+        white: "#FFFFFF",
       },
       borderColor: {
         primaryGray: "#1C1C28",
@@ -23,6 +25,7 @@ const config: Config = {
         mainGray2: "rgb(28,28,40)",
         layer3: "rgb(38,38,54)",
         "socket-primary": "rgb(34,34,48)",
+        lightGray: "#F2F3F9",
       },
       backgroundColor: {
         main: "#171721",

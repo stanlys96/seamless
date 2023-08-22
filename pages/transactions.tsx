@@ -1,5 +1,5 @@
 "use client";
-import { MainLayout } from "@/layouts/Main";
+import { MainLayout } from "@/src/layouts/Main";
 import useSWR from "swr";
 import { fetcherStrapi } from "@/utils/axios";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export default function TransactionPage() {
     <MainLayout>
       {userTransactions.length > 0 ? (
         <div>
-          <div className="pt-[15vh] px-[20px] md:px-[100px] font-bold text-xl">
+          <div className="px-[20px] md:px-[100px] font-bold text-xl">
             Transactions
           </div>
           <div className="overflow-clip mt-5 px-[20px] md:px-[100px] rounded-lg border-none border-socket-primary sm:border">
