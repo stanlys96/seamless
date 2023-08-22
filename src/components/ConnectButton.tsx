@@ -57,7 +57,11 @@ export const ConnectButton = () => {
         >
           {`${formatEther(etherBalance ?? "0x0").slice(0, 8)} ${
             currentNative?.name
-          } ${windowWidth > 768 ? account.slice(0, 15) + "..." : ""}`}
+          } ${
+            windowWidth > 768
+              ? account.slice(0, 5) + "..." + account.slice(account.length - 4)
+              : ""
+          }`}
         </button>
         <SwitchNetwork
           setDropdownActive={setDropdownActive}
