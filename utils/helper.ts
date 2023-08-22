@@ -5,6 +5,10 @@ import {
   BSC,
   Arbitrum,
   Polygon,
+  ArbitrumGoerli,
+  OptimismGoerli,
+  Mumbai,
+  BSCTestnet,
 } from "@usedapp/core";
 
 export const ethTokenData = {
@@ -86,6 +90,10 @@ export const supportedChains = [
   BSC.chainId,
   Arbitrum.chainId,
   Polygon.chainId,
+  ArbitrumGoerli.chainId,
+  OptimismGoerli.chainId,
+  Mumbai.chainId,
+  BSCTestnet.chainId,
 ];
 
 export const chainData = [
@@ -280,6 +288,134 @@ export const chainData = [
       {
         ...wethTokenData,
         contractAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+      },
+    ],
+  },
+  {
+    id: 7,
+    chainId: ArbitrumGoerli.chainId,
+    name: "Arbitrum Goerli",
+    imgUrl: "/img/Arbitrum.svg",
+    tokenData: [
+      {
+        ...daiTokenData,
+        contractAddress: "0xD5e1E269abF5fb03b10F92b93c7065850144A32A",
+      },
+      {
+        ...ethTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+      {
+        ...usdcTokenData,
+        contractAddress: "0x2387e295a523347D1E12fB96C052210D49231a2B",
+      },
+      {
+        ...usdtTokenData,
+        contractAddress: "0xB3011837c08D3A447AC1e08CCBAb30caBFC50511",
+      },
+      {
+        ...wbtcTokenData,
+        contractAddress: "0xd38637f7ce85d4468dbe1b523D92f499edf58244",
+      },
+      {
+        ...wethTokenData,
+        contractAddress: "0x0b2Bb3D88c61E5734448A42984C3ef6c2e09649E",
+      },
+    ],
+  },
+  {
+    id: 8,
+    chainId: OptimismGoerli.chainId,
+    name: "Optimism Goerli",
+    imgUrl: "/img/Optimism.svg",
+    tokenData: [
+      {
+        ...daiTokenData,
+        contractAddress: "0x4A0eef739Fe45aE318831Fd02ffb609822C89931",
+      },
+      {
+        ...ethTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+      {
+        ...usdcTokenData,
+        contractAddress: "0xD1D57Fd32AE51eB778730d4C740E8C041891F525",
+      },
+      {
+        ...usdtTokenData,
+        contractAddress: "0x119df4B634d3dE1325c708a10f539D1a14e45874",
+      },
+      {
+        ...wbtcTokenData,
+        contractAddress: "0x3491d4649aeBC9f46370DFF87c9887f557fb5954",
+      },
+      {
+        ...wethTokenData,
+        contractAddress: "0x329B30e4c9B671ED7fC79AECe9e56215FC40073d",
+      },
+    ],
+  },
+  {
+    id: 9,
+    chainId: Mumbai.chainId,
+    name: "Mumbai",
+    imgUrl: "/img/Polygon.svg",
+    tokenData: [
+      {
+        ...daiTokenData,
+        contractAddress: "0xF14f9596430931E177469715c591513308244e8F",
+      },
+      {
+        ...maticTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+      {
+        ...usdcTokenData,
+        contractAddress: "0x65D177ec36cd8aC2e502C640b97662Cf28381915",
+      },
+      {
+        ...usdtTokenData,
+        contractAddress: "0xd28F8b631FAcC1E838FBA8bb84df23DC3480D51A",
+      },
+      {
+        ...wbtcTokenData,
+        contractAddress: "0x0d787a4a1548f673ed375445535a6c7A1EE56180",
+      },
+      {
+        ...wethTokenData,
+        contractAddress: "0x47cE7E72334Fe164954D4f9dd95f3D20A26e8e2b",
+      },
+    ],
+  },
+  {
+    id: 10,
+    chainId: BSCTestnet.chainId,
+    name: "BSC Testnet",
+    imgUrl: "/img/BSC.svg",
+    tokenData: [
+      {
+        ...bnbTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+      {
+        ...ethTokenData,
+        contractAddress: "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+      },
+      {
+        ...daiTokenData,
+        contractAddress: "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867",
+      },
+      {
+        ...usdcTokenData,
+        contractAddress: "0x8324F87e66a755C8b1439df09e95DFeA44D9247D",
+      },
+      {
+        ...usdtTokenData,
+        contractAddress: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
       },
     ],
   },
