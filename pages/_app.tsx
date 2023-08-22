@@ -1,7 +1,7 @@
+import "../styles/globals.css";
 import { AppProps } from "next/app";
 import { store } from "@/src/stores";
 import { Provider } from "react-redux";
-import "../styles/globals.css";
 
 import {
   Mainnet,

@@ -46,12 +46,12 @@ export const ConnectButton = () => {
       <div
         className={`${
           theme.theme === "light" ? "text-dark" : "text-light"
-        } transition flex gap-x-2`}
+        } transition duration-500 flex gap-x-2`}
       >
         <button
           className={`h-9 rounded bg-[#262636] px-4 font-semibold ${
             theme.theme === "light" ? "text-dark" : "text-light"
-          } sm:h-[48px] transition duration-500 sm:text-lg`}
+          } sm:h-[48px] transition duration-500  sm:text-lg`}
         >
           {`${formatEther(etherBalance ?? "0x0").slice(0, 8)} ${
             currentNative?.name

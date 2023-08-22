@@ -211,7 +211,7 @@ export default function TransactionPage() {
                         </div>
                       </div>
                     </button>
-                    <button className="transition duration-400 mb-2 flex w-max min-w-full items-center justify-between rounded border border-socket-primary px-2 py-3 text-left hover:bg-socket-layers-2 sm:mb-0 lg:hidden">
+                    <button className="transition duration-500  mb-2 flex w-max min-w-full items-center justify-between rounded border border-socket-primary px-2 py-3 text-left hover:bg-socket-layers-2 sm:mb-0 lg:hidden">
                       <div className="flex items-center justify-between">
                         <div className="relative mr-2 h-9 w-9 rounded-full">
                           <img

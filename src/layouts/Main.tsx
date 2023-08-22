@@ -25,7 +25,7 @@ export const MainLayout = ({ children }: Props) => {
     <div
       className={`${
         theme.theme === "light" ? "main-container" : "main-container-dark"
-      } relative transition duration-[3000ms]`}
+      } relative transition duration-500`}
     >
       <div className="z-50 navbar absolute w-full flex justify-between p-5 items-center">
         <div className="flex gap-x-4 items-center">
@@ -65,7 +65,7 @@ export const MainLayout = ({ children }: Props) => {
       </div>
       <div className="layout-container">
         <div
-          className={`flex w-full justify-center items-center transition duration-500 ${
+          className={`flex w-full justify-center items-center transition duration-500  ${
             theme.theme === "light" ? "text-dark" : "text-light"
           }`}
         >

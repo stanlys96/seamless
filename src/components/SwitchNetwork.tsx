@@ -81,7 +81,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             }}
             className={`${
               chainId === data.chainId ? "bg-mainGray" : "hover:bg-mainGray2"
-            } flex w-full items-center justify-between rounded p-2 text-sm font-medium text-socket-primary transition duration-300`}
+            } flex w-full items-center justify-between rounded p-2 text-sm font-medium text-socket-primary transition duration-500 `}
           >
             <div className="flex items-center">
               <div className="skt-w rounded-full overflow-hidden mr-2 w-6 h-6 text-white">

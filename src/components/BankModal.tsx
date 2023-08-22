@@ -30,7 +30,7 @@ export const BankModal = ({
                   e.preventDefault();
                   setBankModal(false);
                 }}
-                className="flex h-9 w-9 transition duration-400 items-center justify-center rounded-full bg-mainGray2 hover:bg-layer3 sm:h-10 sm:w-10"
+                className="flex h-9 w-9 transition duration-500  items-center justify-center rounded-full bg-mainGray2 hover:bg-layer3 sm:h-10 sm:w-10"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@ export const BankModal = ({
                           setBankModal(false);
                         }}
                         key={bank.id}
-                        className={`m-1 transition duration-400 flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
+                        className={`m-1 transition duration-500  flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
                           currentSelectedBank?.id === bank.id
                             ? "bg-layer3 hover:border-layer3"
                             : "hover:border-transparent hover:bg-mainGray2"

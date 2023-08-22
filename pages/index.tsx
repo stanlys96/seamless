@@ -275,7 +275,7 @@ export default function HomePage() {
               theme.theme === "light"
                 ? "primary-container"
                 : "primary-container-dark"
-            } transition duration-500 rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
+            } transition duration-500  rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
           >
             <p className="font-bold text-xl">Transfer</p>
             <div
