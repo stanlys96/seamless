@@ -102,6 +102,7 @@ export const chainData = [
     chainId: Mainnet.chainId,
     name: "Ethereum",
     imgUrl: "/img/Ether.svg",
+    testNetwork: false,
     tokenData: [
       {
         ...ethTokenData,
@@ -135,6 +136,7 @@ export const chainData = [
     chainId: Arbitrum.chainId,
     name: "Arbitrum",
     imgUrl: "/img/Arbitrum.svg",
+    testNetwork: false,
     tokenData: [
       {
         ...daiTokenData,
@@ -168,6 +170,7 @@ export const chainData = [
     chainId: Polygon.chainId,
     name: "Polygon",
     imgUrl: "/img/Polygon.svg",
+    testNetwork: false,
     tokenData: [
       {
         ...daiTokenData,
@@ -201,6 +204,7 @@ export const chainData = [
     chainId: Optimism.chainId,
     name: "Optimism",
     imgUrl: "/img/Optimism.svg",
+    testNetwork: false,
     tokenData: [
       {
         ...daiTokenData,
@@ -234,6 +238,7 @@ export const chainData = [
     chainId: BSC.chainId,
     name: "BSC",
     imgUrl: "/img/BSC.svg",
+    testNetwork: false,
     tokenData: [
       {
         ...bnbTokenData,
@@ -263,6 +268,7 @@ export const chainData = [
     chainId: Goerli.chainId,
     name: "Goerli",
     imgUrl: "/img/Ether.svg",
+    testNetwork: true,
     tokenData: [
       {
         ...ethTokenData,
@@ -294,6 +300,7 @@ export const chainData = [
   {
     id: 7,
     chainId: ArbitrumGoerli.chainId,
+    testNetwork: true,
     name: "Arbitrum Goerli",
     imgUrl: "/img/Arbitrum.svg",
     tokenData: [
@@ -329,6 +336,8 @@ export const chainData = [
     chainId: OptimismGoerli.chainId,
     name: "Optimism Goerli",
     imgUrl: "/img/Optimism.svg",
+    testNetwork: true,
+
     tokenData: [
       {
         ...daiTokenData,
@@ -362,6 +371,7 @@ export const chainData = [
     chainId: Mumbai.chainId,
     name: "Mumbai",
     imgUrl: "/img/Polygon.svg",
+    testNetwork: true,
     tokenData: [
       {
         ...daiTokenData,
@@ -395,6 +405,7 @@ export const chainData = [
     chainId: BSCTestnet.chainId,
     name: "BSC Testnet",
     imgUrl: "/img/BSC.svg",
+    testNetwork: true,
     tokenData: [
       {
         ...bnbTokenData,

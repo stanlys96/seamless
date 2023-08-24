@@ -294,7 +294,11 @@ export default function TransactionPage() {
           </div>
         </div>
       ) : (
-        <div className="relative pt-[100px] flex flex-col items-center lg:justify-center">
+        <div
+          className={`${
+            theme.theme === "light" ? "text-black" : "text-white"
+          } relative pt-[100px] flex flex-col items-center lg:justify-center`}
+        >
           <img src="/img/no-data.svg" className="mb-7 w-[200px] lg:w-[350px]" />
           <h1 className="text-center text-lg font-semibold text-socket-primary lg:text-2xl">
             No Transactions
