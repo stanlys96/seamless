@@ -3,6 +3,8 @@ import { useEthers } from "@usedapp/core";
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { RootState } from "../stores";
+import { useState } from "react";
+import { IoIosRadioButtonOn, IoIosRadioButtonOff } from "react-icons/io";
 
 interface Props {
   setDropdownActive: (param1: any) => void;
@@ -13,6 +15,10 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const theme = useSelector((state: RootState) => state.theme);
   const { chainId, switchNetwork } = useEthers();
   const chainSupported = supportedChains.includes(chainId ?? 0);
+  const [showTestNetwork, setShowTestNetwork] = useState(false);
+  const resultData = showTestNetwork
+    ? chainData
+    : chainData.filter((data: any) => !data.testNetwork);
   return (
     <div className="relative z-100">
       <button
@@ -76,7 +82,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
           theme.theme === "light" ? "bg-button-light" : "bg-button-dark"
         } p-3 ${dropdownActive ? "block" : "hidden"}`}
       >
-        {chainData.map((data, idx) => (
+        {resultData.map((data, idx) => (
           <button
             key={idx}
             onClick={async (e) => {
@@ -106,6 +112,30 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             </div>
           </button>
         ))}
+        <button
+          onClick={async (e) => {
+            e.preventDefault();
+            setShowTestNetwork((prevState) => !prevState);
+          }}
+          className={`${
+            theme.theme === "dark" ? `hover:bg-mainGray2` : "hover:bg-gray"
+          } flex w-full items-center justify-between rounded p-2 text-sm font-medium transition`}
+        >
+          <div className="flex items-center">
+            <div
+              className={`skt-w flex justify-center items-center rounded-full overflow-hidden mr-2 w-6 h-6 transition  ${
+                theme.theme === "light" ? "text-black" : "text-white"
+              }`}
+            >
+              {!showTestNetwork ? (
+                <IoIosRadioButtonOff />
+              ) : (
+                <IoIosRadioButtonOn />
+              )}
+            </div>
+            Show Test Network
+          </div>
+        </button>
       </div>
     </div>
   );

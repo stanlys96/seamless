@@ -18,6 +18,7 @@ export const MainLayout = ({ children }: Props) => {
   const router = useRouter();
   const [currentTheme, setCurrentTheme] = useState("light");
   const [windowWidth, setWindowWidth] = useState(0);
+  console.log(router, "<<< router");
   useEffect(() => {
     setWindowWidth(window.innerWidth);
   }, []);
@@ -25,7 +26,7 @@ export const MainLayout = ({ children }: Props) => {
     <div
       className={`${
         theme.theme === "light" ? "main-container" : "main-container-dark"
-      } relative transition duration-500`}
+      } relative transition duration-500 pb-5`}
     >
       <div className="z-50 navbar absolute w-full flex justify-between p-5 items-center">
         <div className="flex gap-x-4 items-center">
@@ -65,7 +66,7 @@ export const MainLayout = ({ children }: Props) => {
       </div>
       <div className="layout-container">
         <div
-          className={`flex w-full justify-center items-center transition duration-500  ${
+          className={`flex w-full justify-center items-center transition duration-500 mb-4 ${
             theme.theme === "light" ? "text-dark" : "text-light"
           }`}
         >
@@ -74,7 +75,13 @@ export const MainLayout = ({ children }: Props) => {
               e.preventDefault();
               router.push("/");
             }}
-            className="font-bold cursor-pointer transfer-btn"
+            className={`${
+              router.pathname === "/"
+                ? `${
+                    theme.theme === "light" ? "text-black" : "text-white"
+                  } underline`
+                : `text-gray`
+            } font-bold cursor-pointer transfer-btn`}
           >
             TRANSFER
           </a>
@@ -83,7 +90,13 @@ export const MainLayout = ({ children }: Props) => {
               e.preventDefault();
               router.push("/transactions");
             }}
-            className="font-bold cursor-pointer transfer-btn-light"
+            className={`${
+              router.pathname === "/"
+                ? "text-gray"
+                : `${
+                    theme.theme === "light" ? "text-black" : "text-white"
+                  } underline`
+            } font-bold cursor-pointer transfer-btn-light`}
           >
             HISTORY
           </a>
