@@ -21,7 +21,6 @@ export const fetcherStrapi = (url: string) =>
   axiosStrapi.get(url).then((res) => res);
 
 axiosFlip.interceptors.request.use((requestConfig: any) => {
-  console.log(process.env.NEXT_PUBLIC_FLIP_AUTH);
   (requestConfig.headers as AxiosRequestHeaders)["Authorization"] =
     process.env.NEXT_PUBLIC_FLIP_AUTH;
 
