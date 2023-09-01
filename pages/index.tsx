@@ -9,7 +9,7 @@ import {
   useContractFunction,
 } from "@usedapp/core";
 import useSWR from "swr";
-import { axiosStrapi, fetcher } from "@/utils/axios";
+import { axiosFlip, axiosStrapi, fetcher } from "@/utils/axios";
 import erc20Abi from "../contracts/erc20-abi.json";
 import seamlessAbi from "../contracts/seamless4-abi.json";
 import { useEffect } from "react";
@@ -383,7 +383,24 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
-            <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
+            <a
+              onClick={async () => {
+                console.log("WALAO");
+                try {
+                  const getBankAccount = await axiosFlip.post(
+                    "/disbursement/bank-account-inquiry",
+                    {
+                      account_number: "5110175126",
+                      bank_code: "bca",
+                    }
+                  );
+                  console.log(getBankAccount.data, "<<< data");
+                } catch (e) {
+                  console.log(e, "<<< E!");
+                }
+              }}
+              className="cursor-pointer relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
+            >
               <AiOutlineArrowDown />
             </a>
             <div

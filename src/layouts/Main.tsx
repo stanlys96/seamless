@@ -18,7 +18,6 @@ export const MainLayout = ({ children }: Props) => {
   const router = useRouter();
   const [currentTheme, setCurrentTheme] = useState("light");
   const [windowWidth, setWindowWidth] = useState(0);
-  console.log(router, "<<< router");
   useEffect(() => {
     setWindowWidth(window.innerWidth);
   }, []);
