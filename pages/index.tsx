@@ -387,9 +387,7 @@ export default function HomePage() {
               onClick={async () => {
                 console.log("WALAO");
                 try {
-                  const getBankData = await axiosFlip.get(
-                    "/general/banks?code=bca"
-                  );
+                  const getBankData = await axiosFlip.get("/general/banks");
                   console.log(getBankData.data, "<<< data");
                   const getBankAccount = await axiosFlip.post(
                     "/disbursement/bank-account-inquiry",
