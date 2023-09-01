@@ -47,6 +47,7 @@ export default function HomePage() {
   const [bankAccountName, setBankAccountName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [transactionData, setTransactionData] = useState<any>();
+  const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     id: 1,
     name: "BCA",
@@ -383,26 +384,7 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
-            <a
-              onClick={async () => {
-                console.log("WALAO");
-                try {
-                  const getBankData = await axiosFlip.get("/general/banks");
-                  console.log(getBankData.data, "<<< data");
-                  const getBankAccount = await axiosFlip.post(
-                    "/disbursement/bank-account-inquiry",
-                    {
-                      account_number: "5110175126",
-                      bank_code: "bca",
-                    }
-                  );
-                  console.log(getBankAccount.data, "<<< data");
-                } catch (e) {
-                  console.log(e, "<<< E!");
-                }
-              }}
-              className="cursor-pointer relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
-            >
+            <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
               <AiOutlineArrowDown />
             </a>
             <div
@@ -462,23 +444,7 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              }  border-b border-bot`}
-            >
-              <input
-                value={bankAccountName}
-                onChange={(e) => {
-                  setBankAccountName(e.target.value);
-                }}
-                className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                placeholder="Account Name"
-                spellCheck={false}
-                type="text"
-              />
-            </div>
-            <div
-              className={`px-3 py-[14px] ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b border-bot`}
+              } border-b border-bot flex justify-between`}
             >
               <input
                 onKeyDown={(evt) => {
@@ -495,9 +461,71 @@ export default function HomePage() {
                     let lastTemp = temp.replaceAll(".", "");
                     setBankAccountValue(lastTemp);
                   }
+                  setBankAccountName("");
+                }}
+                className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                placeholder="Account Number"
+                spellCheck={false}
+                type="text"
+              />
+              <a
+                onClick={async () => {
+                  if (!bankAccountValue) {
+                    return Swal.fire(
+                      "Info!",
+                      "Bank account number must be filled!",
+                      "info"
+                    );
+                  }
+                  try {
+                    setIsCheckingBankAccount(true);
+                    const getBankAccount = await axiosFlip.post(
+                      "/disbursement/bank-account-inquiry",
+                      {
+                        account_number: bankAccountValue,
+                        bank_code: currentSelectedBank.name.toLowerCase(),
+                      }
+                    );
+                    console.log(getBankAccount.data, "<<< data");
+                    setIsCheckingBankAccount(false);
+                    setBankAccountName(getBankAccount.data.account_holder);
+                    if (
+                      getBankAccount.data.status === "INVALID_ACCOUNT_NUMBER"
+                    ) {
+                      Swal.fire(
+                        "Error!",
+                        "Bank account number invalid!",
+                        "error"
+                      );
+                    }
+                  } catch (e) {
+                    setIsCheckingBankAccount(false);
+                    Swal.fire(
+                      "Error!",
+                      "Bank account number invalid!",
+                      "error"
+                    );
+                    console.log(e, "<<< E!");
+                  }
+                }}
+                className="p-2 cursor-pointer relative mx-auto flex items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
+              >
+                Check
+              </a>
+            </div>
+            <div
+              className={`px-3 py-[14px] ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } border-b border-bot`}
+            >
+              <input
+                value={bankAccountName}
+                disabled
+                onChange={(e) => {
+                  setBankAccountName(e.target.value);
                 }}
                 className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                placeholder="Account Number"
+                placeholder="Account Name"
                 spellCheck={false}
                 type="text"
               />
@@ -656,6 +684,7 @@ export default function HomePage() {
           bankData={bankData}
           setCurrentSelectedBank={setCurrentSelectedBank}
           currentSelectedBank={currentSelectedBank}
+          setBankAccountName={setBankAccountName}
         />
       </div>
     </MainLayout>

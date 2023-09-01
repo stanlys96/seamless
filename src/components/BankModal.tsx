@@ -4,6 +4,7 @@ interface Props {
   bankData: any;
   setCurrentSelectedBank: (param1: any) => void;
   currentSelectedBank: any;
+  setBankAccountName: (param1: any) => void;
 }
 
 export const BankModal = ({
@@ -12,6 +13,7 @@ export const BankModal = ({
   bankData,
   setCurrentSelectedBank,
   currentSelectedBank,
+  setBankAccountName,
 }: Props) => {
   return (
     <div className={`${bankModal ? "block" : "hidden"}`}>
@@ -60,6 +62,9 @@ export const BankModal = ({
                         onClick={(e) => {
                           e.preventDefault();
                           setCurrentSelectedBank({ ...bank });
+                          if (currentSelectedBank.id !== bank.id) {
+                            setBankAccountName("");
+                          }
                           setBankModal(false);
                         }}
                         key={bank.id}
