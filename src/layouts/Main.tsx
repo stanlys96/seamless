@@ -27,10 +27,10 @@ export const MainLayout = ({ children }: Props) => {
     >
       <Head>
         <title>Seamless Finance</title>
-        <meta
+        {/* <meta
           httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"
-        />
+        /> */}
       </Head>
       <div className="z-50 navbar absolute w-full flex justify-between p-5 items-center">
         <div className="flex gap-x-4 items-center">
