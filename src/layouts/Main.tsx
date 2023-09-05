@@ -2,9 +2,9 @@
 import { ConnectButton } from "@/src/components";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { MdOutlineEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, themeActions } from "../stores";
+import Head from "next/head";
 
 interface Props {
   children: any;
@@ -25,10 +25,13 @@ export const MainLayout = ({ children }: Props) => {
         theme.theme === "light" ? "main-container" : "main-container-dark"
       } relative transition duration-500 pb-5`}
     >
-      <meta
-        httpEquiv="Content-Security-Policy"
-        content="upgrade-insecure-requests"
-      />
+      <Head>
+        <title>Seamless Finance</title>
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        />
+      </Head>
       <div className="z-50 navbar absolute w-full flex justify-between p-5 items-center">
         <div className="flex gap-x-4 items-center">
           <a
