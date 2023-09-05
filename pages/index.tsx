@@ -479,13 +479,10 @@ export default function HomePage() {
                   }
                   try {
                     setIsCheckingBankAccount(true);
-                    const getBankAccount = await axiosFlip.post(
-                      "/disbursement/bank-account-inquiry",
-                      {
-                        account_number: bankAccountValue,
-                        bank_code: currentSelectedBank.name.toLowerCase(),
-                      }
-                    );
+                    const getBankAccount = await axiosFlip.post("/inquiry", {
+                      account_number: bankAccountValue,
+                      bank_code: currentSelectedBank.name.toLowerCase(),
+                    });
                     console.log(getBankAccount.data, "<<< data");
                     setIsCheckingBankAccount(false);
                     setBankAccountName(getBankAccount.data.account_holder);

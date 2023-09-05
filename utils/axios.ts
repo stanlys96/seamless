@@ -5,13 +5,13 @@ export const axiosCustom = axios.create({
 });
 
 export const axiosFlip = axios.create({
-  baseURL: "https://bigflip.id/api/v2",
+  baseURL: "http://52.77.213.77:1337/api",
 });
 
 export const fetcher = (url: string) => axiosCustom.get(url).then((res) => res);
 
 export const axiosStrapi = axios.create({
-  baseURL: "https://seamless-cms-production.up.railway.app",
+  baseURL: "http://52.77.213.77:1337",
   headers: {
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`,
   },
