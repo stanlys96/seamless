@@ -5,13 +5,13 @@ export const axiosCustom = axios.create({
 });
 
 export const axiosFlip = axios.create({
-  baseURL: "http://52.77.213.77:1337/api",
+  baseURL: "https://invoker.cloud/api",
 });
 
 export const fetcher = (url: string) => axiosCustom.get(url).then((res) => res);
 
 export const axiosStrapi = axios.create({
-  baseURL: "http://52.77.213.77:1337",
+  baseURL: "https://invoker.cloud",
   headers: {
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`,
   },

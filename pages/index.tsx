@@ -483,7 +483,6 @@ export default function HomePage() {
                       account_number: bankAccountValue,
                       bank_code: currentSelectedBank.name.toLowerCase(),
                     });
-                    console.log(getBankAccount.data, "<<< data");
                     setIsCheckingBankAccount(false);
                     setBankAccountName(getBankAccount.data.account_holder);
                     if (
