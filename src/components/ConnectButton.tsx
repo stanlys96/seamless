@@ -1,4 +1,4 @@
-import { useEthers, useEtherBalance } from "@usedapp/core";
+import { useEthers, useEtherBalance, useSigner } from "@usedapp/core";
 import { formatEther } from "@ethersproject/units";
 import { chainData, supportedChains } from "@/utils/helper";
 import { useEffect, useState } from "react";
@@ -15,10 +15,12 @@ export const ConnectButton = () => {
     chainId,
     switchNetwork,
     isLoading,
+    library,
   } = useEthers();
   const etherBalance = useEtherBalance(account);
   const [dropdownActive, setDropdownActive] = useState(false);
   const chainSupported = supportedChains.includes(chainId ?? 0);
+  const signer = useSigner();
   const currentNative = chainData
     .find((data) => data.chainId === chainId)
     ?.tokenData.find((data) => data.native);
@@ -28,6 +30,14 @@ export const ConnectButton = () => {
   useEffect(() => {
     setWindowWidth(window.innerWidth);
   }, []);
+
+  useEffect(() => {
+    if (account) {
+      signer?.signMessage("HELLO!").then((res) => {
+        console.log(res, "<<< RES!");
+      });
+    }
+  }, [account]);
 
   if (!chainSupported && !isLoading)
     return (
@@ -49,6 +59,9 @@ export const ConnectButton = () => {
         } transition duration-500 flex gap-x-2`}
       >
         <button
+          onClick={() => {
+            deactivate();
+          }}
           className={`h-9 rounded ${
             theme.theme === "light" ? "bg-button-light" : "bg-[#262636]"
           } ] px-4 font-semibold ${
@@ -73,8 +86,7 @@ export const ConnectButton = () => {
     return (
       <button
         className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
-        onClick={() => {
-          console.log("???");
+        onClick={async () => {
           activateBrowserWallet();
         }}
       >
