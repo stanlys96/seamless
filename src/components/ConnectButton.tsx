@@ -33,9 +33,6 @@ export const ConnectButton = () => {
 
   useEffect(() => {
     if (account) {
-      signer?.signMessage("HELLO!").then((res) => {
-        console.log(res, "<<< RES!");
-      });
     }
   }, [account]);
 

@@ -7,6 +7,7 @@ import {
   useTokenBalance,
   useSendTransaction,
   useContractFunction,
+  useSigner,
 } from "@usedapp/core";
 import useSWR from "swr";
 import { axiosFlip, axiosStrapi, fetcher } from "@/utils/axios";
@@ -30,11 +31,13 @@ import { RootState } from "@/src/stores";
 const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
 export default function HomePage() {
+  const [alreadySigned, setAlreadySigned] = useState(false);
   const theme = useSelector((state: RootState) => state.theme);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
+  const signer = useSigner();
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
   const { sendTransaction, state } = useSendTransaction();
   const [loading, setLoading] = useState(false);
@@ -266,6 +269,10 @@ export default function HomePage() {
       console.log(e, "<<< E!!");
     }
   }, [seamlessState, nativeSeamlessState]);
+
+  useEffect(() => {
+    setAlreadySigned(false);
+  }, [account]);
 
   return (
     <MainLayout>
@@ -568,6 +575,15 @@ export default function HomePage() {
                     activateBrowserWallet();
                     return;
                   }
+                  if (!alreadySigned) {
+                    const result = await signer?.signMessage(
+                      "By signing this, you agree to Seamless Finance's terms and conditions."
+                    );
+                    console.log(result, "<<< RESULT");
+                    setAlreadySigned(true);
+                    return;
+                  }
+
                   if (insufficientBalance) return;
                   if (
                     !cryptoValue ||
@@ -632,8 +648,8 @@ export default function HomePage() {
                     );
                     console.log(tx, "<<< TX!!!");
                   }
-                } catch (e) {
-                  console.log(e);
+                } catch (e: any) {
+                  console.log(e?.message.includes("rejected signing"));
                   setLoading(false);
                 }
               }}
@@ -659,6 +675,8 @@ export default function HomePage() {
                 />
               ) : !account ? (
                 "Connect Wallet"
+              ) : !alreadySigned ? (
+                "Sign"
               ) : insufficientBalance ? (
                 "Insufficient Balance"
               ) : (
