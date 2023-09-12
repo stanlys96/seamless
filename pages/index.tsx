@@ -10,7 +10,13 @@ import {
   useSigner,
 } from "@usedapp/core";
 import useSWR from "swr";
-import { axiosFlip, axiosStrapi, fetcher, fetcherFlip } from "@/utils/axios";
+import {
+  axiosFlip,
+  axiosStrapi,
+  fetcher,
+  fetcherFlip,
+  fetcherStrapi,
+} from "@/utils/axios";
 import erc20Abi from "../contracts/erc20-abi.json";
 import seamlessAbi from "../contracts/seamless4-abi.json";
 import { useEffect } from "react";
@@ -27,6 +33,7 @@ import { BankModal } from "@/src/components/BankModal";
 import { JsonFormatter } from "@/utils/crypto";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
+import { HistoryModal } from "@/src/components/HistoryModal";
 
 const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
@@ -46,14 +53,15 @@ export default function HomePage() {
   const [idrValue, setIdrValue] = useState("");
   const [tokenModal, setTokenModal] = useState(false);
   const [bankModal, setBankModal] = useState(false);
+  const [historyModal, setHistoryModal] = useState(false);
   const [bankAccountValue, setBankAccountValue] = useState("");
   const [bankAccountName, setBankAccountName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [transactionData, setTransactionData] = useState<any>();
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
-    id: 1,
     name: "BCA",
+    bank_code: "bca",
     imgUrl: "/img/banks/bca.png",
   });
   const [transactionLoading, setTransactionLoading] = useState(false);
@@ -106,6 +114,10 @@ export default function HomePage() {
     fetcher
   );
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
+  const { data: historyData } = useSWR(
+    `/api/wallet-accounts?filters[wallet_address][$eq]=${account}&filters[bank_code][$eq]=${currentSelectedBank.bank_code}`,
+    fetcherStrapi
+  );
 
   const nativeBalance = useEtherBalance(account);
   const tokenBalance = useTokenBalance(
@@ -148,6 +160,48 @@ export default function HomePage() {
     );
   }, [chainId]);
 
+  const addToWalletAccounts = () => {
+    axiosStrapi
+      .get("/api/wallet-accounts")
+      .then((res) => {
+        const result = res.data.data;
+        let found = false;
+        for (let walletData of result) {
+          if (
+            walletData.attributes.wallet_address.toLowerCase() ===
+              account?.toLowerCase() &&
+            walletData.attributes.bank_code === currentSelectedBank.bank_code &&
+            walletData.attributes.bank_account_name === bankAccountName &&
+            walletData.attributes.bank_account_number === bankAccountValue
+          ) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          axiosStrapi
+            .post("/api/wallet-accounts", {
+              data: {
+                wallet_address: account,
+                bank_code: currentSelectedBank.bank_code,
+                bank_account_name: bankAccountName,
+                bank_account_number: bankAccountValue,
+                phone_number: phoneNumber,
+              },
+            })
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const addToTransactionHistory = () => {
     axiosStrapi
       .post("/api/transaction-histories", {
@@ -167,6 +221,7 @@ export default function HomePage() {
         },
       })
       .then((res) => {
+        addToWalletAccounts();
         setTransactionData(res.data);
         console.log(res.data);
       })
@@ -275,6 +330,14 @@ export default function HomePage() {
   useEffect(() => {
     setAlreadySigned(false);
   }, [account]);
+
+  useEffect(() => {
+    if (historyData && historyData.data.data.length > 0 && !bankAccountName) {
+      const lastData = historyData.data.data[historyData.data.data.length - 1];
+      setBankAccountName(lastData.attributes.bank_account_name);
+      setBankAccountValue(lastData.attributes.bank_account_number);
+    }
+  }, [historyData]);
 
   return (
     <MainLayout>
@@ -402,25 +465,40 @@ export default function HomePage() {
                 theme.theme === "light"
                   ? "from-container border-bot"
                   : "from-container-dark border-bot"
-              } -mt-2.5 flex gap-x-1 items-center`}
+              } -mt-2.5 flex gap-x-1 items-center justify-between`}
             >
-              <p className="text-gray">To:</p>
-              <div
-                onClick={(e) => {
-                  setBankModal(true);
-                }}
-                className="cursor-pointer flex gap-x-1 items-center"
-              >
-                <div className="skt-w flex items-center bg-white rounded-full overflow-hidden w-5 h-5 sm:w-6 sm:h-6">
-                  <img
-                    src={currentSelectedBank.imgUrl}
-                    width="100%"
-                    height="100%"
-                  />
+              <div className="flex">
+                <p className="text-gray">To:</p>
+                <div
+                  onClick={(e) => {
+                    setBankModal(true);
+                  }}
+                  className="cursor-pointer flex gap-x-1 items-center"
+                >
+                  <div className="skt-w flex items-center bg-white rounded-full overflow-hidden w-5 h-5 sm:w-6 sm:h-6">
+                    <img
+                      src={currentSelectedBank.imgUrl}
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                  <p>{currentSelectedBank.name}</p>
+                  <AiOutlineArrowDown />
                 </div>
-                <p>{currentSelectedBank.name}</p>
-                <AiOutlineArrowDown />
               </div>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (loading) return;
+                  if (historyData && historyData.data.data.length === 0) {
+                    return Swal.fire("Info!", "No history data found!", "info");
+                  }
+                  setHistoryModal(true);
+                }}
+                className="bg-gray p-2 rounded-xl text-white"
+              >
+                History
+              </button>
             </div>
             <div
               className={`px-3 py-[14px] ${
@@ -482,6 +560,7 @@ export default function HomePage() {
               />
               <a
                 onClick={async () => {
+                  if (loading) return;
                   if (!bankAccountValue) {
                     return Swal.fire(
                       "Info!",
@@ -493,7 +572,7 @@ export default function HomePage() {
                     setIsCheckingBankAccount(true);
                     const getBankAccount = await axiosFlip.post("/inquiry", {
                       account_number: bankAccountValue,
-                      bank_code: currentSelectedBank.name.toLowerCase(),
+                      bank_code: currentSelectedBank.bank_code.toLowerCase(),
                     });
                     setIsCheckingBankAccount(false);
                     setBankAccountName(getBankAccount.data.account_holder);
@@ -504,6 +583,13 @@ export default function HomePage() {
                         "Error!",
                         "Bank account number invalid!",
                         "error"
+                      );
+                    }
+                    if (getBankAccount.data.status === "PENDING") {
+                      Swal.fire(
+                        "Pending",
+                        "Please try again a bit later.",
+                        "info"
                       );
                     }
                   } catch (e) {
@@ -721,6 +807,16 @@ export default function HomePage() {
           setCurrentSelectedToken={setCurrentSelectedToken}
           currentSelectedToken={currentSelectedToken}
         />
+        <HistoryModal
+          historyModal={historyModal}
+          setHistoryModal={setHistoryModal}
+          bankData={bankData}
+          historyList={historyData}
+          setBankAccountValue={setBankAccountValue}
+          setCurrentSelectedBank={setCurrentSelectedBank}
+          currentSelectedBank={currentSelectedBank}
+          setBankAccountName={setBankAccountName}
+        />
         <BankModal
           bankModal={bankModal}
           setBankModal={setBankModal}
@@ -729,6 +825,7 @@ export default function HomePage() {
           setCurrentSelectedBank={setCurrentSelectedBank}
           currentSelectedBank={currentSelectedBank}
           setBankAccountName={setBankAccountName}
+          setBankAccountValue={setBankAccountValue}
         />
       </div>
     </MainLayout>

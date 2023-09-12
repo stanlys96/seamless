@@ -437,16 +437,19 @@ export const bankData = [
     id: 1,
     name: "BCA",
     imgUrl: "/img/banks/bca.png",
+    bank_code: "bca",
   },
   {
     id: 2,
     name: "BRI",
     imgUrl: "/img/banks/bri.png",
+    bank_code: "bri",
   },
   {
     id: 3,
     name: "BNI",
     imgUrl: "/img/banks/bni.png",
+    bank_code: "bni",
   },
 ];
 

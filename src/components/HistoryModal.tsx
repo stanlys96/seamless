@@ -2,40 +2,30 @@ import { existBankData } from "@/utils/helper";
 import { useState, useEffect } from "react";
 
 interface Props {
-  bankModal: any;
-  setBankModal: (param1: any) => void;
+  historyModal: any;
+  setHistoryModal: (param1: any) => void;
   bankData: any;
   setCurrentSelectedBank: (param1: any) => void;
   currentSelectedBank: any;
   setBankAccountName: (param1: any) => void;
+  historyList?: any;
   setBankAccountValue: (param1: any) => void;
-  banksList?: any;
 }
 
-export const BankModal = ({
-  bankModal,
-  setBankModal,
-  bankData,
-  setCurrentSelectedBank,
-  currentSelectedBank,
+export const HistoryModal = ({
+  historyModal,
+  setHistoryModal,
   setBankAccountName,
-  banksList,
   setBankAccountValue,
+  historyList,
 }: Props) => {
-  const [theList, setTheList] = useState(banksList?.data ?? []);
+  const [theList, setTheList] = useState(historyList?.data?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
-    setTheList(banksList?.data ?? []);
-  }, [banksList]);
-
-  const filterBank = (bankData: any) => {
-    return (
-      bankData.status.toLowerCase() === "operational" &&
-      bankData.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  };
+    setTheList(historyList?.data?.data ?? []);
+  }, [historyList]);
   return (
-    <div className={`${bankModal ? "block" : "hidden"}`}>
+    <div className={`${historyModal ? "block" : "hidden"}`}>
       <div
         className="z-50 bg-[#828282]/50 dark:bg-[#101016CC] backdrop-blur-sm w-full sm:p-5 md:p-10 fixed top-0 left-0 items-center justify-center flex h-full"
         style={{ opacity: 1 }}
@@ -43,13 +33,13 @@ export const BankModal = ({
         <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] rounded-b-none sm:rounded-b-xl absolute sm:static bottom-0 w-full h-fit">
           <div className="relative flex flex-shrink-0 items-center justify-between border-b border-gray py-2.5 px-6 sm:py-4 sm:px-6">
             <h3 className="text-lg font-medium text-socket-primary">
-              Select Bank
+              Select Data
             </h3>
             <div className="flex items-center">
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  setBankModal(false);
+                  setHistoryModal(false);
                   setSearchQuery("");
                 }}
                 className="flex h-9 w-9 transition duration-500  items-center justify-center rounded-full bg-mainGray2 hover:bg-layer3 sm:h-10 sm:w-10"
@@ -75,7 +65,7 @@ export const BankModal = ({
           <div className="flex-1 overflow-y-auto overflow-x-hidden">
             <div className="flex h-fit flex-col justify-center">
               <div className="relative border-gray p-4">
-                <div className="flex h-10 items-center rounded-[5px] bg-socket-layers-2 px-4 sm:h-[48px] sm:px-5 mb-4">
+                <div className="flex h-10 items-center rounded-[5px] bg-socket-layers-2 px-4 sm:h-[48px] sm:px-5">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -103,64 +93,18 @@ export const BankModal = ({
                     value={searchQuery}
                   />
                 </div>
-                <div>
-                  <div className="noScrollbar -mx-2 flex overflow-x-auto sm:flex-wrap items-center">
-                    {bankData.map((bank: any, idx: any) => (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentSelectedBank({ ...bank });
-                          if (
-                            currentSelectedBank.bank_code !== bank.bank_code
-                          ) {
-                            setBankAccountName("");
-                            setBankAccountValue("");
-                          }
-                          setBankModal(false);
-                          setSearchQuery("");
-                        }}
-                        key={bank.id}
-                        className={`m-1 transition duration-500  flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
-                          currentSelectedBank?.bank_code === bank.bank_code
-                            ? "bg-layer3 hover:border-layer3"
-                            : "hover:border-transparent hover:bg-mainGray2"
-                        }`}
-                      >
-                        <img
-                          className="skt-w bg-white rounded-full overflow-hidden h-6 w-6 mr-1.5"
-                          src={bank.imgUrl}
-                          width="100%"
-                          height="100%"
-                        />
-                        <span className="pt-px font-medium uppercase text-socket-primary sm:text-lg">
-                          {bank.name}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto py-2 h-[500px] max-h-[486px] border-t border-gray">
-            {theList.filter(filterBank).map((bankData: any, idx: number) => (
+            {theList.map((theData: any, idx: number) => (
               <button
-                key={bankData.code}
+                key={theData.id}
                 onClick={(e) => {
                   e.preventDefault();
-                  e.preventDefault();
-                  setCurrentSelectedBank({
-                    name: bankData.name,
-                    bank_code: bankData.bank_code,
-                    imgUrl: existBankData.includes(bankData.bank_code)
-                      ? `/img/banks/${bankData.bank_code}.png`
-                      : "/img/banks/bank.png",
-                  });
-                  if (currentSelectedBank.bank_code !== bankData.bank_code) {
-                    setBankAccountName("");
-                    setBankAccountValue("");
-                  }
-                  setBankModal(false);
+                  setBankAccountName(theData.attributes.bank_account_name);
+                  setBankAccountValue(theData.attributes.bank_account_number);
+                  setHistoryModal(false);
                   setSearchQuery("");
                 }}
                 className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
@@ -174,8 +118,8 @@ export const BankModal = ({
                           currentTarget.src = "/img/banks/bank.png";
                         }}
                         src={
-                          existBankData.includes(bankData.bank_code)
-                            ? `/img/banks/${bankData.bank_code}.png`
+                          existBankData.includes(theData.attributes.bank_code)
+                            ? `/img/banks/${theData.attributes.bank_code}.png`
                             : "/img/banks/bank.png"
                         }
                         width="100%"
@@ -185,7 +129,10 @@ export const BankModal = ({
                     </div>
                     <div className="text-left">
                       <p className="flex items-center font-semibold text-socket-primary">
-                        <span>{bankData.name}</span>
+                        <span>{theData.attributes.bank_account_name}</span>
+                      </p>
+                      <p className="flex items-center font-semibold text-socket-primary">
+                        <span>{theData.attributes.bank_account_number}</span>
                       </p>
                     </div>
                   </div>
