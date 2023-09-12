@@ -10,7 +10,7 @@ import {
   useSigner,
 } from "@usedapp/core";
 import useSWR from "swr";
-import { axiosFlip, axiosStrapi, fetcher } from "@/utils/axios";
+import { axiosFlip, axiosStrapi, fetcher, fetcherFlip } from "@/utils/axios";
 import erc20Abi from "../contracts/erc20-abi.json";
 import seamlessAbi from "../contracts/seamless4-abi.json";
 import { useEffect } from "react";
@@ -54,7 +54,7 @@ export default function HomePage() {
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     id: 1,
     name: "BCA",
-    imgUrl: "/img/bca.png",
+    imgUrl: "/img/banks/bca.png",
   });
   const [transactionLoading, setTransactionLoading] = useState(false);
 
@@ -105,6 +105,8 @@ export default function HomePage() {
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
   );
+  const { data: banksData } = useSWR(`/banks`, fetcherFlip);
+
   const nativeBalance = useEtherBalance(account);
   const tokenBalance = useTokenBalance(
     currentSelectedToken?.contractAddress,
@@ -276,7 +278,7 @@ export default function HomePage() {
 
   return (
     <MainLayout>
-      <div className="the-container">
+      <div className="the-container relative">
         <div className="min-h-[80vh] w-full flex justify-center items-center">
           <div
             className={`${
@@ -696,6 +698,7 @@ export default function HomePage() {
           bankModal={bankModal}
           setBankModal={setBankModal}
           bankData={bankData}
+          banksList={banksData}
           setCurrentSelectedBank={setCurrentSelectedBank}
           currentSelectedBank={currentSelectedBank}
           setBankAccountName={setBankAccountName}

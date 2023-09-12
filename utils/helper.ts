@@ -436,18 +436,43 @@ export const bankData = [
   {
     id: 1,
     name: "BCA",
-    imgUrl: "/img/bca.png",
+    imgUrl: "/img/banks/bca.png",
   },
   {
     id: 2,
     name: "BRI",
-    imgUrl: "/img/bri.png",
+    imgUrl: "/img/banks/bri.png",
   },
   {
     id: 3,
     name: "BNI",
-    imgUrl: "/img/bni.png",
+    imgUrl: "/img/banks/bni.png",
   },
+];
+
+export const existBankData = [
+  "anz",
+  "artha",
+  "bca",
+  "bii",
+  "bni",
+  "boc",
+  "bri",
+  "bsm",
+  "bumi_arta",
+  "capital",
+  "cimb",
+  "citibank",
+  "danamon",
+  "dbs",
+  "mandiri",
+  "muamalat",
+  "ocbc",
+  "panin",
+  "permata",
+  "standard_chartered",
+  "tokyo",
+  "uob",
 ];
 
 export const allTokenData = [

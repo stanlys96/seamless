@@ -17,6 +17,9 @@ export const axiosStrapi = axios.create({
   },
 });
 
+export const fetcherFlip = (url: string) =>
+  axiosFlip.get(url).then((res) => res);
+
 export const fetcherStrapi = (url: string) =>
   axiosStrapi.get(url).then((res) => res);
 
