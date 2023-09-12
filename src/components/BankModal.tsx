@@ -34,6 +34,8 @@ export const BankModal = ({
       bankData.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
+
+  const listResult = theList.filter(filterBank);
   return (
     <div className={`${bankModal ? "block" : "hidden"}`}>
       <div
@@ -143,56 +145,62 @@ export const BankModal = ({
             </div>
           </div>
           <div className="flex-1 overflow-y-auto py-2 h-[500px] max-h-[486px] border-t border-gray">
-            {theList.filter(filterBank).map((bankData: any, idx: number) => (
-              <button
-                key={bankData.code}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.preventDefault();
-                  setCurrentSelectedBank({
-                    name: bankData.name,
-                    bank_code: bankData.bank_code,
-                    imgUrl: existBankData.includes(bankData.bank_code)
-                      ? `/img/banks/${bankData.bank_code}.png`
-                      : "/img/banks/bank.png",
-                  });
-                  if (currentSelectedBank.bank_code !== bankData.bank_code) {
-                    setBankAccountName("");
-                    setBankAccountValue("");
-                  }
-                  setBankModal(false);
-                  setSearchQuery("");
-                }}
-                className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
-              >
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="skt-w rounded-full overflow-hidden w-9 h-full mr-3">
-                      <img
-                        onError={({ currentTarget }) => {
-                          currentTarget.onerror = null; // prevents looping
-                          currentTarget.src = "/img/banks/bank.png";
-                        }}
-                        src={
-                          existBankData.includes(bankData.bank_code)
-                            ? `/img/banks/${bankData.bank_code}.png`
-                            : "/img/banks/bank.png"
-                        }
-                        width="100%"
-                        height="100%"
-                        alt="Bank"
-                      />
+            {listResult.length > 0 ? (
+              listResult.map((bankData: any, idx: number) => (
+                <button
+                  key={bankData.code}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.preventDefault();
+                    setCurrentSelectedBank({
+                      name: bankData.name,
+                      bank_code: bankData.bank_code,
+                      imgUrl: existBankData.includes(bankData.bank_code)
+                        ? `/img/banks/${bankData.bank_code}.png`
+                        : "/img/banks/bank.png",
+                    });
+                    if (currentSelectedBank.bank_code !== bankData.bank_code) {
+                      setBankAccountName("");
+                      setBankAccountValue("");
+                    }
+                    setBankModal(false);
+                    setSearchQuery("");
+                  }}
+                  className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="skt-w rounded-full overflow-hidden w-9 h-full mr-3">
+                        <img
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = "/img/banks/bank.png";
+                          }}
+                          src={
+                            existBankData.includes(bankData.bank_code)
+                              ? `/img/banks/${bankData.bank_code}.png`
+                              : "/img/banks/bank.png"
+                          }
+                          width="100%"
+                          height="100%"
+                          alt="Bank"
+                        />
+                      </div>
+                      <div className="text-left">
+                        <p className="flex items-center font-semibold text-socket-primary">
+                          <span>{bankData.name}</span>
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-left">
-                      <p className="flex items-center font-semibold text-socket-primary">
-                        <span>{bankData.name}</span>
-                      </p>
-                    </div>
+                    <span className="flex items-center font-medium text-socket-secondary"></span>
                   </div>
-                  <span className="flex items-center font-medium text-socket-secondary"></span>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))
+            ) : (
+              <p className="px-6 py-3 font-bold text-center">
+                Query not found!
+              </p>
+            )}
           </div>
         </div>
       </div>
