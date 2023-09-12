@@ -18,7 +18,7 @@ import { formatEther, formatUnits } from "@ethersproject/units";
 import { bankData, chainData } from "@/utils/helper";
 import { MainLayout } from "@/src/layouts/Main";
 import { Contract, utils } from "ethers";
-import { Bars } from "react-loader-spinner";
+import { Bars, ColorRing } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import CryptoJS from "crypto-js";
@@ -346,6 +346,7 @@ export default function HomePage() {
               >
                 <div className="relative flex w-[35vw] items-center overflow-hidden">
                   <input
+                    disabled={loading}
                     onKeyDown={(evt) => {
                       ["e", "E", "+", "-"].includes(evt.key) &&
                         evt.preventDefault();
@@ -427,6 +428,7 @@ export default function HomePage() {
               } border-b border-bot`}
             >
               <input
+                disabled={loading}
                 onKeyDown={(evt) => {
                   ["e", "E", "+", "-"].includes(evt.key) &&
                     evt.preventDefault();
@@ -456,6 +458,7 @@ export default function HomePage() {
               } border-b border-bot flex justify-between`}
             >
               <input
+                disabled={loading}
                 onKeyDown={(evt) => {
                   ["e", "E", "+", "-"].includes(evt.key) &&
                     evt.preventDefault();
@@ -515,7 +518,25 @@ export default function HomePage() {
                 }}
                 className="p-2 cursor-pointer relative mx-auto flex items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
               >
-                Check
+                {isCheckingBankAccount ? (
+                  <ColorRing
+                    visible={true}
+                    height="24"
+                    width="24"
+                    ariaLabel="blocks-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="blocks-wrapper"
+                    colors={[
+                      "#e15b64",
+                      "#f47e60",
+                      "#f8b26a",
+                      "#abbd81",
+                      "#849b87",
+                    ]}
+                  />
+                ) : (
+                  "Check"
+                )}
               </a>
             </div>
             <div
@@ -568,7 +589,7 @@ export default function HomePage() {
               </span>
             </div>
             <button
-              disabled={loading}
+              disabled={loading || isCheckingBankAccount}
               onClick={async (e) => {
                 e.preventDefault();
 
@@ -585,18 +606,24 @@ export default function HomePage() {
                     setAlreadySigned(true);
                     return;
                   }
-
                   if (insufficientBalance) return;
                   if (
                     !cryptoValue ||
                     !phoneNumber ||
-                    !bankAccountName ||
                     !bankAccountValue ||
                     cryptoValue === "."
                   ) {
                     Swal.fire(
                       "Not done!",
                       "Please fill all the necessary fields",
+                      "warning"
+                    );
+                    return;
+                  }
+                  if (!bankAccountName) {
+                    Swal.fire(
+                      "Not done!",
+                      "Please check for your bank account number!",
                       "warning"
                     );
                     return;
