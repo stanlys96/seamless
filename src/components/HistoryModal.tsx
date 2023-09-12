@@ -24,6 +24,13 @@ export const HistoryModal = ({
   useEffect(() => {
     setTheList(historyList?.data?.data ?? []);
   }, [historyList]);
+
+  const filterName = (payload: any) => {
+    return payload.attributes.bank_account_name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+  };
+  const listResult = theList.filter(filterName);
   return (
     <div className={`${historyModal ? "block" : "hidden"}`}>
       <div
@@ -88,7 +95,7 @@ export const HistoryModal = ({
                     }}
                     type="string"
                     className="skt-w skt-w-input bg-transparent pt-0.5 focus-visible:outline-none min-w-full text-socket-secondary text-base font-medium w-full"
-                    placeholder="Search by bank name"
+                    placeholder="Search by account name"
                     spellCheck="false"
                     value={searchQuery}
                   />
@@ -97,49 +104,55 @@ export const HistoryModal = ({
             </div>
           </div>
           <div className="flex-1 overflow-y-auto py-2 h-[500px] max-h-[486px] border-t border-gray">
-            {theList.map((theData: any, idx: number) => (
-              <button
-                key={theData.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setBankAccountName(theData.attributes.bank_account_name);
-                  setBankAccountValue(theData.attributes.bank_account_number);
-                  setHistoryModal(false);
-                  setSearchQuery("");
-                }}
-                className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
-              >
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="skt-w rounded-full overflow-hidden w-9 h-full mr-3">
-                      <img
-                        onError={({ currentTarget }) => {
-                          currentTarget.onerror = null; // prevents looping
-                          currentTarget.src = "/img/banks/bank.png";
-                        }}
-                        src={
-                          existBankData.includes(theData.attributes.bank_code)
-                            ? `/img/banks/${theData.attributes.bank_code}.png`
-                            : "/img/banks/bank.png"
-                        }
-                        width="100%"
-                        height="100%"
-                        alt="Bank"
-                      />
+            {listResult.length > 0 ? (
+              listResult.map((theData: any, idx: number) => (
+                <button
+                  key={theData.id}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setBankAccountName(theData.attributes.bank_account_name);
+                    setBankAccountValue(theData.attributes.bank_account_number);
+                    setHistoryModal(false);
+                    setSearchQuery("");
+                  }}
+                  className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
+                >
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="skt-w rounded-full overflow-hidden w-9 h-full mr-3">
+                        <img
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = "/img/banks/bank.png";
+                          }}
+                          src={
+                            existBankData.includes(theData.attributes.bank_code)
+                              ? `/img/banks/${theData.attributes.bank_code}.png`
+                              : "/img/banks/bank.png"
+                          }
+                          width="100%"
+                          height="100%"
+                          alt="Bank"
+                        />
+                      </div>
+                      <div className="text-left">
+                        <p className="flex items-center font-semibold text-socket-primary">
+                          <span>{theData.attributes.bank_account_name}</span>
+                        </p>
+                        <p className="flex items-center font-semibold text-socket-primary">
+                          <span>{theData.attributes.bank_account_number}</span>
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-left">
-                      <p className="flex items-center font-semibold text-socket-primary">
-                        <span>{theData.attributes.bank_account_name}</span>
-                      </p>
-                      <p className="flex items-center font-semibold text-socket-primary">
-                        <span>{theData.attributes.bank_account_number}</span>
-                      </p>
-                    </div>
+                    <span className="flex items-center font-medium text-socket-secondary"></span>
                   </div>
-                  <span className="flex items-center font-medium text-socket-secondary"></span>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))
+            ) : (
+              <p className="px-6 py-3 font-bold text-center">
+                Query not found!
+              </p>
+            )}
           </div>
         </div>
       </div>
