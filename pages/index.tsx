@@ -329,6 +329,8 @@ export default function HomePage() {
 
   useEffect(() => {
     setAlreadySigned(false);
+    setBankAccountName("");
+    setBankAccountValue("");
   }, [account]);
 
   useEffect(() => {
