@@ -428,7 +428,7 @@ export default function HomePage() {
                     className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                     placeholder="0.0"
                     spellCheck={false}
-                    type="text"
+                    type="number"
                   />
                   <div className="invisible absolute w-fit text-xl font-bold"></div>
                 </div>
