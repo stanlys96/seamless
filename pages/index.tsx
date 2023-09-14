@@ -46,7 +46,7 @@ export default function HomePage() {
   const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const signer = useSigner();
-  const socket = io("https://invoker.cloud");
+  // const socket = io("https://invoker.cloud");
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
@@ -566,17 +566,6 @@ export default function HomePage() {
               />
               <a
                 onClick={async () => {
-                  socket.emit(
-                    "check-bank",
-                    {
-                      wallet_address: account,
-                      account_number: bankAccountValue,
-                      bank_code: currentSelectedBank.bank_code.toLowerCase(),
-                    },
-                    (error: any) => {
-                      console.log(error, "<<<");
-                    }
-                  );
                   if (loading) return;
                   if (!bankAccountValue) {
                     return Swal.fire(
