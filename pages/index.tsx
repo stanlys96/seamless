@@ -592,7 +592,7 @@ export default function HomePage() {
               />
               <a
                 onClick={async () => {
-                  if (loading) return;
+                  if (loading || isCheckingBankAccount) return;
                   if (!bankAccountValue) {
                     return Swal.fire(
                       "Info!",
