@@ -36,10 +36,13 @@ import { RootState } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
 import { io } from "socket.io-client";
 
+const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+
 const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
 export default function HomePage() {
   const [alreadySigned, setAlreadySigned] = useState(false);
+  let periodCheckBank = 0;
   const theme = useSelector((state: RootState) => state.theme);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
@@ -217,6 +220,7 @@ export default function HomePage() {
           wallet_destination: depositAddress,
           idempotency_key: "",
           transaction_id: "",
+          receipt: "",
         },
       })
       .then((res) => {
@@ -270,6 +274,7 @@ export default function HomePage() {
             transaction_id: result.id.toString(),
             fee: result.fee.toString(),
             user_id: result.user_id.toString(),
+            receipt: "",
           },
         });
         resetAllFields();
@@ -281,6 +286,27 @@ export default function HomePage() {
           "success"
         );
       });
+  };
+
+  const checkBankInquiry: any = async () => {
+    const getBankAccount = await axiosFlip.post("/inquiry", {
+      account_number: bankAccountValue,
+      bank_code: currentSelectedBank.bank_code.toLowerCase(),
+    });
+    if (getBankAccount.data.status !== "PENDING") {
+      return getBankAccount;
+    }
+    if (periodCheckBank >= 15000) {
+      return {
+        data: {
+          status: "TIME_OUT",
+          account_holder: "",
+        },
+      };
+    }
+    await delay(2500);
+    periodCheckBank += 2500;
+    return checkBankInquiry();
   };
 
   useEffect(() => {
@@ -576,26 +602,24 @@ export default function HomePage() {
                   }
                   try {
                     setIsCheckingBankAccount(true);
-                    const getBankAccount = await axiosFlip.post("/inquiry", {
-                      account_number: bankAccountValue,
-                      bank_code: currentSelectedBank.bank_code.toLowerCase(),
-                    });
+                    periodCheckBank = 0;
+                    const getBankAccount = await checkBankInquiry();
                     setIsCheckingBankAccount(false);
-                    setBankAccountName(getBankAccount.data.account_holder);
+                    if (getBankAccount?.data.status === "TIME_OUT") {
+                      return Swal.fire(
+                        "Time Out",
+                        "Please try again a bit later.",
+                        "info"
+                      );
+                    }
+                    setBankAccountName(getBankAccount?.data.account_holder);
                     if (
-                      getBankAccount.data.status === "INVALID_ACCOUNT_NUMBER"
+                      getBankAccount?.data.status === "INVALID_ACCOUNT_NUMBER"
                     ) {
-                      Swal.fire(
+                      return Swal.fire(
                         "Error!",
                         "Bank account number invalid!",
                         "error"
-                      );
-                    }
-                    if (getBankAccount.data.status === "PENDING") {
-                      Swal.fire(
-                        "Pending",
-                        "Please try again a bit later.",
-                        "info"
                       );
                     }
                   } catch (e) {
