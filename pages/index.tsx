@@ -296,7 +296,7 @@ export default function HomePage() {
     if (getBankAccount.data.status !== "PENDING") {
       return getBankAccount;
     }
-    if (periodCheckBank >= 15000) {
+    if (periodCheckBank >= 20000) {
       return {
         data: {
           status: "TIME_OUT",
