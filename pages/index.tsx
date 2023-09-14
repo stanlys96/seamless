@@ -34,6 +34,7 @@ import { JsonFormatter } from "@/utils/crypto";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
+import { io } from "socket.io-client";
 
 const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
@@ -45,8 +46,8 @@ export default function HomePage() {
   const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const signer = useSigner();
+  const socket = io("https://invoker.cloud");
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
-  const { sendTransaction, state } = useSendTransaction();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
   const [previousValue, setPreviousValue] = useState("");
@@ -79,10 +80,6 @@ export default function HomePage() {
     customContract ?? "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     seamlessInterface
   );
-  const { send: transferToken, state: transferTokenState } =
-    useContractFunction(erc20Contract, "transfer", {
-      transactionName: "Transfer ERC20 Token",
-    });
 
   const { send: approveErc20Send, state: approveErc20State } =
     useContractFunction(erc20Contract, "approve", {
@@ -218,6 +215,8 @@ export default function HomePage() {
           idr_value: idrValue,
           transaction_success: false,
           wallet_destination: depositAddress,
+          idempotency_key: "",
+          transaction_id: "",
         },
       })
       .then((res) => {
@@ -231,52 +230,58 @@ export default function HomePage() {
   };
 
   const updateTransactionHistory = (tempState: any) => {
-    axiosStrapi
-      .put(`/api/transaction-histories/${transactionData?.data.id ?? ""}`, {
-        data: {
-          transaction_hash: tempState.receipt?.transactionHash,
-          gas_price: formatEther(tempState.receipt?.effectiveGasPrice ?? "0x0"),
-          transaction_success: true,
-          block_confirmation:
-            tempState.receipt?.confirmations.toString() ?? "0",
-        },
-      })
-      .then((res) => {
-        console.log(res, "???");
-      })
-      .catch((e) => {
-        console.log(e, "<<< E");
-      });
-    resetAllFields();
-    setTransactionData(null);
-    setTransactionLoading(false);
-    Swal.fire(
-      "Success!",
-      "Transaction successful! Please wait for our admin to contact you.",
-      "success"
-    );
-  };
+    const idempotencyKey =
+      chainData.find((data: any) => data.chainId === tempState.chainId)?.name +
+      `-${tempState?.transaction?.hash}`;
 
-  useEffect(() => {
-    const tempState = currentSelectedToken?.native ? state : transferTokenState;
-    if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
-      setTransactionLoading(true);
-      addToTransactionHistory();
-    }
-    if (tempState.status.toLowerCase() === "success") {
-      updateTransactionHistory(tempState);
-      console.log(tempState, "<<< tempState");
-    }
-    if (
-      tempState.status.toLowerCase() === "none" ||
-      tempState.status.toLowerCase() === "success" ||
-      tempState.status.toLowerCase() === "exception"
-    ) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
-  }, [state, transferTokenState]);
+    axiosStrapi
+      .post("/api/disbursement", {
+        idempotency_key: idempotencyKey,
+        account_number: bankAccountValue,
+        bank_code: currentSelectedBank.bank_code,
+        amount: 1000,
+      })
+      .then(async (res) => {
+        const result = res.data;
+        await axiosStrapi.put(
+          `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
+          {
+            data: {
+              transaction_hash: tempState.receipt?.transactionHash,
+              gas_price: formatEther(
+                tempState.receipt?.effectiveGasPrice ?? "0x0"
+              ),
+              transaction_success: true,
+              block_confirmation:
+                tempState.receipt?.confirmations.toString() ?? "0",
+              idempotency_key: idempotencyKey,
+              transaction_id: result.id.toString(),
+            },
+          }
+        );
+        await axiosStrapi.post("/api/flip-transactions", {
+          data: {
+            account_number: result.account_number,
+            amount: result.amount.toString(),
+            account_name: result.recipient_name,
+            idempotency_key: result.idempotency_key,
+            bank_code: result.bank_code,
+            sender_bank: result.sender_bank,
+            transaction_id: result.id.toString(),
+            fee: result.fee.toString(),
+            user_id: result.user_id.toString(),
+          },
+        });
+        resetAllFields();
+        setTransactionData(null);
+        setTransactionLoading(false);
+        Swal.fire(
+          "Success!",
+          "Transaction successful! Please wait for our admin to contact you.",
+          "success"
+        );
+      });
+  };
 
   useEffect(() => {
     if (
@@ -311,7 +316,6 @@ export default function HomePage() {
       if (tempState.status.toLowerCase() === "success") {
         setTransactionLoading(false);
         updateTransactionHistory(tempState);
-        console.log(tempState, "<<< tempState");
       }
       if (
         tempState.status.toLowerCase() === "none" ||
@@ -562,6 +566,17 @@ export default function HomePage() {
               />
               <a
                 onClick={async () => {
+                  socket.emit(
+                    "check-bank",
+                    {
+                      wallet_address: account,
+                      account_number: bankAccountValue,
+                      bank_code: currentSelectedBank.bank_code.toLowerCase(),
+                    },
+                    (error: any) => {
+                      console.log(error, "<<<");
+                    }
+                  );
                   if (loading) return;
                   if (!bankAccountValue) {
                     return Swal.fire(
