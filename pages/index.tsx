@@ -409,7 +409,7 @@ export default function HomePage() {
                   <CurrencyInput
                     id="input-example"
                     name="input-name"
-                    placeholder="Please enter a number"
+                    placeholder="0"
                     disabled={loading}
                     value={cryptoValue}
                     defaultValue={0}
@@ -647,7 +647,7 @@ export default function HomePage() {
               <CurrencyInput
                 id="input-example"
                 name="input-name"
-                placeholder="Please enter a number"
+                placeholder="0"
                 disabled={loading}
                 value={idrValue}
                 defaultValue={0}
