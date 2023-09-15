@@ -5,7 +5,6 @@ import {
   useEtherBalance,
   useEthers,
   useTokenBalance,
-  useSendTransaction,
   useContractFunction,
   useSigner,
 } from "@usedapp/core";
@@ -21,7 +20,7 @@ import erc20Abi from "../contracts/erc20-abi.json";
 import seamlessAbi from "../contracts/seamless4-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
-import { bankData, chainData } from "@/utils/helper";
+import { chainData } from "@/utils/helper";
 import { MainLayout } from "@/src/layouts/Main";
 import { Contract, utils } from "ethers";
 import { Bars, ColorRing } from "react-loader-spinner";
@@ -31,29 +30,31 @@ import CryptoJS from "crypto-js";
 import { CustomModal } from "@/src/components/CustomModal";
 import { BankModal } from "@/src/components/BankModal";
 import { JsonFormatter } from "@/utils/crypto";
-import { useSelector } from "react-redux";
-import { RootState } from "@/src/stores";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, signActions } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
-import { io } from "socket.io-client";
+import CurrencyInput from "react-currency-input-field";
 
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
 export default function HomePage() {
+  const dispatch = useDispatch();
   const [alreadySigned, setAlreadySigned] = useState(false);
   let periodCheckBank = 0;
   const theme = useSelector((state: RootState) => state.theme);
+  const signed = useSelector((state: RootState) => state.sign);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const signer = useSigner();
-  // const socket = io("https://invoker.cloud");
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
   const [previousValue, setPreviousValue] = useState("");
+  const [previousIdrValue, setPreviousIdrValue] = useState("");
   const [idrValue, setIdrValue] = useState("");
   const [tokenModal, setTokenModal] = useState(false);
   const [bankModal, setBankModal] = useState(false);
@@ -114,11 +115,11 @@ export default function HomePage() {
     fetcher
   );
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
+  const { data: balanceData } = useSWR("/balance", fetcherFlip);
   const { data: historyData } = useSWR(
     `/api/wallet-accounts?filters[wallet_address][$eq]=${account}&filters[bank_code][$eq]=${currentSelectedBank.bank_code}`,
     fetcherStrapi
   );
-
   const nativeBalance = useEtherBalance(account);
   const tokenBalance = useTokenBalance(
     currentSelectedToken?.contractAddress,
@@ -138,21 +139,8 @@ export default function HomePage() {
         ).slice(0, 8)
       );
   const insufficientBalance = parseFloat(cryptoValue ?? "0") > usedBalance;
-
-  useEffect(() => {
-    if (data) {
-      const previousValue1 = previousValue.slice(0, previousValue.length - 1);
-      const previousValue2 = previousValue;
-      const usedValue =
-        previousValue2 >= previousValue1 ? previousValue1 : previousValue2;
-      const thisValue = !cryptoValue ? usedValue : cryptoValue;
-      const idr = (
-        data.data[0].current_price * parseFloat(thisValue ?? "0")
-      ).toLocaleString("en-US");
-      setIdrValue(idr === "NaN" ? "0" : idr);
-      setPreviousValue(cryptoValue);
-    }
-  }, [data, cryptoValue]);
+  const insufficientDisburse =
+    parseFloat(idrValue.replaceAll(",", "")) > (balanceData?.data.balance ?? 0);
 
   useEffect(() => {
     setCurrentSelectedToken(
@@ -232,7 +220,6 @@ export default function HomePage() {
         console.log(e);
       });
   };
-
   const updateTransactionHistory = (tempState: any) => {
     const idempotencyKey =
       chainData.find((data: any) => data.chainId === tempState.chainId)?.name +
@@ -243,9 +230,10 @@ export default function HomePage() {
         idempotency_key: idempotencyKey,
         account_number: bankAccountValue,
         bank_code: currentSelectedBank.bank_code,
-        amount: 1000,
+        amount: Math.ceil(parseFloat(idrValue.replaceAll(",", ""))),
       })
       .then(async (res) => {
+        console.log(res, "<<< RES!");
         const result = res.data;
         await axiosStrapi.put(
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
@@ -329,7 +317,6 @@ export default function HomePage() {
       setLoading(true);
     }
   }, [approveErc20State]);
-
   useEffect(() => {
     try {
       const tempState = currentSelectedToken?.native
@@ -370,7 +357,7 @@ export default function HomePage() {
       setBankAccountValue(lastData.attributes.bank_account_number);
     }
   }, [historyData]);
-
+  const lockModal = loading || isCheckingBankAccount;
   return (
     <MainLayout>
       <div className="the-container relative">
@@ -382,6 +369,10 @@ export default function HomePage() {
                 : "primary-container-dark"
             } transition duration-500  rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
           >
+            <p className="text-gray">
+              Max disburse: Rp{" "}
+              {balanceData?.data.balance.toLocaleString("en-US") ?? 0}
+            </p>
             <p className="font-bold text-xl">Transfer</p>
             <div
               className={`rounded-t p-2 ${
@@ -440,25 +431,24 @@ export default function HomePage() {
                 }`}
               >
                 <div className="relative flex w-[35vw] items-center overflow-hidden">
-                  <input
+                  <CurrencyInput
+                    id="input-example"
+                    name="input-name"
+                    placeholder="Please enter a number"
                     disabled={loading}
-                    onKeyDown={(evt) => {
-                      ["e", "E", "+", "-"].includes(evt.key) &&
-                        evt.preventDefault();
-                    }}
                     value={cryptoValue}
-                    onChange={(e) => {
-                      e.preventDefault();
-                      const re = /^[0-9]*[.,]?[0-9]*$/;
-
-                      if (e.target.value === "" || re.test(e.target.value)) {
-                        setCryptoValue(e.target.value.replaceAll(",", "."));
+                    defaultValue={0}
+                    decimalsLimit={2}
+                    className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                    onValueChange={(value, name) => {
+                      setCryptoValue(value ?? "0");
+                      if (data) {
+                        const idr = (
+                          data.data[0].current_price * parseFloat(value ?? "0")
+                        ).toFixed(2);
+                        setIdrValue(idr === "NaN" ? "0" : idr);
                       }
                     }}
-                    className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                    placeholder="0.0"
-                    spellCheck={false}
-                    type="number"
                   />
                   <div className="invisible absolute w-fit text-xl font-bold"></div>
                 </div>
@@ -466,6 +456,7 @@ export default function HomePage() {
                   <button
                     onClick={(e) => {
                       e.preventDefault();
+                      if (loading || isCheckingBankAccount) return;
                       setTokenModal(true);
                     }}
                     className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent"
@@ -503,6 +494,7 @@ export default function HomePage() {
                 <p className="text-gray">To:</p>
                 <div
                   onClick={(e) => {
+                    if (loading || isCheckingBankAccount) return;
                     setBankModal(true);
                   }}
                   className="cursor-pointer flex gap-x-1 items-center"
@@ -521,7 +513,7 @@ export default function HomePage() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  if (loading) return;
+                  if (loading || isCheckingBankAccount) return;
                   if (historyData && historyData.data.data.length === 0) {
                     return Swal.fire("Info!", "No history data found!", "info");
                   }
@@ -677,16 +669,26 @@ export default function HomePage() {
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } px-3 py-[14px] flex justify-between items-center`}
             >
-              <input
+              <CurrencyInput
+                id="input-example"
+                name="input-name"
+                placeholder="Please enter a number"
+                disabled={loading}
                 value={idrValue}
-                onChange={(e) => {
-                  e.preventDefault();
-                }}
+                defaultValue={0}
+                decimalsLimit={2}
                 className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                placeholder="0.0"
-                spellCheck={false}
-                type="text"
-                disabled
+                onValueChange={(value, name) => {
+                  setIdrValue(value ?? "0");
+                  if (data) {
+                    const crypto = (
+                      (1 / data.data[0].current_price) *
+                      parseFloat(value ?? "0")
+                    ).toFixed(2);
+                    setCryptoValue(crypto === "NaN" ? "0" : crypto);
+                    setPreviousValue(cryptoValue);
+                  }
+                }}
               />
               <span>
                 <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
@@ -714,15 +716,25 @@ export default function HomePage() {
                     activateBrowserWallet();
                     return;
                   }
-                  if (!alreadySigned) {
-                    const result = await signer?.signMessage(
-                      "By signing this, you agree to Seamless Finance's terms and conditions."
-                    );
-                    console.log(result, "<<< RESULT");
-                    setAlreadySigned(true);
+                  if (!signed.signed) {
+                    dispatch(signActions.setIsSigning(true));
+                    signer
+                      ?.signMessage(
+                        "By signing this, you agree to Seamless Finance's terms and conditions."
+                      )
+                      .then((res) => {
+                        dispatch(signActions.setIsSigning(false));
+                        if (res) {
+                          dispatch(signActions.setSign(true));
+                        }
+                      })
+                      .catch((err) => {
+                        dispatch(signActions.setIsSigning(false));
+                        console.log(err, "<<< err");
+                      });
                     return;
                   }
-                  if (insufficientBalance) return;
+                  if (insufficientBalance || insufficientDisburse) return;
                   if (
                     !cryptoValue ||
                     !phoneNumber ||
@@ -803,7 +815,7 @@ export default function HomePage() {
                   ? "bg-darkGray cursor-not-allowed"
                   : !account
                   ? "mainBtn"
-                  : insufficientBalance
+                  : insufficientBalance || insufficientDisburse
                   ? "bg-red/30 cursor-not-allowed"
                   : "mainBtn"
               } w-full leading-[24px] px-4 py-[13px] flex items-center justify-center`}
@@ -820,10 +832,12 @@ export default function HomePage() {
                 />
               ) : !account ? (
                 "Connect Wallet"
-              ) : !alreadySigned ? (
+              ) : !signed.signed ? (
                 "Sign"
               ) : insufficientBalance ? (
                 "Insufficient Balance"
+              ) : insufficientDisburse ? (
+                "Disbursement unavailable"
               ) : (
                 "Transfer to Bank"
               )}
@@ -840,7 +854,6 @@ export default function HomePage() {
         <HistoryModal
           historyModal={historyModal}
           setHistoryModal={setHistoryModal}
-          bankData={bankData}
           historyList={historyData}
           setBankAccountValue={setBankAccountValue}
           setCurrentSelectedBank={setCurrentSelectedBank}
@@ -850,7 +863,6 @@ export default function HomePage() {
         <BankModal
           bankModal={bankModal}
           setBankModal={setBankModal}
-          bankData={bankData}
           banksList={banksData}
           setCurrentSelectedBank={setCurrentSelectedBank}
           currentSelectedBank={currentSelectedBank}

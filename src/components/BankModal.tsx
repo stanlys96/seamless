@@ -1,10 +1,14 @@
-import { existBankData } from "@/utils/helper";
+import {
+  bankTypes,
+  eWallets,
+  existBankData,
+  virtualAccounts,
+} from "@/utils/helper";
 import { useState, useEffect } from "react";
 
 interface Props {
   bankModal: any;
   setBankModal: (param1: any) => void;
-  bankData: any;
   setCurrentSelectedBank: (param1: any) => void;
   currentSelectedBank: any;
   setBankAccountName: (param1: any) => void;
@@ -15,7 +19,6 @@ interface Props {
 export const BankModal = ({
   bankModal,
   setBankModal,
-  bankData,
   setCurrentSelectedBank,
   currentSelectedBank,
   setBankAccountName,
@@ -24,6 +27,9 @@ export const BankModal = ({
 }: Props) => {
   const [theList, setTheList] = useState(banksList?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<
+    "bank" | "e-wallet" | "va"
+  >("bank");
   useEffect(() => {
     setTheList(banksList?.data ?? []);
   }, [banksList]);
@@ -35,7 +41,18 @@ export const BankModal = ({
     );
   };
 
-  const listResult = theList.filter(filterBank);
+  const filterCategory = (bankData: any) => {
+    if (searchQuery) return bankData;
+    if (selectedCategory === "bank") {
+      return !eWallets.includes(bankData.bank_code);
+    } else if (selectedCategory === "e-wallet") {
+      return eWallets.includes(bankData.bank_code);
+    } else if (selectedCategory === "va") {
+      return virtualAccounts.includes(bankData.bank_code);
+    }
+  };
+
+  const listResult = theList.filter(filterBank).filter(filterCategory);
   return (
     <div className={`${bankModal ? "block" : "hidden"}`}>
       <div
@@ -52,6 +69,7 @@ export const BankModal = ({
                 onClick={(e) => {
                   e.preventDefault();
                   setBankModal(false);
+                  setSelectedCategory("bank");
                   setSearchQuery("");
                 }}
                 className="flex h-9 w-9 transition duration-500  items-center justify-center rounded-full bg-mainGray2 hover:bg-layer3 sm:h-10 sm:w-10"
@@ -77,7 +95,7 @@ export const BankModal = ({
           <div className="flex-1 overflow-y-auto overflow-x-hidden">
             <div className="flex h-fit flex-col justify-center">
               <div className="relative border-gray p-4">
-                <div className="flex h-10 items-center rounded-[5px] bg-socket-layers-2 px-4 sm:h-[48px] sm:px-5 mb-4">
+                <div className="flex h-10 items-center rounded-[5px] bg-socket-layers-2 px-4 sm:h-[48px] sm:px-5">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -100,30 +118,23 @@ export const BankModal = ({
                     }}
                     type="string"
                     className="skt-w skt-w-input bg-transparent pt-0.5 focus-visible:outline-none min-w-full text-socket-secondary text-base font-medium w-full"
-                    placeholder="Search by bank name"
+                    placeholder="Search by name"
                     spellCheck="false"
                     value={searchQuery}
                   />
                 </div>
-                <div>
-                  <div className="noScrollbar -mx-2 flex overflow-x-auto sm:flex-wrap items-center">
-                    {bankData.map((bank: any, idx: any) => (
+                <div className={`${!searchQuery ? "block" : "hidden"}`}>
+                  <div className="noScrollbar flex overflow-x-auto sm:flex-wrap items-center mt-4">
+                    {bankTypes.map((bank: any, idx: any) => (
                       <button
                         onClick={(e) => {
                           e.preventDefault();
-                          setCurrentSelectedBank({ ...bank });
-                          if (
-                            currentSelectedBank.bank_code !== bank.bank_code
-                          ) {
-                            setBankAccountName("");
-                            setBankAccountValue("");
-                          }
-                          setBankModal(false);
-                          setSearchQuery("");
+                          setSelectedCategory(bank.name.toLowerCase());
                         }}
                         key={bank.id}
                         className={`m-1 transition duration-500  flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
-                          currentSelectedBank?.bank_code === bank.bank_code
+                          selectedCategory.toLowerCase() ===
+                          bank.name.toLowerCase()
                             ? "bg-layer3 hover:border-layer3"
                             : "hover:border-transparent hover:bg-mainGray2"
                         }`}
@@ -134,7 +145,7 @@ export const BankModal = ({
                           width="100%"
                           height="100%"
                         />
-                        <span className="pt-px font-medium uppercase text-socket-primary sm:text-lg">
+                        <span className="pt-px font-medium text-socket-primary sm:text-lg">
                           {bank.name}
                         </span>
                       </button>
@@ -162,6 +173,7 @@ export const BankModal = ({
                     if (currentSelectedBank.bank_code !== bankData.bank_code) {
                       setBankAccountName("");
                       setBankAccountValue("");
+                      setSelectedCategory("bank");
                     }
                     setBankModal(false);
                     setSearchQuery("");

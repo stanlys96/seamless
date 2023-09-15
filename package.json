@@ -26,6 +26,7 @@
     "next": "13.4.13",
     "postcss": "8.4.27",
     "react": "18.2.0",
+    "react-currency-input-field": "^3.6.11",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "react-loader-spinner": "^5.3.4",

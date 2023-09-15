@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { themeReducer } from "./theme-slice";
+import { signReducer } from "./sign-slice";
 
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
+    sign: signReducer,
   },
 });
 

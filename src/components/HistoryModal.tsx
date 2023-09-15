@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 interface Props {
   historyModal: any;
   setHistoryModal: (param1: any) => void;
-  bankData: any;
   setCurrentSelectedBank: (param1: any) => void;
   currentSelectedBank: any;
   setBankAccountName: (param1: any) => void;

@@ -3,11 +3,13 @@ import { formatEther } from "@ethersproject/units";
 import { chainData, supportedChains } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import { SwitchNetwork } from "./SwitchNetwork";
-import { useSelector } from "react-redux";
-import { RootState } from "../stores";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, signActions } from "../stores";
 
 export const ConnectButton = () => {
   const theme = useSelector((state: RootState) => state.theme);
+  const signed = useSelector((state: RootState) => state.sign);
+  const dispatch = useDispatch();
   const {
     account,
     deactivate,
@@ -16,6 +18,7 @@ export const ConnectButton = () => {
     switchNetwork,
     isLoading,
     library,
+    active,
   } = useEthers();
   const etherBalance = useEtherBalance(account);
   const [dropdownActive, setDropdownActive] = useState(false);
@@ -32,9 +35,26 @@ export const ConnectButton = () => {
   }, []);
 
   useEffect(() => {
-    if (account) {
+    if (signer && account && !signed.signed && !signed.isSigning) {
+      dispatch(signActions.setIsSigning(true));
+      setTimeout(() => {
+        signer
+          ?.signMessage(
+            "By signing this, you agree to Seamless Finance's terms and conditions."
+          )
+          .then((res) => {
+            dispatch(signActions.setIsSigning(false));
+            if (res) {
+              dispatch(signActions.setSign(true));
+            }
+          })
+          .catch((err) => {
+            dispatch(signActions.setIsSigning(false));
+            console.log(err, "<<< err");
+          });
+      }, 1500);
     }
-  }, [account]);
+  }, [signer, account]);
 
   if (!chainSupported && !isLoading)
     return (

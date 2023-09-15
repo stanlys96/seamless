@@ -432,24 +432,21 @@ export const chainData = [
   },
 ];
 
-export const bankData = [
+export const bankTypes = [
   {
     id: 1,
-    name: "BCA",
-    imgUrl: "/img/banks/bca.png",
-    bank_code: "bca",
+    name: "Bank",
+    imgUrl: "/img/banks/banking.png",
   },
   {
     id: 2,
-    name: "BRI",
-    imgUrl: "/img/banks/bri.png",
-    bank_code: "bri",
+    name: "VA",
+    imgUrl: "/img/banks/va.png",
   },
   {
     id: 3,
-    name: "BNI",
-    imgUrl: "/img/banks/bni.png",
-    bank_code: "bni",
+    name: "E-Wallet",
+    imgUrl: "/img/banks/ewallet.png",
   },
 ];
 
@@ -476,6 +473,23 @@ export const existBankData = [
   "standard_chartered",
   "tokyo",
   "uob",
+  "gopay",
+  "ovo",
+  "linkaja",
+  "dana",
+  "shopeepay",
+];
+
+export const eWallets = ["gopay", "ovo", "dana", "shopeepay", "linkaja"];
+
+export const virtualAccounts = [
+  "bni",
+  "bri",
+  "permata",
+  "cimb",
+  "mandiri",
+  "muamalat",
+  "danamon",
 ];
 
 export const allTokenData = [
