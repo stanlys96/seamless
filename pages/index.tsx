@@ -34,6 +34,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, signActions } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
+import axios from "axios";
 
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -150,40 +151,15 @@ export default function HomePage() {
 
   const addToWalletAccounts = () => {
     axiosStrapi
-      .get("/api/wallet-accounts")
+      .post("/api/check-wallet-accounts", {
+        wallet_address: account,
+        bank_code: currentSelectedBank.bank_code,
+        bank_account_name: bankAccountName,
+        bank_account_number: bankAccountValue,
+        phone_number: phoneNumber,
+      })
       .then((res) => {
-        const result = res.data.data;
-        let found = false;
-        for (let walletData of result) {
-          if (
-            walletData.attributes.wallet_address.toLowerCase() ===
-              account?.toLowerCase() &&
-            walletData.attributes.bank_code === currentSelectedBank.bank_code &&
-            walletData.attributes.bank_account_name === bankAccountName &&
-            walletData.attributes.bank_account_number === bankAccountValue
-          ) {
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          axiosStrapi
-            .post("/api/wallet-accounts", {
-              data: {
-                wallet_address: account,
-                bank_code: currentSelectedBank.bank_code,
-                bank_account_name: bankAccountName,
-                bank_account_number: bankAccountValue,
-                phone_number: phoneNumber,
-              },
-            })
-            .then((res) => {
-              console.log(res.data);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        }
+        console.log(res.data);
       })
       .catch((e) => {
         console.log(e);
@@ -352,12 +328,16 @@ export default function HomePage() {
 
   useEffect(() => {
     if (historyData && historyData.data.data.length > 0 && !bankAccountName) {
-      const lastData = historyData.data.data[historyData.data.data.length - 1];
-      setBankAccountName(lastData.attributes.bank_account_name);
-      setBankAccountValue(lastData.attributes.bank_account_number);
+      const theResult = historyData.data.data;
+      const latestData = theResult.find((res: any) => res.attributes.latest);
+      if (latestData) {
+        setBankAccountName(latestData.attributes.bank_account_name);
+        setBankAccountValue(latestData.attributes.bank_account_number);
+        setPhoneNumber(latestData.attributes.phone_number);
+      }
     }
   }, [historyData]);
-  const lockModal = loading || isCheckingBankAccount;
+
   return (
     <MainLayout>
       <div className="the-container relative">
@@ -710,7 +690,6 @@ export default function HomePage() {
               disabled={loading || isCheckingBankAccount}
               onClick={async (e) => {
                 e.preventDefault();
-
                 try {
                   if (!account) {
                     activateBrowserWallet();
@@ -852,6 +831,7 @@ export default function HomePage() {
           currentSelectedToken={currentSelectedToken}
         />
         <HistoryModal
+          setPhoneNumber={setPhoneNumber}
           historyModal={historyModal}
           setHistoryModal={setHistoryModal}
           historyList={historyData}

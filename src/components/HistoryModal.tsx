@@ -9,6 +9,7 @@ interface Props {
   setBankAccountName: (param1: any) => void;
   historyList?: any;
   setBankAccountValue: (param1: any) => void;
+  setPhoneNumber: (param1: any) => void;
 }
 
 export const HistoryModal = ({
@@ -16,6 +17,7 @@ export const HistoryModal = ({
   setHistoryModal,
   setBankAccountName,
   setBankAccountValue,
+  setPhoneNumber,
   historyList,
 }: Props) => {
   const [theList, setTheList] = useState(historyList?.data?.data ?? []);
@@ -111,6 +113,7 @@ export const HistoryModal = ({
                     e.preventDefault();
                     setBankAccountName(theData.attributes.bank_account_name);
                     setBankAccountValue(theData.attributes.bank_account_number);
+                    setPhoneNumber(theData.attributes.phone_number);
                     setHistoryModal(false);
                     setSearchQuery("");
                   }}
