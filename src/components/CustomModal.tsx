@@ -19,7 +19,7 @@ export const CustomModal = ({
         className="z-50 bg-[#828282]/50 dark:bg-[#101016CC] backdrop-blur-sm h-full w-full sm:p-5 md:p-10 fixed top-0 left-0 items-center justify-center flex"
         style={{ opacity: 1 }}
       >
-        <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] rounded-b-none sm:rounded-b-xl absolute sm:static bottom-0 w-full h-fit">
+        <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] static bottom-0 w-full h-fit">
           <div className="relative flex flex-shrink-0 items-center justify-between border-b border-gray py-2.5 px-6 sm:py-4 sm:px-6">
             <h3 className="text-lg font-medium text-socket-primary">
               Select Token
@@ -54,7 +54,7 @@ export const CustomModal = ({
             <div className="flex h-fit flex-col">
               <div className="relative border-gray p-4">
                 <div>
-                  <div className="noScrollbar -mx-2 flex overflow-x-auto sm:flex-wrap">
+                  <div className="noScrollbar -mx-2 flex overflow-x-auto flex-wrap">
                     {currentChain?.tokenData &&
                       currentChain?.tokenData.map((token: any, idx: any) => (
                         <button

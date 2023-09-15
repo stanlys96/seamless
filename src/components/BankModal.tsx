@@ -42,7 +42,7 @@ export const BankModal = ({
   };
 
   const filterCategory = (bankData: any) => {
-    if (searchQuery) return bankData;
+    if (searchQuery) return true;
     if (selectedCategory === "bank") {
       return !eWallets.includes(bankData.bank_code);
     } else if (selectedCategory === "e-wallet") {
@@ -59,7 +59,7 @@ export const BankModal = ({
         className="z-50 bg-[#828282]/50 dark:bg-[#101016CC] backdrop-blur-sm w-full sm:p-5 md:p-10 fixed top-0 left-0 items-center justify-center flex h-full"
         style={{ opacity: 1 }}
       >
-        <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] rounded-b-none sm:rounded-b-xl absolute sm:static bottom-0 w-full h-fit">
+        <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] rounded-b-xl static bottom-0 w-full h-fit">
           <div className="relative flex flex-shrink-0 items-center justify-between border-b border-gray py-2.5 px-6 sm:py-4 sm:px-6">
             <h3 className="text-lg font-medium text-socket-primary">
               Select Bank
