@@ -115,7 +115,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
         <button
           onClick={async (e) => {
             e.preventDefault();
-            setShowTestNetwork((prevState) => !prevState);
+            // setShowTestNetwork((prevState) => !prevState);
           }}
           className={`${
             theme.theme === "dark" ? `hover:bg-mainGray2` : "hover:bg-gray"
