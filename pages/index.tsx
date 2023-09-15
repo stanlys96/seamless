@@ -785,7 +785,7 @@ export default function HomePage() {
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
-                          cryptoValue,
+                          cryptoValue.replaceAll(",", ""),
                           currentSelectedToken?.decimals
                         ),
                       }
@@ -798,7 +798,7 @@ export default function HomePage() {
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
-                          cryptoValue,
+                          cryptoValue.replaceAll(",", ""),
                           currentSelectedToken?.decimals
                         ),
                       }
