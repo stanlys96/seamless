@@ -38,7 +38,7 @@ export const HistoryModal = ({
         className="z-50 bg-[#828282]/50 dark:bg-[#101016CC] backdrop-blur-sm w-full sm:p-5 md:p-10 fixed top-0 left-0 items-center justify-center flex h-full"
         style={{ opacity: 1 }}
       >
-        <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] rounded-xl static bottom-0 w-full h-fit">
+        <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] sm:rounded-b-xl rounded-b-none absolute sm:static bottom-0 w-full h-fit">
           <div className="relative flex flex-shrink-0 items-center justify-between border-b border-gray py-2.5 px-6 sm:py-4 sm:px-6">
             <h3 className="text-lg font-medium text-socket-primary">
               Select Data
