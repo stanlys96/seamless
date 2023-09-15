@@ -54,8 +54,6 @@ export default function HomePage() {
   const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
-  const [previousValue, setPreviousValue] = useState("");
-  const [previousIdrValue, setPreviousIdrValue] = useState("");
   const [idrValue, setIdrValue] = useState("");
   const [tokenModal, setTokenModal] = useState(false);
   const [bankModal, setBankModal] = useState(false);
@@ -104,12 +102,9 @@ export default function HomePage() {
       transactionName: "Send Native Token",
     });
 
-  const resetAllFields = () => {
+  const resetFields = () => {
     setCryptoValue("");
-    setPreviousValue("");
-    setBankAccountName("");
-    setBankAccountValue("");
-    setPhoneNumber("");
+    setIdrValue("");
   };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
@@ -241,7 +236,7 @@ export default function HomePage() {
             receipt: "",
           },
         });
-        resetAllFields();
+        resetFields();
         setTransactionData(null);
         setTransactionLoading(false);
         Swal.fire(
@@ -666,7 +661,6 @@ export default function HomePage() {
                       parseFloat(value ?? "0")
                     ).toFixed(2);
                     setCryptoValue(crypto === "NaN" ? "0" : crypto);
-                    setPreviousValue(cryptoValue);
                   }
                 }}
               />
