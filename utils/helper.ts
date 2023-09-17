@@ -284,6 +284,7 @@ export const chainData = [
     imgUrl: "/img/Ether.svg",
     testNetwork: true,
     seamlessContract: goerliSeamlessContract,
+    transactionUrl: "https://goerli.etherscan.io/tx/",
     tokenData: [
       {
         ...ethTokenData,

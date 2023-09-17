@@ -106,6 +106,7 @@ export default function HomePage() {
     setCryptoValue("");
     setIdrValue("");
     setFee(6000);
+    setExchangeFee("0");
   };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
