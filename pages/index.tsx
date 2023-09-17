@@ -78,8 +78,9 @@ export default function HomePage() {
     erc20Interface
   );
   const seamlessContract = new Contract(
-    currentChain?.seamlessContract ??
-      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    !currentChain?.seamlessContract
+      ? "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+      : currentChain.seamlessContract,
     seamlessInterface
   );
 
