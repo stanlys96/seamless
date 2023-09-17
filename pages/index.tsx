@@ -38,8 +38,6 @@ import { Tooltip } from "antd";
 
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
-const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
-
 export default function HomePage() {
   const dispatch = useDispatch();
   let periodCheckBank = 0;
@@ -80,7 +78,8 @@ export default function HomePage() {
     erc20Interface
   );
   const seamlessContract = new Contract(
-    customContract ?? "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    currentChain?.seamlessContract ??
+      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     seamlessInterface
   );
 
@@ -868,7 +867,7 @@ export default function HomePage() {
                   }
                   if (!currentSelectedToken?.native) {
                     const tx1 = await approveErc20Send(
-                      customContract,
+                      currentChain?.seamlessContract ?? "",
                       utils.parseUnits(
                         cryptoValue,
                         currentSelectedToken?.decimals

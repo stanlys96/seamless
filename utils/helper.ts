@@ -96,6 +96,10 @@ export const supportedChains = [
   BSCTestnet.chainId,
 ];
 
+const ethereumSeamlessContract = "";
+const polygonSeamlessContract = process.env.NEXT_PUBLIC_POLYGON_CUSTOM_CONTRACT;
+const goerliSeamlessContract = process.env.NEXT_PUBLIC_GOERLI_CUSTOM_CONTRACT;
+
 export const chainData = [
   {
     id: 1,
@@ -104,6 +108,7 @@ export const chainData = [
     imgUrl: "/img/Ether.svg",
     testNetwork: false,
     transactionUrl: "https://etherscan.io/tx/",
+    seamlessContract: "",
     tokenData: [
       {
         ...ethTokenData,
@@ -139,6 +144,7 @@ export const chainData = [
     imgUrl: "/img/Arbitrum.svg",
     testNetwork: false,
     transactionUrl: "https://arbiscan.io/tx/",
+    seamlessContract: "",
     tokenData: [
       {
         ...daiTokenData,
@@ -174,6 +180,7 @@ export const chainData = [
     imgUrl: "/img/Polygon.svg",
     testNetwork: false,
     transactionUrl: "https://polygonscan.com/tx/",
+    seamlessContract: polygonSeamlessContract,
     tokenData: [
       {
         ...daiTokenData,
@@ -209,6 +216,7 @@ export const chainData = [
     imgUrl: "/img/Optimism.svg",
     testNetwork: false,
     transactionUrl: "https://optimistic.etherscan.io/tx/",
+    seamlessContract: "",
     tokenData: [
       {
         ...daiTokenData,
@@ -244,6 +252,7 @@ export const chainData = [
     imgUrl: "/img/BSC.svg",
     testNetwork: false,
     transactionUrl: "https://bscscan.com/tx/",
+    seamlessContract: "",
     tokenData: [
       {
         ...bnbTokenData,
@@ -274,6 +283,7 @@ export const chainData = [
     name: "Goerli",
     imgUrl: "/img/Ether.svg",
     testNetwork: true,
+    seamlessContract: goerliSeamlessContract,
     tokenData: [
       {
         ...ethTokenData,
@@ -308,6 +318,7 @@ export const chainData = [
     testNetwork: true,
     name: "Arbitrum Goerli",
     imgUrl: "/img/Arbitrum.svg",
+    seamlessContract: "",
     tokenData: [
       {
         ...daiTokenData,
@@ -342,7 +353,7 @@ export const chainData = [
     name: "Optimism Goerli",
     imgUrl: "/img/Optimism.svg",
     testNetwork: true,
-
+    seamlessContract: "",
     tokenData: [
       {
         ...daiTokenData,
@@ -377,6 +388,7 @@ export const chainData = [
     name: "Mumbai",
     imgUrl: "/img/Polygon.svg",
     testNetwork: true,
+    seamlessContract: "",
     tokenData: [
       {
         ...daiTokenData,
@@ -411,6 +423,7 @@ export const chainData = [
     name: "BSC Testnet",
     imgUrl: "/img/BSC.svg",
     testNetwork: true,
+    seamlessContract: "",
     tokenData: [
       {
         ...bnbTokenData,
