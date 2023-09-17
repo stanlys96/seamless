@@ -103,6 +103,7 @@ export const chainData = [
     name: "Ethereum",
     imgUrl: "/img/Ether.svg",
     testNetwork: false,
+    transactionUrl: "https://etherscan.io/tx/",
     tokenData: [
       {
         ...ethTokenData,
@@ -137,6 +138,7 @@ export const chainData = [
     name: "Arbitrum",
     imgUrl: "/img/Arbitrum.svg",
     testNetwork: false,
+    transactionUrl: "https://arbiscan.io/tx/",
     tokenData: [
       {
         ...daiTokenData,
@@ -171,6 +173,7 @@ export const chainData = [
     name: "Polygon",
     imgUrl: "/img/Polygon.svg",
     testNetwork: false,
+    transactionUrl: "https://polygonscan.com/tx/",
     tokenData: [
       {
         ...daiTokenData,
@@ -205,6 +208,7 @@ export const chainData = [
     name: "Optimism",
     imgUrl: "/img/Optimism.svg",
     testNetwork: false,
+    transactionUrl: "https://optimistic.etherscan.io/tx/",
     tokenData: [
       {
         ...daiTokenData,
@@ -239,6 +243,7 @@ export const chainData = [
     name: "BSC",
     imgUrl: "/img/BSC.svg",
     testNetwork: false,
+    transactionUrl: "https://bscscan.com/tx/",
     tokenData: [
       {
         ...bnbTokenData,

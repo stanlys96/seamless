@@ -42,16 +42,14 @@ const customContract = process.env.NEXT_PUBLIC_CUSTOM_CONTRACT;
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const [alreadySigned, setAlreadySigned] = useState(false);
   let periodCheckBank = 0;
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
-  const router = useRouter();
   const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const signer = useSigner();
-  const { account, deactivate, activateBrowserWallet, chainId } = useEthers();
+  const { account, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
   const [idrValue, setIdrValue] = useState("");
@@ -65,8 +63,6 @@ export default function HomePage() {
   const [transactionData, setTransactionData] = useState<any>();
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
   const [fee, setFee] = useState(6000);
-  const [total, setTotal] = useState(6000);
-  const [totalToken, setTotalToken] = useState(0);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     name: "BCA",
     bank_code: "bca",
@@ -109,6 +105,7 @@ export default function HomePage() {
   const resetFields = () => {
     setCryptoValue("");
     setIdrValue("");
+    setFee(6000);
   };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
@@ -125,6 +122,7 @@ export default function HomePage() {
     currentSelectedToken?.contractAddress,
     account
   );
+  const receiveValue = parseFloat((parseFloat(idrValue) - fee).toFixed(2));
   const usedBalance = currentSelectedToken?.native
     ? parseFloat(
         formatUnits(
@@ -178,12 +176,14 @@ export default function HomePage() {
           bank_account_name: bankAccountName,
           phone_number: phoneNumber,
           token_value: cryptoValue,
-          idr_value: Math.ceil(total).toString(),
+          idr_value: idrValue,
           transaction_success: false,
           wallet_destination: depositAddress,
           idempotency_key: "",
           transaction_id: "",
           receipt: "",
+          fee: fee.toFixed(2),
+          receive: Math.ceil(receiveValue).toString(),
         },
       })
       .then((res) => {
@@ -205,7 +205,7 @@ export default function HomePage() {
         idempotency_key: idempotencyKey,
         account_number: bankAccountValue,
         bank_code: currentSelectedBank.bank_code,
-        amount: Math.ceil(parseFloat(idrValue)),
+        amount: Math.ceil(receiveValue),
       })
       .then(async (res) => {
         console.log(res, "<<< RES!");
@@ -214,7 +214,9 @@ export default function HomePage() {
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
           {
             data: {
-              transaction_hash: tempState.receipt?.transactionHash,
+              transaction_hash:
+                currentChain?.transactionUrl +
+                tempState.receipt?.transactionHash,
               gas_price: formatEther(
                 tempState.receipt?.effectiveGasPrice ?? "0x0"
               ),
@@ -253,11 +255,9 @@ export default function HomePage() {
 
   const resetCurrency = () => {
     setFee(6000);
-    setTotal(6000);
     setIdrValue("0");
     setCryptoValue("0");
     setExchangeFee("0");
-    setTotalToken(0);
   };
 
   const checkBankInquiry: any = async () => {
@@ -329,7 +329,6 @@ export default function HomePage() {
   }, [seamlessState, nativeSeamlessState]);
 
   useEffect(() => {
-    setAlreadySigned(false);
     setBankAccountName("");
     setBankAccountValue("");
   }, [account]);
@@ -433,33 +432,13 @@ export default function HomePage() {
                       if (data) {
                         const idr = (
                           data.data[0].current_price * parseFloat(value ?? "0")
-                        ).toFixed(6);
+                        ).toFixed(2);
                         const idrFloat = parseFloat(idr);
                         const thisFee = parseFloat(
-                          (6000 + idrFloat * 0.005).toFixed(6)
+                          (6000 + idrFloat * 0.005).toFixed(2)
                         );
-                        setExchangeFee((idrFloat * 0.005).toFixed(6));
+                        setExchangeFee((idrFloat * 0.005).toFixed(2));
                         setFee(thisFee);
-                        const thisTotal = parseFloat(
-                          (idrFloat + thisFee).toFixed(6)
-                        );
-                        setTotal(thisTotal);
-                        const totalToken = parseFloat(value ?? "0") / thisTotal;
-                        if (!value) {
-                          setTotalToken(0);
-                        } else {
-                          setTotalToken(
-                            parseFloat(
-                              (
-                                (1 / data.data[0].current_price) *
-                                thisTotal
-                              ).toFixed(6)
-                            )
-                          );
-                        }
-
-                        console.log(data.data[0].current_price);
-                        console.log(1 / data.data[0].current_price, "<<< ??");
                         setIdrValue(idr === "NaN" ? "0" : idr);
                       }
                     }}
@@ -699,27 +678,11 @@ export default function HomePage() {
                   onValueChange={(value, name) => {
                     setIdrValue(value ?? "0");
                     const idrFloat = parseFloat(value ?? "0");
-                    setExchangeFee((idrFloat * 0.005).toFixed(6));
+                    setExchangeFee((idrFloat * 0.005).toFixed(2));
                     const thisFee = parseFloat(
-                      (6000 + idrFloat * 0.005).toFixed(6)
+                      (6000 + idrFloat * 0.005).toFixed(2)
                     );
                     setFee(thisFee);
-                    const thisTotal = parseFloat(
-                      (idrFloat + thisFee).toFixed(6)
-                    );
-                    setTotal(thisTotal);
-                    if (!value) {
-                      setTotalToken(0);
-                    } else {
-                      setTotalToken(
-                        parseFloat(
-                          (
-                            (1 / data?.data[0].current_price) *
-                            thisTotal
-                          ).toFixed(6)
-                        )
-                      );
-                    }
                     if (data) {
                       const crypto = (
                         (1 / data.data[0].current_price) *
@@ -779,11 +742,7 @@ export default function HomePage() {
                   name="input-name"
                   placeholder="0"
                   disabled
-                  value={
-                    (totalToken - parseFloat(cryptoValue)).toFixed(6) === "NaN"
-                      ? 0
-                      : (totalToken - parseFloat(cryptoValue)).toFixed(6)
-                  }
+                  value={fee}
                   defaultValue={0}
                   decimalsLimit={6}
                   className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
@@ -792,43 +751,6 @@ export default function HomePage() {
               </div>
               <span>
                 <button className="skt-w skt-w-input skt-w-button flex items-center  p-0 hover:bg-transparent bg-transparent cursor-default">
-                  <span className="flex items-center relative h-fit w-fit mr-2">
-                    <img
-                      className="skt-w mr-1 h-6 w-6 rounded-full"
-                      src={currentSelectedToken?.imgUrl}
-                      width="100%"
-                      height="100%"
-                    />
-                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
-                      {currentSelectedToken?.name}
-                    </span>
-                  </span>
-                </button>
-              </span>
-            </div>
-            {/* <div
-              className={`rounded-b ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] border-t flex justify-between items-center`}
-            >
-              <div className="flex gap-x-2 items-center">
-                <p className="font-medium text-socket-primary sm:text-lg">
-                  Total:
-                </p>
-                <CurrencyInput
-                  id="input-example"
-                  name="input-name"
-                  placeholder="0"
-                  disabled
-                  value={total}
-                  defaultValue={0}
-                  decimalsLimit={2}
-                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                  onValueChange={(value, name) => {}}
-                />
-              </div>
-              <span>
-                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
                   <span className="flex items-center relative h-fit w-fit mr-2">
                     <img
                       className="skt-w mr-1 h-6 w-6 rounded-full"
@@ -842,7 +764,7 @@ export default function HomePage() {
                   </span>
                 </button>
               </span>
-            </div> */}
+            </div>
             <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
@@ -850,14 +772,14 @@ export default function HomePage() {
             >
               <div className="flex gap-x-2 items-center">
                 <p className="font-medium text-socket-primary sm:text-lg">
-                  Total:
+                  Receive:
                 </p>
                 <CurrencyInput
                   id="input-example"
                   name="input-name"
                   placeholder="0"
                   disabled
-                  value={totalToken}
+                  value={!receiveValue ? 0 : receiveValue}
                   defaultValue={0}
                   decimalsLimit={6}
                   className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
@@ -869,15 +791,11 @@ export default function HomePage() {
                   <span className="flex items-center">
                     <div className="relative flex h-fit w-fit">
                       <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
-                        <img
-                          src={currentSelectedToken?.imgUrl ?? ""}
-                          width="100%"
-                          height="100%"
-                        />
+                        <img src="img/indo2.png" width="100%" height="100%" />
                       </div>
                     </div>
                     <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-end items-center gap-x-1">
-                      {currentSelectedToken?.name ?? ""}
+                      IDR
                     </span>
                   </span>
                 </button>
@@ -940,11 +858,19 @@ export default function HomePage() {
                     );
                     return;
                   }
+                  if (receiveValue <= 0) {
+                    Swal.fire(
+                      "Not done!",
+                      "Receive value must be a positive number!",
+                      "warning"
+                    );
+                    return;
+                  }
                   if (!currentSelectedToken?.native) {
                     const tx1 = await approveErc20Send(
                       customContract,
                       utils.parseUnits(
-                        totalToken.toFixed(6),
+                        cryptoValue,
                         currentSelectedToken?.decimals
                       )
                     );
@@ -968,24 +894,22 @@ export default function HomePage() {
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
-                          totalToken.toFixed(6),
+                          cryptoValue,
                           currentSelectedToken?.decimals
                         ),
                       }
                     );
-                    console.log(tx, "<<<");
                   } else {
                     const tx = await transferSeamless(
                       currentSelectedToken?.contractAddress,
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
-                          totalToken.toFixed(6),
+                          cryptoValue,
                           currentSelectedToken?.decimals
                         ),
                       }
                     );
-                    console.log(tx, "<<< TX!!!");
                   }
                 } catch (e: any) {
                   console.log(e?.message.includes("rejected signing"));
