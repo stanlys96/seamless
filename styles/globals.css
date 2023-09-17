@@ -230,3 +230,7 @@ input[type="number"] {
 .bg-button-dark {
   background-color: #171721;
 }
+
+.ant-tooltip-inner {
+  white-space: pre-line;
+}

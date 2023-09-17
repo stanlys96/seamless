@@ -1,5 +1,5 @@
 "use client";
-import { AiOutlineArrowDown } from "react-icons/ai";
+import { AiOutlineArrowDown, AiFillInfoCircle } from "react-icons/ai";
 import { useState } from "react";
 import {
   useEtherBalance,
@@ -17,7 +17,7 @@ import {
   fetcherStrapi,
 } from "@/utils/axios";
 import erc20Abi from "../contracts/erc20-abi.json";
-import seamlessAbi from "../contracts/seamless4-abi.json";
+import seamlessAbi from "../contracts/seamless-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
 import { chainData } from "@/utils/helper";
@@ -34,7 +34,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, signActions } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
-import axios from "axios";
+import { Tooltip } from "antd";
 
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -57,12 +57,15 @@ export default function HomePage() {
   const [idrValue, setIdrValue] = useState("");
   const [tokenModal, setTokenModal] = useState(false);
   const [bankModal, setBankModal] = useState(false);
+  const [exchangeFee, setExchangeFee] = useState("0");
   const [historyModal, setHistoryModal] = useState(false);
   const [bankAccountValue, setBankAccountValue] = useState("");
   const [bankAccountName, setBankAccountName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [transactionData, setTransactionData] = useState<any>();
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
+  const [fee, setFee] = useState(6000);
+  const [total, setTotal] = useState(6000);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     name: "BCA",
     bank_code: "bca",
@@ -91,15 +94,15 @@ export default function HomePage() {
 
   const { send: transferSeamless, state: seamlessState } = useContractFunction(
     seamlessContract,
-    "sendToken",
+    "transfer_erc20",
     {
-      transactionName: "Send Token",
+      transactionName: "Transfer ERC20",
     }
   );
 
   const { send: nativeTransferSeamless, state: nativeSeamlessState } =
-    useContractFunction(seamlessContract, "sendNativeToken", {
-      transactionName: "Send Native Token",
+    useContractFunction(seamlessContract, "transfer", {
+      transactionName: "Transfer",
     });
 
   const resetFields = () => {
@@ -174,7 +177,7 @@ export default function HomePage() {
           bank_account_name: bankAccountName,
           phone_number: phoneNumber,
           token_value: cryptoValue,
-          idr_value: idrValue,
+          idr_value: Math.ceil(total).toString(),
           transaction_success: false,
           wallet_destination: depositAddress,
           idempotency_key: "",
@@ -201,7 +204,7 @@ export default function HomePage() {
         idempotency_key: idempotencyKey,
         account_number: bankAccountValue,
         bank_code: currentSelectedBank.bank_code,
-        amount: Math.ceil(parseFloat(idrValue.replaceAll(",", ""))),
+        amount: Math.ceil(total),
       })
       .then(async (res) => {
         console.log(res, "<<< RES!");
@@ -421,6 +424,16 @@ export default function HomePage() {
                         const idr = (
                           data.data[0].current_price * parseFloat(value ?? "0")
                         ).toFixed(2);
+                        const idrFloat = parseFloat(idr);
+                        const thisFee = parseFloat(
+                          (6000 + idrFloat * 0.005).toFixed(2)
+                        );
+                        setExchangeFee((idrFloat * 0.005).toFixed(2));
+                        setFee(thisFee);
+                        const thisTotal = parseFloat(
+                          (idrFloat + thisFee).toFixed(2)
+                        );
+                        setTotal(thisTotal);
                         setIdrValue(idr === "NaN" ? "0" : idr);
                       }
                     }}
@@ -644,26 +657,131 @@ export default function HomePage() {
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } px-3 py-[14px] flex justify-between items-center`}
             >
-              <CurrencyInput
-                id="input-example"
-                name="input-name"
-                placeholder="0"
-                disabled={loading}
-                value={idrValue}
-                defaultValue={0}
-                decimalsLimit={2}
-                className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                onValueChange={(value, name) => {
-                  setIdrValue(value ?? "0");
-                  if (data) {
-                    const crypto = (
-                      (1 / data.data[0].current_price) *
-                      parseFloat(value ?? "0")
-                    ).toFixed(2);
-                    setCryptoValue(crypto === "NaN" ? "0" : crypto);
-                  }
-                }}
-              />
+              <div className="flex gap-x-2 items-center">
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Value:
+                </p>
+                <CurrencyInput
+                  id="input-example"
+                  name="input-name"
+                  placeholder="0"
+                  disabled={loading}
+                  value={idrValue}
+                  defaultValue={0}
+                  decimalsLimit={2}
+                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  onValueChange={(value, name) => {
+                    setIdrValue(value ?? "0");
+                    const idrFloat = parseFloat(value ?? "0");
+                    setExchangeFee((idrFloat * 0.005).toFixed(2));
+                    const thisFee = parseFloat(
+                      (6000 + idrFloat * 0.005).toFixed(2)
+                    );
+                    setFee(thisFee);
+                    const thisTotal = parseFloat(
+                      (idrFloat + thisFee).toFixed(2)
+                    );
+                    setTotal(thisTotal);
+                    if (data) {
+                      const crypto = (
+                        (1 / data.data[0].current_price) *
+                        parseFloat(value ?? "0")
+                      ).toFixed(2);
+                      setCryptoValue(crypto === "NaN" ? "0" : crypto);
+                    }
+                  }}
+                />
+              </div>
+              <span>
+                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
+                  <span className="flex items-center relative h-fit w-fit mr-2">
+                    <img
+                      className="skt-w mr-1 h-6 w-6 rounded-full"
+                      src="img/indo2.png"
+                      width="100%"
+                      height="100%"
+                    />
+                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
+                      IDR
+                    </span>
+                  </span>
+                </button>
+              </span>
+            </div>
+            <div
+              className={`rounded-b ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } px-3 py-[14px] border-t flex justify-between items-center`}
+            >
+              <div className="flex gap-x-2 items-center">
+                <div className="flex font-medium text-socket-primary sm:text-lg">
+                  <Tooltip
+                    title={`Gas Fee: 3000 IDR
+                    Transfer Fee: 3000 IDR
+                    Exchange Fee (0.5%): ${exchangeFee} IDR`}
+                  >
+                    <AiFillInfoCircle />
+                  </Tooltip>
+                  <div
+                    id="tooltip-light"
+                    role="tooltip"
+                    className="absolute z-100 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
+                  >
+                    Tooltip content
+                    <div className="tooltip-arrow" data-popper-arrow></div>
+                  </div>
+                  <span className="ml-1">Fee</span>
+                  <span>:</span>
+                </div>
+                <CurrencyInput
+                  id="input-example"
+                  name="input-name"
+                  placeholder="0"
+                  disabled
+                  value={fee}
+                  defaultValue={0}
+                  decimalsLimit={2}
+                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  onValueChange={(value, name) => {}}
+                />
+              </div>
+              <span>
+                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
+                  <span className="flex items-center relative h-fit w-fit mr-2">
+                    <img
+                      className="skt-w mr-1 h-6 w-6 rounded-full"
+                      src="img/indo2.png"
+                      width="100%"
+                      height="100%"
+                    />
+                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
+                      IDR
+                    </span>
+                  </span>
+                </button>
+              </span>
+            </div>
+            <div
+              className={`rounded-b ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } px-3 py-[14px] border-t flex justify-between items-center`}
+            >
+              <div className="flex gap-x-2 items-center">
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Total:
+                </p>
+                <CurrencyInput
+                  id="input-example"
+                  name="input-name"
+                  placeholder="0"
+                  disabled
+                  value={total}
+                  defaultValue={0}
+                  decimalsLimit={2}
+                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  onValueChange={(value, name) => {}}
+                />
+              </div>
               <span>
                 <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
                   <span className="flex items-center relative h-fit w-fit mr-2">
@@ -754,7 +872,6 @@ export default function HomePage() {
 
                   if (currentSelectedToken?.native) {
                     const tx = await nativeTransferSeamless(
-                      depositAddress,
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
@@ -767,7 +884,6 @@ export default function HomePage() {
                   } else {
                     const tx = await transferSeamless(
                       currentSelectedToken?.contractAddress,
-                      depositAddress,
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
