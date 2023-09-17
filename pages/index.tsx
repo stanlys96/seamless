@@ -944,7 +944,7 @@ export default function HomePage() {
                     const tx1 = await approveErc20Send(
                       customContract,
                       utils.parseUnits(
-                        cryptoValue,
+                        totalToken.toFixed(6),
                         currentSelectedToken?.decimals
                       )
                     );
