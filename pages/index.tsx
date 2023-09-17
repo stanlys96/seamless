@@ -66,6 +66,7 @@ export default function HomePage() {
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
   const [fee, setFee] = useState(6000);
   const [total, setTotal] = useState(6000);
+  const [totalToken, setTotalToken] = useState(0);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     name: "BCA",
     bank_code: "bca",
@@ -204,7 +205,7 @@ export default function HomePage() {
         idempotency_key: idempotencyKey,
         account_number: bankAccountValue,
         bank_code: currentSelectedBank.bank_code,
-        amount: Math.ceil(total),
+        amount: Math.ceil(parseFloat(idrValue)),
       })
       .then(async (res) => {
         console.log(res, "<<< RES!");
@@ -248,6 +249,15 @@ export default function HomePage() {
           "success"
         );
       });
+  };
+
+  const resetCurrency = () => {
+    setFee(6000);
+    setTotal(6000);
+    setIdrValue("0");
+    setCryptoValue("0");
+    setExchangeFee("0");
+    setTotalToken(0);
   };
 
   const checkBankInquiry: any = async () => {
@@ -416,24 +426,40 @@ export default function HomePage() {
                     disabled={loading}
                     value={cryptoValue}
                     defaultValue={0}
-                    decimalsLimit={2}
+                    decimalsLimit={6}
                     className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                     onValueChange={(value, name) => {
                       setCryptoValue(value ?? "0");
                       if (data) {
                         const idr = (
                           data.data[0].current_price * parseFloat(value ?? "0")
-                        ).toFixed(2);
+                        ).toFixed(6);
                         const idrFloat = parseFloat(idr);
                         const thisFee = parseFloat(
-                          (6000 + idrFloat * 0.005).toFixed(2)
+                          (6000 + idrFloat * 0.005).toFixed(6)
                         );
-                        setExchangeFee((idrFloat * 0.005).toFixed(2));
+                        setExchangeFee((idrFloat * 0.005).toFixed(6));
                         setFee(thisFee);
                         const thisTotal = parseFloat(
-                          (idrFloat + thisFee).toFixed(2)
+                          (idrFloat + thisFee).toFixed(6)
                         );
                         setTotal(thisTotal);
+                        const totalToken = parseFloat(value ?? "0") / thisTotal;
+                        if (!value) {
+                          setTotalToken(0);
+                        } else {
+                          setTotalToken(
+                            parseFloat(
+                              (
+                                (1 / data.data[0].current_price) *
+                                thisTotal
+                              ).toFixed(6)
+                            )
+                          );
+                        }
+
+                        console.log(data.data[0].current_price);
+                        console.log(1 / data.data[0].current_price, "<<< ??");
                         setIdrValue(idr === "NaN" ? "0" : idr);
                       }
                     }}
@@ -673,20 +699,32 @@ export default function HomePage() {
                   onValueChange={(value, name) => {
                     setIdrValue(value ?? "0");
                     const idrFloat = parseFloat(value ?? "0");
-                    setExchangeFee((idrFloat * 0.005).toFixed(2));
+                    setExchangeFee((idrFloat * 0.005).toFixed(6));
                     const thisFee = parseFloat(
-                      (6000 + idrFloat * 0.005).toFixed(2)
+                      (6000 + idrFloat * 0.005).toFixed(6)
                     );
                     setFee(thisFee);
                     const thisTotal = parseFloat(
-                      (idrFloat + thisFee).toFixed(2)
+                      (idrFloat + thisFee).toFixed(6)
                     );
                     setTotal(thisTotal);
+                    if (!value) {
+                      setTotalToken(0);
+                    } else {
+                      setTotalToken(
+                        parseFloat(
+                          (
+                            (1 / data?.data[0].current_price) *
+                            thisTotal
+                          ).toFixed(6)
+                        )
+                      );
+                    }
                     if (data) {
                       const crypto = (
                         (1 / data.data[0].current_price) *
                         parseFloat(value ?? "0")
-                      ).toFixed(2);
+                      ).toFixed(6);
                       setCryptoValue(crypto === "NaN" ? "0" : crypto);
                     }
                   }}
@@ -711,14 +749,17 @@ export default function HomePage() {
             <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] border-t flex justify-between items-center`}
+              } px-3 py-[14px] border-t flex w-full justify-between items-center`}
             >
               <div className="flex gap-x-2 items-center">
                 <div className="flex font-medium text-socket-primary sm:text-lg">
                   <Tooltip
-                    title={`Gas Fee: 3000 IDR
-                    Transfer Fee: 3000 IDR
-                    Exchange Fee (0.5%): ${exchangeFee} IDR`}
+                    title={`Gas Fee: 3,000 IDR
+                    Transfer Fee: 3,000 IDR
+                    Exchange Fee (0.5%): ${parseFloat(
+                      exchangeFee
+                    ).toLocaleString("en-US")} IDR
+                    Total Fee: ${fee.toLocaleString("en-US")} IDR`}
                   >
                     <AiFillInfoCircle />
                   </Tooltip>
@@ -738,30 +779,34 @@ export default function HomePage() {
                   name="input-name"
                   placeholder="0"
                   disabled
-                  value={fee}
+                  value={
+                    (totalToken - parseFloat(cryptoValue)).toFixed(6) === "NaN"
+                      ? 0
+                      : (totalToken - parseFloat(cryptoValue)).toFixed(6)
+                  }
                   defaultValue={0}
-                  decimalsLimit={2}
+                  decimalsLimit={6}
                   className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                   onValueChange={(value, name) => {}}
                 />
               </div>
               <span>
-                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
+                <button className="skt-w skt-w-input skt-w-button flex items-center  p-0 hover:bg-transparent bg-transparent cursor-default">
                   <span className="flex items-center relative h-fit w-fit mr-2">
                     <img
                       className="skt-w mr-1 h-6 w-6 rounded-full"
-                      src="img/indo2.png"
+                      src={currentSelectedToken?.imgUrl}
                       width="100%"
                       height="100%"
                     />
                     <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
-                      IDR
+                      {currentSelectedToken?.name}
                     </span>
                   </span>
                 </button>
               </span>
             </div>
-            <div
+            {/* <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } px-3 py-[14px] border-t flex justify-between items-center`}
@@ -797,6 +842,46 @@ export default function HomePage() {
                   </span>
                 </button>
               </span>
+            </div> */}
+            <div
+              className={`rounded-b ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } px-3 py-[14px] border-t flex justify-between items-center`}
+            >
+              <div className="flex gap-x-2 items-center">
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Total:
+                </p>
+                <CurrencyInput
+                  id="input-example"
+                  name="input-name"
+                  placeholder="0"
+                  disabled
+                  value={totalToken}
+                  defaultValue={0}
+                  decimalsLimit={6}
+                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  onValueChange={(value, name) => {}}
+                />
+              </div>
+              <span>
+                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
+                  <span className="flex items-center">
+                    <div className="relative flex h-fit w-fit">
+                      <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
+                        <img
+                          src={currentSelectedToken?.imgUrl ?? ""}
+                          width="100%"
+                          height="100%"
+                        />
+                      </div>
+                    </div>
+                    <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-end items-center gap-x-1">
+                      {currentSelectedToken?.name ?? ""}
+                    </span>
+                  </span>
+                </button>
+              </span>
             </div>
             <button
               disabled={loading || isCheckingBankAccount}
@@ -826,6 +911,14 @@ export default function HomePage() {
                     return;
                   }
                   if (insufficientBalance || insufficientDisburse) return;
+                  if (cryptoValue === "0" || parseFloat(cryptoValue) === 0) {
+                    Swal.fire(
+                      "Not done!",
+                      "Please fill crypto value!",
+                      "warning"
+                    );
+                    return;
+                  }
                   if (
                     !cryptoValue ||
                     !phoneNumber ||
@@ -875,7 +968,7 @@ export default function HomePage() {
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
-                          cryptoValue.replaceAll(",", ""),
+                          totalToken.toFixed(6),
                           currentSelectedToken?.decimals
                         ),
                       }
@@ -887,7 +980,7 @@ export default function HomePage() {
                       encrypt.toString(),
                       {
                         value: utils.parseUnits(
-                          cryptoValue.replaceAll(",", ""),
+                          totalToken.toFixed(6),
                           currentSelectedToken?.decimals
                         ),
                       }
@@ -939,6 +1032,7 @@ export default function HomePage() {
           currentChain={currentChain}
           setCurrentSelectedToken={setCurrentSelectedToken}
           currentSelectedToken={currentSelectedToken}
+          resetCurrency={resetCurrency}
         />
         <HistoryModal
           setPhoneNumber={setPhoneNumber}

@@ -4,6 +4,7 @@ interface Props {
   currentChain: any;
   setCurrentSelectedToken: (param1: any) => void;
   currentSelectedToken: any;
+  resetCurrency: () => void;
 }
 
 export const CustomModal = ({
@@ -12,6 +13,7 @@ export const CustomModal = ({
   currentChain,
   setCurrentSelectedToken,
   currentSelectedToken,
+  resetCurrency,
 }: Props) => {
   return (
     <div className={`${tokenModal ? "block" : "hidden"}`}>
@@ -60,6 +62,9 @@ export const CustomModal = ({
                         <button
                           onClick={(e) => {
                             e.preventDefault();
+                            if (token.id !== currentSelectedToken?.id) {
+                              resetCurrency();
+                            }
                             setCurrentSelectedToken({
                               ...token,
                             });
