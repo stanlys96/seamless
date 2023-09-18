@@ -7,6 +7,7 @@ import {
   useTokenBalance,
   useContractFunction,
   useSigner,
+  useCall,
 } from "@usedapp/core";
 import useSWR from "swr";
 import {
@@ -45,7 +46,6 @@ export default function HomePage() {
   const signed = useSelector((state: RootState) => state.sign);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
-  const depositAddress = process.env.NEXT_PUBLIC_DEPOSIT_ADDRESS;
   const signer = useSigner();
   const { account, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
@@ -96,6 +96,12 @@ export default function HomePage() {
       transactionName: "Transfer ERC20",
     }
   );
+
+  const vaultAddress = useCall({
+    contract: seamlessContract,
+    method: "vault_address",
+    args: [],
+  });
 
   const { send: nativeTransferSeamless, state: nativeSeamlessState } =
     useContractFunction(seamlessContract, "transfer", {
@@ -164,7 +170,21 @@ export default function HomePage() {
       });
   };
 
-  const addToTransactionHistory = () => {
+  const addToTransactionHistory = (status: "Approval" | "Blockchain") => {
+    const date = new Date(Date.now());
+    const dateStr =
+      date.getFullYear() +
+      "-" +
+      ("00" + (date.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + date.getDate()).slice(-2) +
+      " " +
+      ("00" + date.getHours()).slice(-2) +
+      ":" +
+      ("00" + date.getMinutes()).slice(-2) +
+      ":" +
+      ("00" + date.getSeconds()).slice(-2) +
+      ("." + date.getMilliseconds()).slice(-4);
     axiosStrapi
       .post("/api/transaction-histories", {
         data: {
@@ -173,18 +193,19 @@ export default function HomePage() {
           chain: chainId?.toString(),
           bank_name: currentSelectedBank.name,
           bank_account_number: bankAccountValue,
-          status: "Waiting",
+          status: status,
           bank_account_name: bankAccountName,
           phone_number: phoneNumber,
-          token_value: cryptoValue,
-          idr_value: idrValue,
+          token_value: parseFloat(cryptoValue),
+          idr_value: parseFloat(idrValue),
           transaction_success: false,
-          wallet_destination: depositAddress,
+          wallet_destination: vaultAddress?.value[0] ?? "",
           idempotency_key: "",
           transaction_id: "",
           receipt: "",
-          fee: fee.toFixed(2),
-          receive: Math.ceil(receiveValue).toString(),
+          fee: fee,
+          receive: Math.ceil(receiveValue),
+          start_progress: status === "Blockchain" ? dateStr : null,
         },
       })
       .then((res) => {
@@ -196,20 +217,31 @@ export default function HomePage() {
         console.log(e);
       });
   };
-  const updateTransactionHistory = (tempState: any) => {
+  const blockchainSuccess = async (tempState: any) => {
     const idempotencyKey =
       chainData.find((data: any) => data.chainId === tempState.chainId)?.name +
       `-${tempState?.transaction?.hash}`;
-
+    try {
+      const updateTransactionStatus = await axiosStrapi.put(
+        `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
+        {
+          data: {
+            status: "Blockchain Success",
+          },
+        }
+      );
+    } catch (e) {
+      console.log(e, "<<< Update Transaction Error");
+    }
     axiosStrapi
       .post("/api/disbursement", {
         idempotency_key: idempotencyKey,
         account_number: bankAccountValue,
         bank_code: currentSelectedBank.bank_code,
         amount: Math.ceil(receiveValue),
+        remark: "Seamless Finance",
       })
       .then(async (res) => {
-        console.log(res, "<<< RES!");
         const result = res.data;
         await axiosStrapi.put(
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
@@ -218,27 +250,28 @@ export default function HomePage() {
               transaction_hash:
                 currentChain?.transactionUrl +
                 tempState.receipt?.transactionHash,
-              gas_price: formatEther(
-                tempState.receipt?.effectiveGasPrice ?? "0x0"
+              gas_price: parseFloat(
+                formatEther(tempState.receipt?.effectiveGasPrice ?? "0x0")
               ),
               transaction_success: true,
               block_confirmation:
                 tempState.receipt?.confirmations.toString() ?? "0",
               idempotency_key: idempotencyKey,
               transaction_id: result.id.toString(),
+              status: "Flip",
             },
           }
         );
         await axiosStrapi.post("/api/flip-transactions", {
           data: {
             account_number: result.account_number,
-            amount: result.amount.toString(),
+            amount: result.amount,
             account_name: result.recipient_name,
             idempotency_key: result.idempotency_key,
             bank_code: result.bank_code,
             sender_bank: result.sender_bank,
             transaction_id: result.id.toString(),
-            fee: result.fee.toString(),
+            fee: result.fee,
             user_id: result.user_id.toString(),
             receipt: "",
           },
@@ -288,9 +321,11 @@ export default function HomePage() {
       !transactionLoading
     ) {
       setTransactionLoading(true);
+      addToTransactionHistory("Approval");
     }
     if (approveErc20State.status.toLowerCase() === "success") {
       setTransactionLoading(false);
+      updateTransactionStatus("Approval Success");
     }
     if (
       approveErc20State.status.toLowerCase() === "none" ||
@@ -302,6 +337,54 @@ export default function HomePage() {
       setLoading(true);
     }
   }, [approveErc20State]);
+
+  const updateTransactionStatus = async (
+    status:
+      | "Approval"
+      | "Approval Success"
+      | "Blockchain"
+      | "Blockchain Success"
+  ) => {
+    try {
+      if (status === "Blockchain") {
+        const date = new Date();
+        const dateStr =
+          date.getFullYear() +
+          "-" +
+          ("00" + (date.getMonth() + 1)).slice(-2) +
+          "-" +
+          ("00" + date.getDate()).slice(-2) +
+          " " +
+          ("00" + date.getHours()).slice(-2) +
+          ":" +
+          ("00" + date.getMinutes()).slice(-2) +
+          ":" +
+          ("00" + date.getSeconds()).slice(-2) +
+          ("." + date.getMilliseconds()).slice(-4);
+        const updateTransaction = await axiosStrapi.put(
+          `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
+          {
+            data: {
+              status: status,
+              start_progress: dateStr,
+            },
+          }
+        );
+      } else {
+        const updateTransaction = await axiosStrapi.put(
+          `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
+          {
+            data: {
+              status: status,
+            },
+          }
+        );
+      }
+    } catch (e) {
+      console.log(e, status, "<<< ERR");
+    }
+  };
+
   useEffect(() => {
     try {
       const tempState = currentSelectedToken?.native
@@ -309,11 +392,15 @@ export default function HomePage() {
         : seamlessState;
       if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
         setTransactionLoading(true);
-        addToTransactionHistory();
+        if (tempState === nativeSeamlessState) {
+          addToTransactionHistory("Blockchain");
+        } else {
+          updateTransactionStatus("Blockchain");
+        }
       }
       if (tempState.status.toLowerCase() === "success") {
         setTransactionLoading(false);
-        updateTransactionHistory(tempState);
+        blockchainSuccess(tempState);
       }
       if (
         tempState.status.toLowerCase() === "none" ||
