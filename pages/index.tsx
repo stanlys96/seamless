@@ -66,6 +66,7 @@ export default function HomePage() {
     bank_code: "bca",
     imgUrl: "/img/banks/bca.png",
   });
+  const [receiveValue, setReceiveValue] = useState(-6000);
   const [transactionLoading, setTransactionLoading] = useState(false);
 
   const currentChain = chainData.find((data) => data.chainId === chainId);
@@ -113,6 +114,7 @@ export default function HomePage() {
     setIdrValue("");
     setFee(6000);
     setExchangeFee("0");
+    setReceiveValue(-6000);
   };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
@@ -129,7 +131,6 @@ export default function HomePage() {
     currentSelectedToken?.contractAddress,
     account
   );
-  const receiveValue = parseFloat((parseFloat(idrValue) - fee).toFixed(2));
   const usedBalance = currentSelectedToken?.native
     ? parseFloat(
         formatUnits(
@@ -288,10 +289,11 @@ export default function HomePage() {
   };
 
   const resetCurrency = () => {
+    setCryptoValue("");
+    setIdrValue("");
     setFee(6000);
-    setIdrValue("0");
-    setCryptoValue("0");
     setExchangeFee("0");
+    setReceiveValue(-6000);
   };
 
   const checkBankInquiry: any = async () => {
@@ -444,11 +446,11 @@ export default function HomePage() {
                 : "primary-container-dark"
             } transition duration-500  rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
           >
-            <p className="text-gray">
+            {/* <p className="text-gray">
               Max disburse: Rp{" "}
               {balanceData?.data.balance.toLocaleString("en-US") ?? 0}
-            </p>
-            <p className="font-bold text-xl">Transfer</p>
+            </p> */}
+            <p className="font-bold text-xl">Sending</p>
             <div
               className={`rounded-t p-2 ${
                 theme.theme === "light"
@@ -514,8 +516,14 @@ export default function HomePage() {
                     value={cryptoValue}
                     defaultValue={0}
                     decimalsLimit={6}
+                    onFocus={undefined}
+                    onKeyUp={undefined}
+                    onSubmit={undefined}
+                    onSubmitCapture={undefined}
+                    onChangeCapture={undefined}
                     className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                     onValueChange={(value, name) => {
+                      if (value === cryptoValue) return;
                       setCryptoValue(value ?? "0");
                       if (data) {
                         const idr = (
@@ -528,6 +536,9 @@ export default function HomePage() {
                         setExchangeFee((idrFloat * 0.005).toFixed(2));
                         setFee(thisFee);
                         setIdrValue(idr === "NaN" ? "0" : idr);
+                        setReceiveValue(
+                          parseFloat((parseFloat(idr) - thisFee).toFixed(2))
+                        );
                       }
                     }}
                   />
@@ -561,18 +572,21 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
-            <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
+            {/* <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
               <AiOutlineArrowDown />
-            </a>
+            </a> */}
+            <p className="font-bold text-xl mt-4 mb-2">Receiving</p>
             <div
               className={`rounded-t p-2 ${
                 theme.theme === "light"
                   ? "from-container border-bot"
                   : "from-container-dark border-bot"
-              } -mt-2.5 flex gap-x-1 items-center justify-between`}
+              } flex gap-x-1 items-center justify-between`}
             >
               <div className="flex">
-                <p className="text-gray">To:</p>
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Destination: &nbsp;
+                </p>
                 <div
                   onClick={(e) => {
                     if (loading || isCheckingBankAccount) return;
@@ -608,61 +622,36 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b border-bot`}
-            >
-              <input
-                disabled={loading}
-                onKeyDown={(evt) => {
-                  ["e", "E", "+", "-"].includes(evt.key) &&
-                    evt.preventDefault();
-                }}
-                value={phoneNumber}
-                onChange={(e) => {
-                  e.preventDefault();
-                  const re = /^[0-9]*[.,]?[0-9]*$/;
-
-                  // if value is not blank, then test the regex
-
-                  if (e.target.value === "" || re.test(e.target.value)) {
-                    let temp = e.target.value.replaceAll(",", "");
-                    let lastTemp = temp.replaceAll(".", "");
-                    setPhoneNumber(lastTemp);
-                  }
-                }}
-                className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                placeholder="Phone Number (WhatsApp)"
-                spellCheck={false}
-                type="number"
-              />
-            </div>
-            <div
-              className={`px-3 py-[14px] ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
               } border-b border-bot flex justify-between`}
             >
-              <input
-                disabled={loading}
-                onKeyDown={(evt) => {
-                  ["e", "E", "+", "-"].includes(evt.key) &&
-                    evt.preventDefault();
-                }}
-                value={bankAccountValue}
-                onChange={(e) => {
-                  e.preventDefault();
-                  const re = /^[0-9]*[.,]?[0-9]*$/;
+              <div className="flex items-center">
+                <p className="font-medium text-socket-primary sm:text-lg w-fit">
+                  Account&nbsp;Number:&nbsp;
+                </p>
+                <input
+                  disabled={loading}
+                  onKeyDown={(evt) => {
+                    ["e", "E", "+", "-"].includes(evt.key) &&
+                      evt.preventDefault();
+                  }}
+                  value={bankAccountValue}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    const re = /^[0-9]*[.,]?[0-9]*$/;
 
-                  if (e.target.value === "" || re.test(e.target.value)) {
-                    let temp = e.target.value.replaceAll(",", "");
-                    let lastTemp = temp.replaceAll(".", "");
-                    setBankAccountValue(lastTemp);
-                  }
-                  setBankAccountName("");
-                }}
-                className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                placeholder="Account Number"
-                spellCheck={false}
-                type="number"
-              />
+                    if (e.target.value === "" || re.test(e.target.value)) {
+                      let temp = e.target.value.replaceAll(",", "");
+                      let lastTemp = temp.replaceAll(".", "");
+                      setBankAccountValue(lastTemp);
+                    }
+                    setBankAccountName("");
+                  }}
+                  className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  placeholder="Account Number"
+                  spellCheck={false}
+                  type="number"
+                />
+              </div>
               <a
                 onClick={async () => {
                   if (loading || isCheckingBankAccount) return;
@@ -728,22 +717,28 @@ export default function HomePage() {
                 )}
               </a>
             </div>
+
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } border-b border-bot`}
             >
-              <input
-                value={bankAccountName}
-                disabled
-                onChange={(e) => {
-                  setBankAccountName(e.target.value);
-                }}
-                className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none min-w-full w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                placeholder="Account Name"
-                spellCheck={false}
-                type="text"
-              />
+              <div className="flex items-center flex-wrap">
+                <p className="font-medium text-socket-primary sm:text-lg w-fit">
+                  Account&nbsp;Name:&nbsp;
+                </p>
+                <input
+                  value={bankAccountName}
+                  disabled
+                  onChange={(e) => {
+                    setBankAccountName(e.target.value);
+                  }}
+                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl"
+                  placeholder="Account Name"
+                  spellCheck={false}
+                  type="text"
+                />
+              </div>
             </div>
             <div
               className={`rounded-b ${
@@ -758,10 +753,10 @@ export default function HomePage() {
                   id="input-example"
                   name="input-name"
                   placeholder="0"
-                  disabled={loading}
                   value={idrValue}
                   defaultValue={0}
                   decimalsLimit={2}
+                  disabled
                   className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                   onValueChange={(value, name) => {
                     setIdrValue(value ?? "0");
@@ -771,6 +766,7 @@ export default function HomePage() {
                       (6000 + idrFloat * 0.005).toFixed(2)
                     );
                     setFee(thisFee);
+                    setReceiveValue(idrFloat - thisFee);
                     if (data) {
                       const crypto = (
                         (1 / data.data[0].current_price) *
@@ -860,18 +856,51 @@ export default function HomePage() {
             >
               <div className="flex gap-x-2 items-center">
                 <p className="font-medium text-socket-primary sm:text-lg">
-                  Receive:
+                  Amount&nbsp;Receiving:
                 </p>
                 <CurrencyInput
                   id="input-example"
                   name="input-name"
                   placeholder="0"
-                  disabled
                   value={!receiveValue ? 0 : receiveValue}
                   defaultValue={0}
                   decimalsLimit={6}
+                  disabled={loading}
                   className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                  onValueChange={(value, name) => {}}
+                  onValueChange={(value, name) => {
+                    if (value === receiveValue.toString()) return;
+                    const thisReceiveValue = parseFloat(value ?? "0");
+                    const fixedFee = 6000;
+                    setReceiveValue(parseFloat(value ?? "0"));
+                    const idrFloat = parseFloat(value ?? "0");
+                    setExchangeFee((idrFloat * 0.005).toFixed(2));
+                    const thisFee = parseFloat(
+                      (6000 + idrFloat * 0.005).toFixed(2)
+                    );
+                    setFee(thisFee);
+                    // console.log(parseFloat(value ?? "0"));
+                    // console.log(thisFee);
+                    // console.log(
+                    //   (parseFloat(value ?? "0") + 6000) * 1.005025119
+                    // );
+                    const idrValueFloat =
+                      (parseFloat(value ?? "0") + 6000) * 1.005;
+                    setIdrValue(
+                      ((parseFloat(value ?? "0") + 6000) * 1.005).toFixed(2)
+                    );
+                    const theFee = parseFloat(
+                      (idrValueFloat - parseFloat(value ?? "0")).toFixed(2)
+                    );
+                    setFee(theFee);
+                    setExchangeFee((theFee - 6000).toFixed(2));
+                    if (data) {
+                      const crypto = (
+                        (1 / data.data[0].current_price) *
+                        (idrFloat + thisFee)
+                      ).toFixed(6);
+                      setCryptoValue(crypto === "NaN" ? "0" : crypto);
+                    }
+                  }}
                 />
               </div>
               <span>
@@ -888,6 +917,41 @@ export default function HomePage() {
                   </span>
                 </button>
               </span>
+            </div>
+            <div
+              className={`px-3 py-[14px] ${
+                theme.theme === "light" ? "to-container" : "to-container-dark"
+              } border-t`}
+            >
+              <div className="flex items-center">
+                <p className="font-medium text-socket-primary sm:text-lg w-fit">
+                  Phone&nbsp;Number&nbsp;(WhatsApp):&nbsp;
+                </p>
+                <input
+                  disabled={loading}
+                  onKeyDown={(evt) => {
+                    ["e", "E", "+", "-"].includes(evt.key) &&
+                      evt.preventDefault();
+                  }}
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    const re = /^[0-9]*[.,]?[0-9]*$/;
+
+                    // if value is not blank, then test the regex
+
+                    if (e.target.value === "" || re.test(e.target.value)) {
+                      let temp = e.target.value.replaceAll(",", "");
+                      let lastTemp = temp.replaceAll(".", "");
+                      setPhoneNumber(lastTemp);
+                    }
+                  }}
+                  className="skt-w skt-w-input text-socket-primary w-1/2 bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl"
+                  placeholder="Phone"
+                  spellCheck={false}
+                  type="number"
+                />
+              </div>
             </div>
             <button
               disabled={loading || isCheckingBankAccount}
