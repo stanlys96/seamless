@@ -66,7 +66,7 @@ export default function HomePage() {
     bank_code: "bca",
     imgUrl: "/img/banks/bca.png",
   });
-  const [receiveValue, setReceiveValue] = useState(-6000);
+  const [receiveValue, setReceiveValue] = useState(0);
   const [transactionLoading, setTransactionLoading] = useState(false);
 
   const currentChain = chainData.find((data) => data.chainId === chainId);
@@ -114,7 +114,7 @@ export default function HomePage() {
     setIdrValue("");
     setFee(6000);
     setExchangeFee("0");
-    setReceiveValue(-6000);
+    setReceiveValue(0);
   };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
@@ -293,7 +293,7 @@ export default function HomePage() {
     setIdrValue("");
     setFee(6000);
     setExchangeFee("0");
-    setReceiveValue(-6000);
+    setReceiveValue(0);
   };
 
   const checkBankInquiry: any = async () => {
@@ -869,25 +869,10 @@ export default function HomePage() {
                   className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                   onValueChange={(value, name) => {
                     if (value === receiveValue.toString()) return;
-                    const thisReceiveValue = parseFloat(value ?? "0");
-                    const fixedFee = 6000;
                     setReceiveValue(parseFloat(value ?? "0"));
-                    const idrFloat = parseFloat(value ?? "0");
-                    setExchangeFee((idrFloat * 0.005).toFixed(2));
-                    const thisFee = parseFloat(
-                      (6000 + idrFloat * 0.005).toFixed(2)
-                    );
-                    setFee(thisFee);
-                    // console.log(parseFloat(value ?? "0"));
-                    // console.log(thisFee);
-                    // console.log(
-                    //   (parseFloat(value ?? "0") + 6000) * 1.005025119
-                    // );
                     const idrValueFloat =
                       (parseFloat(value ?? "0") + 6000) * 1.005;
-                    setIdrValue(
-                      ((parseFloat(value ?? "0") + 6000) * 1.005).toFixed(2)
-                    );
+                    setIdrValue(idrValueFloat.toFixed(2));
                     const theFee = parseFloat(
                       (idrValueFloat - parseFloat(value ?? "0")).toFixed(2)
                     );
@@ -896,7 +881,7 @@ export default function HomePage() {
                     if (data) {
                       const crypto = (
                         (1 / data.data[0].current_price) *
-                        (idrFloat + thisFee)
+                        idrValueFloat
                       ).toFixed(6);
                       setCryptoValue(crypto === "NaN" ? "0" : crypto);
                     }
