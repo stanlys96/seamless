@@ -931,7 +931,7 @@ export default function HomePage() {
                       setPhoneNumber(lastTemp);
                     }
                   }}
-                  className="skt-w skt-w-input text-socket-primary w-1/2 bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl"
+                  className="skt-w skt-w-input text-socket-primary w-1/2 bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl overflow-hidden"
                   placeholder="Phone"
                   spellCheck={false}
                   type="number"
