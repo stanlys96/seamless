@@ -438,7 +438,7 @@ export default function HomePage() {
   return (
     <MainLayout>
       <div className="the-container relative">
-        <div className="min-h-[80vh] w-full flex justify-center items-center">
+        <div className="w-full flex justify-center items-center">
           <div
             className={`${
               theme.theme === "light"
@@ -521,7 +521,7 @@ export default function HomePage() {
                     onSubmit={undefined}
                     onSubmitCapture={undefined}
                     onChangeCapture={undefined}
-                    className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                    className="skt-w border-b skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                     onValueChange={(value, name) => {
                       if (value === cryptoValue) return;
                       setCryptoValue(value ?? "0");
@@ -852,7 +852,7 @@ export default function HomePage() {
             <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] border-t flex justify-between items-center`}
+              } px-3 py-[14px] border-t border-gray flex justify-between items-center`}
             >
               <div className="flex gap-x-2 items-center">
                 <p className="font-medium text-socket-primary sm:text-lg">
@@ -866,7 +866,7 @@ export default function HomePage() {
                   defaultValue={0}
                   decimalsLimit={6}
                   disabled={loading}
-                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  className="skt-w border-b skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
                   onValueChange={(value, name) => {
                     if (value === receiveValue.toString()) return;
                     setReceiveValue(parseFloat(value ?? "0"));
@@ -906,7 +906,7 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-t`}
+              } border-t border-gray`}
             >
               <div className="flex items-center">
                 <p className="font-medium text-socket-primary sm:text-lg w-fit">
@@ -931,7 +931,7 @@ export default function HomePage() {
                       setPhoneNumber(lastTemp);
                     }
                   }}
-                  className="skt-w skt-w-input text-socket-primary w-1/2 bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl"
+                  className="skt-w skt-w-input text-socket-primary w-5/6 md:w-1/2 bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl"
                   placeholder="Phone"
                   spellCheck={false}
                   type="number"

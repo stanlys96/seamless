@@ -41,7 +41,12 @@ export const MainLayout = ({ children }: Props) => {
             }}
             className="font-bold text-xl text-gray cursor-pointer mr-2"
           >
-            Seamless
+            <img
+              src={`/img/${
+                theme.theme === "dark" ? "light" : "dark"
+              }-seamless.png`}
+              className="w-[150px]"
+            />
           </a>
         </div>
         <div className="flex gap-x-2 items-center">
