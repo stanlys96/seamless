@@ -646,7 +646,7 @@ export default function HomePage() {
                     }
                     setBankAccountName("");
                   }}
-                  className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full overflow-hidden"
                   placeholder="Account Number"
                   spellCheck={false}
                   type="number"
