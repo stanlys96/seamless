@@ -36,7 +36,7 @@ import { RootState, signActions } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
 import { Tooltip } from "antd";
-
+// delay
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function HomePage() {
