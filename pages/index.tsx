@@ -740,7 +740,7 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <div
+            {/* <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } px-3 py-[14px] flex justify-between items-center`}
@@ -792,11 +792,11 @@ export default function HomePage() {
                   </span>
                 </button>
               </span>
-            </div>
+            </div> */}
             <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] border-t flex w-full justify-between items-center`}
+              } px-3 py-[14px] flex w-full justify-between items-center`}
             >
               <div className="flex gap-x-2 items-center">
                 <div className="flex font-medium text-socket-primary sm:text-lg">
