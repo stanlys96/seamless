@@ -36,11 +36,13 @@ import { RootState, signActions } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
 import { Tooltip } from "antd";
+import Typed from "react-typed";
 // delay
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function HomePage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   let periodCheckBank = 0;
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
@@ -438,7 +440,72 @@ export default function HomePage() {
   return (
     <MainLayout>
       <div className="the-container relative">
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center items-center gap-x-[30px]">
+          <div className="text-black md:grid hidden grid grid-cols-2 text-[35px] font-bold gap-y-[30px] gap-x-[10px]">
+            <div
+              className={`text-right ${
+                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
+              }`}
+            >
+              You Can Use
+            </div>
+            {/* <div className="text-left underline">USDC</div> */}
+            <Typed
+              strings={["USDC", "Matic", "USDT", "DAI", "WBTC", "WETH"]}
+              typeSpeed={150}
+              backSpeed={100}
+              loop
+              className={`underline ${
+                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
+              }`}
+            />
+            <div
+              className={`text-right ${
+                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
+              }`}
+            >
+              From
+            </div>
+            <Typed
+              strings={["Ethereum", "Arbitrum", "Polygon", "Optimism", "BSC"]}
+              typeSpeed={150}
+              backSpeed={100}
+              loop
+              className={`underline ${
+                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
+              }`}
+            />
+            <div
+              className={`text-right ${
+                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
+              }`}
+            >
+              To
+            </div>
+            <div
+              className={`underline text-left ${
+                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
+              }`}
+            >
+              Pay
+            </div>
+            <div
+              className={`text-right ${
+                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
+              }`}
+            >
+              Directly To
+            </div>
+            <Typed
+              strings={["BCA", "GoPay", "OVO", "Shopee Pay", "Tokopedia"]}
+              typeSpeed={150}
+              backSpeed={100}
+              loop
+              className={`underline ${
+                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
+              }`}
+            />
+          </div>
           <div
             className={`${
               theme.theme === "light"
@@ -446,6 +513,42 @@ export default function HomePage() {
                 : "primary-container-dark"
             } transition duration-500  rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
           >
+            <div
+              className={`flex w-full justify-center items-center transition duration-500 mb-4 ${
+                theme.theme === "light" ? "text-dark" : "text-light"
+              }`}
+            >
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/");
+                }}
+                className={`${
+                  router.pathname === "/"
+                    ? `${
+                        theme.theme === "light" ? "text-black" : "text-white"
+                      } underline`
+                    : `text-gray`
+                } font-bold cursor-pointer transfer-btn`}
+              >
+                TRANSFER
+              </a>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/transactions");
+                }}
+                className={`${
+                  router.pathname === "/"
+                    ? "text-gray"
+                    : `${
+                        theme.theme === "light" ? "text-black" : "text-white"
+                      } underline`
+                } font-bold cursor-pointer transfer-btn-light`}
+              >
+                HISTORY
+              </a>
+            </div>
             {/* <p className="text-gray">
               Max disburse: Rp{" "}
               {balanceData?.data.balance.toLocaleString("en-US") ?? 0}
@@ -800,7 +903,7 @@ export default function HomePage() {
             >
               <div className="flex gap-x-2 items-center">
                 <div className="flex font-medium text-socket-primary sm:text-lg">
-                  <Tooltip
+                  {/* <Tooltip
                     title={`Gas Fee: 3,000 IDR
                     Transfer Fee: 3,000 IDR
                     Exchange Fee (0.5%): ${parseFloat(
@@ -809,15 +912,15 @@ export default function HomePage() {
                     Total Fee: ${fee.toLocaleString("en-US")} IDR`}
                   >
                     <AiFillInfoCircle />
-                  </Tooltip>
-                  <div
+                  </Tooltip> */}
+                  {/* <div
                     id="tooltip-light"
                     role="tooltip"
                     className="absolute z-100 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
                   >
                     Tooltip content
                     <div className="tooltip-arrow" data-popper-arrow></div>
-                  </div>
+                  </div> */}
                   <span className="ml-1">Fee</span>
                   <span>:</span>
                 </div>

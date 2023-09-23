@@ -73,45 +73,7 @@ export const MainLayout = ({ children }: Props) => {
           <ConnectButton />
         </div>
       </div>
-      <div className="layout-container">
-        <div
-          className={`flex w-full justify-center items-center transition duration-500 mb-4 ${
-            theme.theme === "light" ? "text-dark" : "text-light"
-          }`}
-        >
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/");
-            }}
-            className={`${
-              router.pathname === "/"
-                ? `${
-                    theme.theme === "light" ? "text-black" : "text-white"
-                  } underline`
-                : `text-gray`
-            } font-bold cursor-pointer transfer-btn`}
-          >
-            TRANSFER
-          </a>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/transactions");
-            }}
-            className={`${
-              router.pathname === "/"
-                ? "text-gray"
-                : `${
-                    theme.theme === "light" ? "text-black" : "text-white"
-                  } underline`
-            } font-bold cursor-pointer transfer-btn-light`}
-          >
-            HISTORY
-          </a>
-        </div>
-        {children}
-      </div>
+      <div className="layout-container">{children}</div>
     </div>
   );
 };
