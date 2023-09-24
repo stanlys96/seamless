@@ -14,6 +14,7 @@ interface Props {
   setBankAccountName: (param1: any) => void;
   setBankAccountValue: (param1: any) => void;
   banksList?: any;
+  setPhoneNumber: (param1: any) => void;
 }
 
 export const BankModal = ({
@@ -24,6 +25,7 @@ export const BankModal = ({
   setBankAccountName,
   banksList,
   setBankAccountValue,
+  setPhoneNumber,
 }: Props) => {
   const [theList, setTheList] = useState(banksList?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
@@ -174,6 +176,7 @@ export const BankModal = ({
                       setBankAccountName("");
                       setBankAccountValue("");
                       setSelectedCategory("bank");
+                      setPhoneNumber("");
                     }
                     setBankModal(false);
                     setSearchQuery("");

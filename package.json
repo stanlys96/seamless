@@ -27,6 +27,7 @@
     "next": "13.4.13",
     "postcss": "8.4.27",
     "react": "18.2.0",
+    "react-collapse": "^5.1.1",
     "react-currency-input-field": "^3.6.11",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
@@ -41,6 +42,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.1.1"
+    "@types/crypto-js": "^4.1.1",
+    "@types/react-collapse": "^5.0.1"
   }
 }

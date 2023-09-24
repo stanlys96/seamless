@@ -521,3 +521,49 @@ export const allTokenData = [
   maticTokenData,
   bnbTokenData,
 ];
+
+export const faqData = [
+  {
+    id: 1,
+    question: "What is Seamless Finance?",
+    answer: `<br/>Seamless Finance is a bridge from web3 to traditional finance.
+                We create a single-click way to fulfill your withdrawal or
+                payment needs to Indonesian Rupiah (IDR). These are the things
+                you can do with Seamless Finance:
+                <br />
+                <br /> 1) Withdrawal to bank account, <br />
+                2) Topup e-wallet (Gopay, OVO, etc), <br />
+                3) Checkout ecommerce (tokopedia, shopee, blibli, etc),
+                <br />
+                4) Perform a payroll if you’re a DAO with onchain treasury and
+                have to pay salary in IDR.`,
+    open: false,
+  },
+  {
+    id: 2,
+    question: "Ok, any tutorial link to use Seamless?",
+    answer: "<br/>Go to this link!",
+    open: false,
+  },
+  {
+    id: 3,
+    question: "Does Seamless Finance has a token?",
+    answer:
+      "<br/>Seamless Finance has not released the token yet. Before our official announcement, any seamless token out there is not related to Seamless Finance.",
+    open: false,
+  },
+  {
+    id: 4,
+    question: "Is there any retroactive airdrop plan?",
+    answer:
+      "<br/>We are thankful to all of the early supporters of Seamless Finance. We plan to give our retroactive appreciation to them. Stay tuned!",
+    open: false,
+  },
+  {
+    id: 5,
+    question: "Does Seamless Finance take any fees?",
+    answer:
+      "<br/>Yes, we are. But easy, you don’t need to worry about hidden fees. The value in the “amount received” is fixed.",
+    open: false,
+  },
+];

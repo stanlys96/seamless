@@ -1,5 +1,10 @@
 "use client";
-import { AiOutlineArrowDown, AiFillInfoCircle } from "react-icons/ai";
+import {
+  AiOutlineArrowDown,
+  AiFillInfoCircle,
+  AiOutlineInsertRowBelow,
+  AiOutlineArrowUp,
+} from "react-icons/ai";
 import { useState } from "react";
 import {
   useEtherBalance,
@@ -21,7 +26,7 @@ import erc20Abi from "../contracts/erc20-abi.json";
 import seamlessAbi from "../contracts/seamless-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
-import { chainData } from "@/utils/helper";
+import { chainData, faqData } from "@/utils/helper";
 import { MainLayout } from "@/src/layouts/Main";
 import { Contract, utils } from "ethers";
 import { Bars, ColorRing } from "react-loader-spinner";
@@ -37,6 +42,8 @@ import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
 import { Tooltip } from "antd";
 import Typed from "react-typed";
+import { Collapse } from "react-collapse";
+import { SelectNetworkModal } from "@/src/components/SelectNetworkModal";
 // delay
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -44,16 +51,19 @@ export default function HomePage() {
   const dispatch = useDispatch();
   const router = useRouter();
   let periodCheckBank = 0;
+  const [theState, setTheState] = useState(0);
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const signer = useSigner();
+  const [openCollapse, setOpenCollapse] = useState(false);
   const { account, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
   const [idrValue, setIdrValue] = useState("");
   const [tokenModal, setTokenModal] = useState(false);
+  const [networkModal, setNetworkModal] = useState(false);
   const [bankModal, setBankModal] = useState(false);
   const [exchangeFee, setExchangeFee] = useState("0");
   const [historyModal, setHistoryModal] = useState(false);
@@ -62,6 +72,7 @@ export default function HomePage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [transactionData, setTransactionData] = useState<any>();
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
+  const [hasLatestData, setHasLatestData] = useState(false);
   const [fee, setFee] = useState(6000);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     name: "BCA",
@@ -70,6 +81,9 @@ export default function HomePage() {
   });
   const [receiveValue, setReceiveValue] = useState(0);
   const [transactionLoading, setTransactionLoading] = useState(false);
+  const [openData, setOpenData] = useState(
+    faqData.map((faq) => ({ id: faq.id, open: false }))
+  );
 
   const currentChain = chainData.find((data) => data.chainId === chainId);
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
@@ -423,6 +437,7 @@ export default function HomePage() {
   useEffect(() => {
     setBankAccountName("");
     setBankAccountValue("");
+    setPhoneNumber("");
   }, [account]);
 
   useEffect(() => {
@@ -433,13 +448,25 @@ export default function HomePage() {
         setBankAccountName(latestData.attributes.bank_account_name);
         setBankAccountValue(latestData.attributes.bank_account_number);
         setPhoneNumber(latestData.attributes.phone_number);
+        setHasLatestData(true);
+      } else {
+        setHasLatestData(false);
       }
     }
+    if (!historyData) {
+      setHasLatestData(false);
+    }
+    console.log(hasLatestData);
   }, [historyData]);
 
   return (
     <MainLayout>
       <div className="the-container relative">
+        <p className={`text-gray text-center py-3 text-[11px] md:text-[16px]`}>
+          This product is still in beta.
+          <br />
+          If you run into any issue please let us know in our discord server
+        </p>
         <div className="w-full flex justify-center items-center gap-x-[30px]">
           <div className="text-black md:grid hidden grid grid-cols-2 text-[35px] font-bold gap-y-[30px] gap-x-[10px]">
             <div
@@ -567,7 +594,12 @@ export default function HomePage() {
             >
               <div className="flex">
                 <p className="text-gray">From</p>
-                <button className="skt-w skt-w-input skt-w-button flex items-center p-2 flex-shrink-0 w-auto py-0 hover:bg-transparent bg-transparent justify-start sm:justify-between cursor-default">
+                <button
+                  onClick={() => {
+                    setNetworkModal(true);
+                  }}
+                  className={`skt-w cursor-pointer skt-w-input skt-w-button flex items-center p-2 flex-shrink-0 w-auto py-0 hover:bg-transparent bg-transparent justify-start sm:justify-between cursor-default`}
+                >
                   <span className="flex items-center">
                     <div className="relative flex h-fit w-fit">
                       <div className="skt-w rounded-full overflow-hidden w-5 h-5 sm:w-6 sm:h-6">
@@ -587,6 +619,7 @@ export default function HomePage() {
                     <span className="skt-w ml-1 -mb-0.5 font-medium text-socket-primary sm:text-lg">
                       {currentChain?.name ?? "Ethereum"}
                     </span>
+                    <AiOutlineArrowDown />
                   </span>
                 </button>
               </div>
@@ -896,14 +929,14 @@ export default function HomePage() {
                 </button>
               </span>
             </div> */}
-            <div
+            {/* <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } px-3 py-[14px] flex w-full justify-between items-center`}
             >
               <div className="flex gap-x-2 items-center">
                 <div className="flex font-medium text-socket-primary sm:text-lg">
-                  {/* <Tooltip
+                  <Tooltip
                     title={`Gas Fee: 3,000 IDR
                     Transfer Fee: 3,000 IDR
                     Exchange Fee (0.5%): ${parseFloat(
@@ -912,15 +945,15 @@ export default function HomePage() {
                     Total Fee: ${fee.toLocaleString("en-US")} IDR`}
                   >
                     <AiFillInfoCircle />
-                  </Tooltip> */}
-                  {/* <div
+                  </Tooltip>
+                  <div
                     id="tooltip-light"
                     role="tooltip"
                     className="absolute z-100 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
                   >
                     Tooltip content
                     <div className="tooltip-arrow" data-popper-arrow></div>
-                  </div> */}
+                  </div>
                   <span className="ml-1">Fee</span>
                   <span>:</span>
                 </div>
@@ -951,11 +984,11 @@ export default function HomePage() {
                   </span>
                 </button>
               </span>
-            </div>
+            </div> */}
             <div
               className={`rounded-b ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] border-t border-gray flex justify-between items-center`}
+              } px-3 py-[14px] border-gray flex justify-between items-center`}
             >
               <div className="flex gap-x-2 items-center">
                 <p className="font-medium text-socket-primary sm:text-lg">
@@ -1016,7 +1049,7 @@ export default function HomePage() {
                   Phone&nbsp;Number&nbsp;(WhatsApp):&nbsp;
                 </p>
                 <input
-                  disabled={loading}
+                  disabled={loading || hasLatestData}
                   onKeyDown={(evt) => {
                     ["e", "E", "+", "-"].includes(evt.key) &&
                       evt.preventDefault();
@@ -1190,6 +1223,47 @@ export default function HomePage() {
             </button>
           </div>
         </div>
+        <div
+          className={`flex flex-col justify-center items-center mt-5 w-full px-[20px] lg:px-[325px] ${
+            theme.theme === "light" ? "text-black" : "text-white"
+          }`}
+        >
+          <p className="text-[40px]">FAQ</p>
+          {faqData.map((faq: any, idx: number) => (
+            <div
+              className={`flex collapsie flex-col justify-between items-center w-full text-[16px] md:text-[20px] py-2 border-t ${
+                faq.id === faqData.length && "border-b"
+              }`}
+            >
+              <div
+                onClick={() => {
+                  faq.open = !faq.open;
+                  setTheState((prevState) => prevState + 1);
+                }}
+                className="flex w-full justify-between items-center cursor-pointer collapse-content"
+              >
+                <p>{faq.question}</p>
+                <div className={`${faq.open ? "hidden" : "block"}`}>
+                  <AiOutlineArrowDown />
+                </div>{" "}
+                <div className={`${faq.open ? "block" : "hidden"}`}>
+                  <AiOutlineArrowUp />
+                </div>
+              </div>
+              <div
+                className="collapse-content"
+                style={{
+                  maxHeight: faq.open ? "400px" : 0,
+                }}
+                dangerouslySetInnerHTML={{ __html: faq.answer }}
+              />
+            </div>
+          ))}
+        </div>
+        <SelectNetworkModal
+          networkModal={networkModal}
+          setNetworkModal={setNetworkModal}
+        />
         <CustomModal
           tokenModal={tokenModal}
           setTokenModal={setTokenModal}
@@ -1216,6 +1290,7 @@ export default function HomePage() {
           currentSelectedBank={currentSelectedBank}
           setBankAccountName={setBankAccountName}
           setBankAccountValue={setBankAccountValue}
+          setPhoneNumber={setPhoneNumber}
         />
       </div>
     </MainLayout>

@@ -32,24 +32,24 @@ export const MainLayout = ({ children }: Props) => {
           content="upgrade-insecure-requests"
         /> */}
       </Head>
-      <div className="z-50 navbar absolute w-full flex justify-between p-5 items-center">
-        <div className="flex gap-x-4 items-center">
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/");
-            }}
-            className="font-bold text-xl text-gray cursor-pointer mr-2"
-          >
-            <img
-              src={`/img/${
-                theme.theme === "dark" ? "light" : "dark"
-              }-seamless.png`}
-              className="w-[150px]"
-            />
-          </a>
-        </div>
+      <div className="z-50 navbar w-full flex justify-end p-5 items-center">
         <div className="flex gap-x-2 items-center">
+          <div className="flex gap-x-4 items-center lg:absolute left-[43%]">
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/");
+              }}
+              className="font-bold text-xl text-gray cursor-pointer mr-2"
+            >
+              <img
+                src={`/img/${
+                  theme.theme === "dark" ? "light" : "dark"
+                }-seamless.png`}
+                className="w-[150px]"
+              />
+            </a>
+          </div>
           <div className="dark_mode">
             <input
               value={theme.theme}
