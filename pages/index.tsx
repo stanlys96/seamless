@@ -1231,6 +1231,7 @@ export default function HomePage() {
           <p className="text-[40px]">FAQ</p>
           {faqData.map((faq: any, idx: number) => (
             <div
+              key={faq.id}
               className={`flex collapsie flex-col justify-between items-center w-full text-[16px] md:text-[20px] py-2 border-t ${
                 faq.id === faqData.length && "border-b"
               }`}
