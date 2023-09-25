@@ -104,7 +104,7 @@ export const HistoryModal = ({
               </div>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto py-2 h-[500px] max-h-[486px] border-t border-gray">
+          <div className="flex-1 overflow-y-auto py-2 h-[500px] max-h-[60vh] border-t border-gray">
             {listResult.length > 0 ? (
               listResult.map((theData: any, idx: number) => (
                 <button

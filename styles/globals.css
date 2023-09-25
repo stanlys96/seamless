@@ -255,8 +255,31 @@ input[type="number"] {
 .collapse-content {
   overflow: hidden;
   transition: 0.4s all;
+  /* max-height: fit-content;
+  height: -moz-max-content; */
 }
 
 .collapsie > div {
   overflow: auto;
+}
+
+.rotate-180 {
+  transform: rotateZ(-180deg);
+  transition: transform 200ms linear;
+}
+
+.rotate-0 {
+  transform: rotateZ(0);
+  transition: transform 200ms linear;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
