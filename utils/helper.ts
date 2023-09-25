@@ -85,15 +85,15 @@ export const bnbTokenData = {
 
 export const supportedChains = [
   Mainnet.chainId,
-  Goerli.chainId,
+  // Goerli.chainId,
   Optimism.chainId,
   BSC.chainId,
   Arbitrum.chainId,
   Polygon.chainId,
-  ArbitrumGoerli.chainId,
-  OptimismGoerli.chainId,
-  Mumbai.chainId,
-  BSCTestnet.chainId,
+  // ArbitrumGoerli.chainId,
+  // OptimismGoerli.chainId,
+  // Mumbai.chainId,
+  // BSCTestnet.chainId,
 ];
 
 const ethereumSeamlessContract = "";
