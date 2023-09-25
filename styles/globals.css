@@ -255,6 +255,8 @@ input[type="number"] {
 .collapse-content {
   overflow: hidden;
   transition: 0.4s all;
+  /* max-height: fit-content;
+  height: -moz-max-content; */
 }
 
 .collapsie > div {

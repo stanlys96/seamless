@@ -23,7 +23,7 @@ export const SelectNetworkModal = ({
         <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] sm:rounded-b-xl static bottom-0 w-full h-fit">
           <div className="relative flex flex-shrink-0 items-center justify-between border-b border-gray py-2.5 px-6 sm:py-4 sm:px-6">
             <h3 className="text-lg font-medium text-socket-primary">
-              Select Token
+              Select Network
             </h3>
             <div className="flex items-center">
               <button
