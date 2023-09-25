@@ -1232,7 +1232,7 @@ export default function HomePage() {
           {faqData.map((faq: any, idx: number) => (
             <div
               key={faq.id}
-              className={`flex collapsie flex-col justify-between items-center w-full text-[16px] md:text-[20px] py-2 border-t ${
+              className={`flex collapsie flex-col justify-between items-center w-full text-[16px] md:text-[20px] py-2 border-t no-scrollbar ${
                 faq.id === faqData.length && "border-b"
               }`}
             >
@@ -1241,18 +1241,15 @@ export default function HomePage() {
                   faq.open = !faq.open;
                   setTheState((prevState) => prevState + 1);
                 }}
-                className="flex w-full justify-between items-center cursor-pointer collapse-content"
+                className="flex w-full justify-between items-center cursor-pointer collapse-content overflow-hidden no-scrollbar"
               >
                 <p>{faq.question}</p>
-                <div className={`${faq.open ? "hidden" : "block"}`}>
+                <div className={`${faq.open ? "rotate-0" : "rotate-180"}`}>
                   <AiOutlineArrowDown />
                 </div>{" "}
-                <div className={`${faq.open ? "block" : "hidden"}`}>
-                  <AiOutlineArrowUp />
-                </div>
               </div>
               <div
-                className="collapse-content"
+                className="collapse-content no-scrollbar overflow-x-scroll"
                 style={{
                   maxHeight: faq.open ? "400px" : 0,
                 }}

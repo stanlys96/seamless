@@ -536,7 +536,8 @@ export const faqData = [
                 3) Checkout ecommerce (tokopedia, shopee, blibli, etc),
                 <br />
                 4) Perform a payroll if you’re a DAO with onchain treasury and
-                have to pay salary in IDR.`,
+                have to pay salary in IDR.
+                `,
     open: false,
   },
   {
