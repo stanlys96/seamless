@@ -16,9 +16,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const { chainId, switchNetwork } = useEthers();
   const chainSupported = supportedChains.includes(chainId ?? 0);
   const [showTestNetwork, setShowTestNetwork] = useState(false);
-  const resultData = showTestNetwork
-    ? chainData
-    : chainData.filter((data: any) => !data.testNetwork);
+  const resultData = chainData.filter((data: any) => !data.testNetwork);
   return (
     <div className="relative z-100">
       <button
@@ -112,7 +110,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             </div>
           </button>
         ))}
-        <button
+        {/* <button
           onClick={async (e) => {
             e.preventDefault();
             setShowTestNetwork((prevState) => !prevState);
@@ -135,7 +133,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             </div>
             Show Test Network
           </div>
-        </button>
+        </button> */}
       </div>
     </div>
   );

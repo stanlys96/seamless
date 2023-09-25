@@ -10,8 +10,8 @@ export const SelectNetworkModal = ({
   networkModal,
   setNetworkModal,
 }: Props) => {
-  // const resultData = chainData.filter((data: any) => !data.testNetwork);
-  const resultData = chainData;
+  const resultData = chainData.filter((data: any) => !data.testNetwork);
+  // const resultData = chainData;
   const { chainId, switchNetwork } = useEthers();
   const chainSupported = supportedChains.includes(chainId ?? 0);
   return (
