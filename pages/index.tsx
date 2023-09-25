@@ -26,7 +26,7 @@ import erc20Abi from "../contracts/erc20-abi.json";
 import seamlessAbi from "../contracts/seamless-abi.json";
 import { useEffect } from "react";
 import { formatEther, formatUnits } from "@ethersproject/units";
-import { chainData, faqData } from "@/utils/helper";
+import { chainData, faqData, supportedChains } from "@/utils/helper";
 import { MainLayout } from "@/src/layouts/Main";
 import { Contract, utils } from "ethers";
 import { Bars, ColorRing } from "react-loader-spinner";
@@ -163,6 +163,7 @@ export default function HomePage() {
   const insufficientBalance = parseFloat(cryptoValue ?? "0") > usedBalance;
   const insufficientDisburse =
     parseFloat(idrValue.replaceAll(",", "")) > (balanceData?.data.balance ?? 0);
+  const chainSupported = supportedChains.includes(chainId ?? 0);
 
   useEffect(() => {
     setCurrentSelectedToken(
@@ -1083,6 +1084,9 @@ export default function HomePage() {
                     activateBrowserWallet();
                     return;
                   }
+                  if (!chainSupported) {
+                    return;
+                  }
                   if (!signed.signed) {
                     dispatch(signActions.setIsSigning(true));
                     signer
@@ -1194,7 +1198,9 @@ export default function HomePage() {
                   ? "bg-darkGray cursor-not-allowed"
                   : !account
                   ? "mainBtn"
-                  : insufficientBalance || insufficientDisburse
+                  : insufficientBalance ||
+                    insufficientDisburse ||
+                    !chainSupported
                   ? "bg-red/30 cursor-not-allowed"
                   : "mainBtn"
               } w-full leading-[24px] px-4 py-[13px] flex items-center justify-center`}
@@ -1211,6 +1217,8 @@ export default function HomePage() {
                 />
               ) : !account ? (
                 "Connect Wallet"
+              ) : !chainSupported ? (
+                "Chain Not Supported"
               ) : !signed.signed ? (
                 "Sign"
               ) : insufficientBalance ? (
