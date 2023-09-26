@@ -1285,7 +1285,7 @@ export default function HomePage() {
               >
                 <p>{faq.question}</p>
                 <div className={`${faq.open ? "rotate-0" : "rotate-180"}`}>
-                  <AiOutlineArrowDown />
+                  <AiOutlineArrowUp />
                 </div>{" "}
               </div>
               <div

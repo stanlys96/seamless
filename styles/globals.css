@@ -264,7 +264,7 @@ input[type="number"] {
 }
 
 .rotate-180 {
-  transform: rotateZ(-180deg);
+  transform: rotateZ(180deg);
   transition: transform 200ms linear;
 }
 
