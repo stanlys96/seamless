@@ -164,6 +164,7 @@ export default function HomePage() {
   const insufficientDisburse =
     parseFloat(idrValue.replaceAll(",", "")) > (balanceData?.data.balance ?? 0);
   const chainSupported = supportedChains.includes(chainId ?? 0);
+  const receiveValueError = receiveValue < 10000;
 
   useEffect(() => {
     setCurrentSelectedToken(
@@ -588,7 +589,7 @@ export default function HomePage() {
                   ? "from-container"
                   : "from-container-dark"
               } mt-2 flex justify-between  ${
-                insufficientBalance
+                insufficientBalance || receiveValueError
                   ? "border-l border-t border-r border-red"
                   : "border-l border-t border-r border-transparent"
               }`}
@@ -630,16 +631,16 @@ export default function HomePage() {
             </div>
             <div
               className={`${
-                parseFloat(cryptoValue ?? "0") > usedBalance
-                  ? "border-t border-transparent"
-                  : "border-t border-transparent"
+                insufficientBalance || receiveValueError
+                  ? "border-t border-red"
+                  : "border-t border-mainGray2"
               }`}
             >
               <div
                 className={`rounded-b ${
                   theme.theme === "light" ? "to-container" : "to-container-dark"
                 } flex items-center justify-between px-3 py-[14px] sm:py-4 ${
-                  parseFloat(cryptoValue ?? "0") > usedBalance
+                  insufficientBalance || receiveValueError
                     ? "border-l border-r border-b border-red"
                     : "border-l border-r border-b border-transparent"
                 }`}
@@ -658,7 +659,13 @@ export default function HomePage() {
                     onSubmit={undefined}
                     onSubmitCapture={undefined}
                     onChangeCapture={undefined}
-                    className="skt-w border-b skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                    className={`skt-w border-b ${
+                      insufficientBalance || receiveValueError
+                        ? "border-red"
+                        : theme.theme === "dark"
+                        ? "border-white"
+                        : "border-black"
+                    } skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full`}
                     onValueChange={(value, name) => {
                       if (value === cryptoValue) return;
                       setCryptoValue(value ?? "0");
@@ -709,6 +716,13 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
+            <p className="text-red mt-1">
+              {insufficientBalance
+                ? "You have inputted value more than your balance"
+                : receiveValueError
+                ? "Minimal receive value is 10,000 IDR"
+                : ""}
+            </p>
             {/* <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
               <AiOutlineArrowDown />
             </a> */}
@@ -1003,7 +1017,13 @@ export default function HomePage() {
                   defaultValue={0}
                   decimalsLimit={6}
                   disabled={loading}
-                  className="skt-w border-b skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
+                  className={`skt-w border-b ${
+                    receiveValueError
+                      ? "border-red text-red"
+                      : theme.theme === "dark"
+                      ? "border-white text-white"
+                      : "border-black text-black"
+                  } skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full`}
                   onValueChange={(value, name) => {
                     if (value === receiveValue.toString()) return;
                     setReceiveValue(parseFloat(value ?? "0"));
@@ -1105,7 +1125,13 @@ export default function HomePage() {
                       });
                     return;
                   }
-                  if (insufficientBalance || insufficientDisburse) return;
+                  if (
+                    insufficientBalance ||
+                    insufficientDisburse ||
+                    receiveValueError
+                  )
+                    return;
+
                   if (cryptoValue === "0" || parseFloat(cryptoValue) === 0) {
                     Swal.fire(
                       "Not done!",
@@ -1135,10 +1161,10 @@ export default function HomePage() {
                     );
                     return;
                   }
-                  if (receiveValue <= 0) {
+                  if (receiveValue < 10000) {
                     Swal.fire(
                       "Not done!",
-                      "Receive value must be a positive number!",
+                      "Receive value must be at least 10000!",
                       "warning"
                     );
                     return;
@@ -1193,16 +1219,19 @@ export default function HomePage() {
                   setLoading(false);
                 }
               }}
-              className={`mt-5 text-dark rounded font-bold ${
+              className={`mt-5 rounded font-bold ${
                 loading
                   ? "bg-darkGray cursor-not-allowed"
-                  : !account
+                  : !account || !signed.signed
                   ? "mainBtn"
                   : insufficientBalance ||
                     insufficientDisburse ||
-                    !chainSupported
+                    !chainSupported ||
+                    receiveValueError
                   ? "bg-red/30 cursor-not-allowed"
                   : "mainBtn"
+              } ${
+                theme.theme === "dark" ? "text-white" : "text-black"
               } w-full leading-[24px] px-4 py-[13px] flex items-center justify-center`}
             >
               {loading ? (
@@ -1223,6 +1252,8 @@ export default function HomePage() {
                 "Sign"
               ) : insufficientBalance ? (
                 "Insufficient Balance"
+              ) : receiveValueError ? (
+                "Min receive value is 10,000 IDR"
               ) : insufficientDisburse ? (
                 "Disbursement unavailable"
               ) : (

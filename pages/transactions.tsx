@@ -45,7 +45,7 @@ export default function TransactionPage() {
         <div>
           <div
             className={`px-[20px] md:px-[100px] font-bold text-xl ${
-              theme.theme === "light" ? "text-black" : "text-white"
+              theme.theme === "light" ? "text-dark" : "text-white"
             }`}
           >
             Transactions
@@ -55,8 +55,8 @@ export default function TransactionPage() {
               <div
                 className={`hidden w-max min-w-full border-b border-socket-primary ${
                   theme.theme === "light"
-                    ? "primary-container"
-                    : "bg-socket-layers-1"
+                    ? "primary-container border-t border-l border-r border-orange"
+                    : "bg-socket-layers-1 border-t border-l border-r border-socket-primary"
                 } py-3.5 pl-8 pr-5 font-medium capitalize text-socket-primary sm:overflow-x-auto lg:flex`}
               >
                 <div className="mr-10 min-w-[350px] flex-[1.3] flex-shrink-0 pr-8 lg:pr-4">
@@ -77,8 +77,8 @@ export default function TransactionPage() {
                     <button
                       className={`mb-2 hidden w-max min-w-full justify-between rounded ${
                         theme.theme === "light"
-                          ? "primary-container border border-orange"
-                          : "bg-socket-layers-1 border border-socket-primary"
+                          ? "primary-container border-b border-l border-r border-orange text-black"
+                          : "bg-socket-layers-1 border-b border-l border-r border-socket-primary text-white"
                       }  px-2 py-3 text-left hover:bg-socket-layers-2 disabled:hover:bg-socket-layers-1 sm:mb-0 sm:rounded-none sm:border-b sm:py-4 sm:pl-8 sm:pr-5 sm:last:border-0 lg:flex`}
                     >
                       <div className="mr-10 flex min-w-[350px] flex-[1.3] flex-shrink-0 items-center pr-8 lg:pr-4">
@@ -163,7 +163,7 @@ export default function TransactionPage() {
                             </span>
                           </div>
                           <a
-                            href={`https://goerli.etherscan.io/tx/${userData.attributes.transaction_hash}`}
+                            href={`${userData.attributes.transaction_hash}`}
                             target="_blank"
                           >
                             <span className="flex ml-1">
@@ -176,7 +176,9 @@ export default function TransactionPage() {
                               >
                                 <path
                                   d="M13.8203 2.48368C13.7955 2.48446 13.7707 2.48663 13.7461 2.49019H10.5C10.4117 2.48894 10.3239 2.50526 10.242 2.5382C10.16 2.57114 10.0854 2.62005 10.0225 2.68208C9.95955 2.74411 9.90959 2.81802 9.8755 2.89953C9.8414 2.98103 9.82384 3.0685 9.82384 3.15685C9.82384 3.2452 9.8414 3.33267 9.8755 3.41418C9.90959 3.49568 9.95955 3.5696 10.0225 3.63163C10.0854 3.69366 10.16 3.74256 10.242 3.77551C10.3239 3.80845 10.4117 3.82477 10.5 3.82352H12.224L6.02865 10.0188C5.96466 10.0803 5.91358 10.1538 5.87839 10.2353C5.8432 10.3167 5.82461 10.4043 5.82371 10.493C5.82281 10.5817 5.83961 10.6697 5.87314 10.7518C5.90666 10.8339 5.95624 10.9085 6.01896 10.9712C6.08167 11.0339 6.15628 11.0835 6.2384 11.1171C6.32051 11.1506 6.4085 11.1674 6.49719 11.1665C6.58588 11.1656 6.67351 11.147 6.75493 11.1118C6.83634 11.0766 6.90992 11.0255 6.97135 10.9615L13.1667 4.76623V6.49019C13.1654 6.57853 13.1817 6.66624 13.2147 6.74822C13.2476 6.83019 13.2965 6.90481 13.3586 6.96772C13.4206 7.03063 13.4945 7.08059 13.576 7.11469C13.6575 7.14879 13.745 7.16635 13.8333 7.16635C13.9217 7.16635 14.0092 7.14879 14.0907 7.11469C14.1722 7.08059 14.2461 7.03063 14.3081 6.96772C14.3701 6.90481 14.419 6.83019 14.452 6.74822C14.4849 6.66624 14.5012 6.57853 14.5 6.49019V3.24149C14.5133 3.14551 14.5055 3.04778 14.4771 2.95512C14.4488 2.86246 14.4006 2.77709 14.3359 2.70496C14.2712 2.63283 14.1916 2.57566 14.1025 2.53744C14.0135 2.49923 13.9172 2.48088 13.8203 2.48368ZM3.83333 2.49019C3.10462 2.49019 2.5 3.09481 2.5 3.82352V13.1569C2.5 13.8856 3.10462 14.4902 3.83333 14.4902H13.1667C13.8954 14.4902 14.5 13.8856 14.5 13.1569V9.15685C14.5012 9.06851 14.4849 8.9808 14.452 8.89882C14.419 8.81685 14.3701 8.74223 14.3081 8.67932C14.2461 8.61641 14.1722 8.56645 14.0907 8.53235C14.0092 8.49825 13.9217 8.48069 13.8333 8.48069C13.745 8.48069 13.6575 8.49825 13.576 8.53235C13.4945 8.56645 13.4206 8.61641 13.3586 8.67932C13.2965 8.74223 13.2476 8.81685 13.2147 8.89882C13.1817 8.9808 13.1654 9.06851 13.1667 9.15685V13.1569H3.83333V3.82352H7.83333C7.92167 3.82477 8.00938 3.80845 8.09136 3.77551C8.17334 3.74256 8.24795 3.69366 8.31087 3.63163C8.37378 3.5696 8.42374 3.49568 8.45784 3.41418C8.49193 3.33267 8.50949 3.2452 8.50949 3.15685C8.50949 3.0685 8.49193 2.98103 8.45784 2.89953C8.42374 2.81802 8.37378 2.74411 8.31087 2.68208C8.24795 2.62005 8.17334 2.57114 8.09136 2.5382C8.00938 2.50526 7.92167 2.48894 7.83333 2.49019H3.83333Z"
-                                  fill="#F9FAFB"
+                                  fill={`${
+                                    theme.theme === "light" ? "black" : "white"
+                                  }`}
                                 ></path>
                               </svg>
                             </span>
@@ -230,7 +232,11 @@ export default function TransactionPage() {
                         </div>
                       </div>
                     </button>
-                    <button className="transition duration-500  mb-2 flex w-max min-w-full items-center justify-between rounded border border-socket-primary px-2 py-3 text-left hover:bg-socket-layers-2 sm:mb-0 lg:hidden">
+                    <button
+                      className={`${
+                        theme.theme === "light" ? "text-black" : "text-white"
+                      } transition duration-500  mb-2 flex w-max min-w-full items-center justify-between rounded border border-socket-primary px-2 py-3 text-left hover:bg-socket-layers-2 sm:mb-0 lg:hidden`}
+                    >
                       <div className="flex items-center justify-between">
                         <div className="relative mr-2 h-9 w-9 rounded-full">
                           <img
