@@ -481,7 +481,7 @@ export default function HomePage() {
             </div>
             {/* <div className="text-left underline">USDC</div> */}
             <Typed
-              strings={["USDC", "Matic", "USDT", "DAI", "WBTC", "WETH"]}
+              strings={["USDC", "Matic", "USDT", "Dai", "WBTC", "WETH"]}
               typeSpeed={150}
               backSpeed={100}
               loop
@@ -497,7 +497,15 @@ export default function HomePage() {
               From
             </div>
             <Typed
-              strings={["Ethereum", "Arbitrum", "Polygon", "Optimism", "BSC"]}
+              strings={[
+                "Ethereum",
+                "Arbitrum",
+                "Polygon",
+                "Optimism",
+                "Aurora",
+                "Base",
+                "Binance Smart Chain",
+              ]}
               typeSpeed={150}
               backSpeed={100}
               loop
