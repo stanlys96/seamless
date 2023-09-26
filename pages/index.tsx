@@ -165,7 +165,8 @@ export default function HomePage() {
     parseFloat(idrValue.replaceAll(",", "")) > (balanceData?.data.balance ?? 0);
   const chainSupported = supportedChains.includes(chainId ?? 0);
   const receiveValueError = receiveValue < 10000;
-
+  console.log(chainId);
+  console.log(chainSupported);
   useEffect(() => {
     setCurrentSelectedToken(
       currentChain?.tokenData.find((data) => data.name === "USDC")
@@ -540,7 +541,7 @@ export default function HomePage() {
               theme.theme === "light"
                 ? "primary-container"
                 : "primary-container-dark"
-            } transition duration-500  rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
+            } transition duration-500 w-[100vw] rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
           >
             <div
               className={`flex w-full justify-center items-center transition duration-500 mb-4 ${

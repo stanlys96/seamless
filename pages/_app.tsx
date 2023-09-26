@@ -16,6 +16,8 @@ import {
   OptimismGoerli,
   Mumbai,
   BSCTestnet,
+  Aurora,
+  Base,
 } from "@usedapp/core";
 
 const GOERLI_RPC_URL = process.env.NEXT_PUBLIC_GOERLI_RPC_URL;
@@ -28,6 +30,8 @@ const ARBITRUM_GOERLI_RPC_URL = process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL;
 const OPTIMISM_GOERLI_RPC_URL = process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_RPC_URL;
 const MUMBAI_RPC_URL = process.env.NEXT_PUBLIC_MUMBAI_RPC_URL;
 const BSC_TESTNET_RPC_URL = process.env.NEXT_PUBLIC_BSC_TESTNET_RPC_URL;
+const AURORA_RPC_URL = process.env.NEXT_PUBLIC_AURORA_RPC_URL;
+const BASE_RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC_URL;
 
 const config: Config = {
   noMetamaskDeactivate: true,
@@ -44,6 +48,8 @@ const config: Config = {
     [OptimismGoerli.chainId]: OPTIMISM_GOERLI_RPC_URL,
     [Mumbai.chainId]: MUMBAI_RPC_URL,
     [BSCTestnet.chainId]: BSC_TESTNET_RPC_URL,
+    [Aurora.chainId]: AURORA_RPC_URL,
+    [Base.chainId]: BASE_RPC_URL,
   },
 };
 

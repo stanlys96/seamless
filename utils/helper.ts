@@ -9,6 +9,8 @@ import {
   OptimismGoerli,
   Mumbai,
   BSCTestnet,
+  Aurora,
+  Base,
 } from "@usedapp/core";
 
 export const ethTokenData = {
@@ -94,6 +96,8 @@ export const supportedChains = [
   // OptimismGoerli.chainId,
   // Mumbai.chainId,
   // BSCTestnet.chainId,
+  Aurora.chainId,
+  Base.chainId,
 ];
 
 const ethereumSeamlessContract = "";
@@ -446,6 +450,54 @@ export const chainData = [
       {
         ...usdtTokenData,
         contractAddress: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+      },
+    ],
+  },
+  {
+    id: 11,
+    chainId: Aurora.chainId,
+    name: "Aurora",
+    imgUrl: "/img/aurora2.png",
+    testNetwork: false,
+    transactionUrl: "https://explorer.aurora.dev/tx/",
+    seamlessContract: "",
+    tokenData: [
+      {
+        ...ethTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+      {
+        ...daiTokenData,
+        contractAddress: "0xe3520349f477a5f6eb06107066048508498a291b",
+      },
+      {
+        ...usdcTokenData,
+        contractAddress: "0xb12bfca5a55806aaf64e99521918a4bf0fc40802",
+      },
+      {
+        ...usdtTokenData,
+        contractAddress: "0x4988a896b1227218e4a686fde5eabdcabd91571f",
+      },
+      {
+        ...wbtcTokenData,
+        contractAddress: "0xf4eb217ba2454613b15dbdea6e5f22276410e89e",
+      },
+    ],
+  },
+  {
+    id: 12,
+    chainId: Base.chainId,
+    name: "Base",
+    imgUrl: "/img/base.png",
+    testNetwork: false,
+    transactionUrl: "https://basescan.org/tx/",
+    seamlessContract: "",
+    tokenData: [
+      {
+        ...ethTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
     ],
   },
