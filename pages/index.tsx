@@ -504,7 +504,7 @@ export default function HomePage() {
                 "Optimism",
                 "Aurora",
                 "Base",
-                "Binance Smart Chain",
+                "Binance",
               ]}
               typeSpeed={150}
               backSpeed={100}
