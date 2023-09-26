@@ -483,6 +483,10 @@ export const chainData = [
         ...wbtcTokenData,
         contractAddress: "0xf4eb217ba2454613b15dbdea6e5f22276410e89e",
       },
+      {
+        ...wethTokenData,
+        contractAddress: "0xC9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB",
+      },
     ],
   },
   {
