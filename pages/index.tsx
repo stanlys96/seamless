@@ -1047,13 +1047,14 @@ export default function HomePage() {
               </div>
               <span>
                 <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
-                  <span className="flex items-center">
-                    <div className="relative flex h-fit w-fit">
-                      <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
-                        <img src="img/indo2.png" width="100%" height="100%" />
-                      </div>
-                    </div>
-                    <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-end items-center gap-x-1">
+                  <span className="flex justify-center items-center relative h-fit w-fit">
+                    <img
+                      className="skt-w mr-1 h-6 w-6 rounded-full"
+                      src="img/indo2.png"
+                      width="100%"
+                      height="100%"
+                    />
+                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
                       IDR
                     </span>
                   </span>

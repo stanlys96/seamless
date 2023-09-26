@@ -4,10 +4,11 @@ import useSWR from "swr";
 import { fetcherStrapi } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { useEthers } from "@usedapp/core";
-import { allTokenData, chainData } from "@/utils/helper";
+import { allTokenData, chainData, existBankData } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
+import { Pagination, ConfigProvider } from "antd";
 
 function sortById(a: any, b: any) {
   return a.id - b.id;
@@ -18,11 +19,13 @@ export default function TransactionPage() {
   const router = useRouter();
   const { account } = useEthers();
   const [userTransactions, setUserTransactions] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: transactionsData } = useSWR(
-    "/api/transaction-histories",
+    `/api/transaction-histories?filters[wallet_address][$eq]=${account}&pagination[page]=${currentPage}&pagination[pageSize]=5`,
     fetcherStrapi
   );
-
+  console.log(transactionsData, "<<<");
+  console.log(transactionsData?.data.meta.pagination.pageCount);
   useEffect(() => {
     if (
       transactionsData &&
@@ -30,13 +33,10 @@ export default function TransactionPage() {
       transactionsData.data.data.length > 0
     ) {
       const transactionsResult = transactionsData.data.data;
-      setUserTransactions(
-        transactionsResult.filter(
-          (transaction: any) =>
-            transaction.attributes.wallet_address.toLowerCase() ===
-            account?.toLowerCase()
-        )
-      );
+      setUserTransactions(transactionsResult);
+    }
+    if (transactionsData?.data.data.length < 1) {
+      setUserTransactions([]);
     }
   }, [transactionsData, account]);
   return (
@@ -211,7 +211,13 @@ export default function TransactionPage() {
                           <div className="ml-1.5 flex items-center font-semibold text-socket-primary">
                             <img
                               className="skt-w rounded-full overflow-hidden w-5 h-5"
-                              src="/img/bca.png"
+                              src={
+                                existBankData.includes(
+                                  userData.attributes.bank_name.toLowerCase()
+                                )
+                                  ? `/img/banks/${userData.attributes.bank_name.toLowerCase()}.png`
+                                  : "/img/banks/bank.png"
+                              }
                               width="100%"
                               height="100%"
                             />
@@ -277,7 +283,13 @@ export default function TransactionPage() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex h-6 w-6 items-center justify-center justify-self-end rounded-full bg-socket-layers-3 pl-px text-socket-secondary">
+                      <div
+                        className={`flex ${
+                          theme.theme === "light"
+                            ? "bg-black text-white"
+                            : "bg-white text-black"
+                        } h-6 w-6 items-center justify-center justify-self-end rounded-full bg-socket-layers-3 pl-px text-socket-secondary`}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -297,6 +309,30 @@ export default function TransactionPage() {
                   </div>
                 ))}
             </div>
+          </div>
+          <div className="w-full justify-center items-center mt-5 mx-auto">
+            <ConfigProvider
+              theme={{
+                components: {
+                  Pagination: {
+                    colorText: theme.theme === "light" ? "#000000" : "#ffffff",
+                    colorTextDisabled:
+                      theme.theme === "light" ? "#D9DEE2" : "#3c3c3c",
+                  },
+                },
+              }}
+            >
+              <Pagination
+                className={`mx-auto w-fit ${
+                  theme.theme === "light" ? "text-black" : "text-white"
+                }`}
+                onChange={(e) => {
+                  setCurrentPage(e);
+                }}
+                pageSize={transactionsData?.data.meta.pagination.pageSize ?? 0}
+                total={transactionsData?.data.meta.pagination.total ?? 0}
+              />
+            </ConfigProvider>
           </div>
         </div>
       ) : (
