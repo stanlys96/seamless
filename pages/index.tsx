@@ -1186,9 +1186,15 @@ export default function HomePage() {
                     bankAccountValue,
                     phoneNumber,
                   };
+                  let secretKey;
+                  if (process.env.NEXT_PUBLIC_SECRET_PHRASE) {
+                    secretKey = process.env.NEXT_PUBLIC_SECRET_PHRASE;
+                  } else {
+                    secretKey = "superjunior";
+                  }
                   const encrypt = CryptoJS.AES.encrypt(
                     JSON.stringify(encryptedData),
-                    "blackpink",
+                    secretKey,
                     {
                       format: JsonFormatter,
                     }
