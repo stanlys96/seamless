@@ -9,10 +9,18 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
 import { Pagination, ConfigProvider } from "antd";
-import { RotatingLines } from "react-loader-spinner";
 
 function sortById(a: any, b: any) {
   return a.id - b.id;
+}
+
+function formatDate(dateString: string) {
+  const theDate = new Date(dateString);
+  return theDate
+    .toLocaleString("id-ID")
+    .replaceAll("/", "-")
+    .replaceAll(",", "")
+    .replaceAll(".", ":");
 }
 
 export default function TransactionPage() {
@@ -41,6 +49,7 @@ export default function TransactionPage() {
     }
     setPageLoading(false);
   }, [transactionsData, account]);
+  console.log(transactionsData);
   return (
     <MainLayout>
       <div ref={scrollToTop}>
@@ -107,10 +116,12 @@ export default function TransactionPage() {
                                     ></path>
                                   </svg>
                                 </div>
-                                Transfer Successful{" "}
-                                <span className="pl-1.5 text-socket-primary">
-                                  - {userData.attributes.updatedAt.slice(0, 10)}
-                                </span>
+                                <div className="flex flex-col">
+                                  <span>Transfer Successful</span>
+                                  <span className="text-socket-primary">
+                                    {formatDate(userData.attributes.updatedAt)}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
