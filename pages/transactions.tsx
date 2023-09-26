@@ -11,7 +11,7 @@ import { RootState } from "@/src/stores";
 import { Pagination, ConfigProvider } from "antd";
 
 function sortById(a: any, b: any) {
-  return a.id - b.id;
+  return b.id - a.id;
 }
 
 function formatDate(dateString: string) {
@@ -23,6 +23,10 @@ function formatDate(dateString: string) {
     .replaceAll(".", ":");
 }
 
+function sortByLatestId(a: any, b: any) {
+  return b.id - a.id;
+}
+
 export default function TransactionPage() {
   const scrollToTop = useRef<HTMLInputElement>(null);
   const theme = useSelector((state: RootState) => state.theme);
@@ -32,7 +36,7 @@ export default function TransactionPage() {
   const [userTransactions, setUserTransactions] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { data: transactionsData } = useSWR(
-    `/api/transaction-histories?filters[wallet_address][$eq]=${account}&pagination[page]=${currentPage}&pagination[pageSize]=8`,
+    `/api/transaction-histories?sort[0]=id:desc&filters[wallet_address][$eq]=${account}&pagination[page]=${currentPage}&pagination[pageSize]=8`,
     fetcherStrapi
   );
   useEffect(() => {
@@ -42,7 +46,7 @@ export default function TransactionPage() {
       transactionsData.data.data.length > 0
     ) {
       const transactionsResult = transactionsData.data.data;
-      setUserTransactions(transactionsResult);
+      setUserTransactions(transactionsResult.sort(sortByLatestId));
     }
     if (transactionsData?.data.data.length < 1) {
       setUserTransactions([]);
