@@ -44,7 +44,7 @@ export const BankModal = ({
   };
 
   const filterCategory = (bankData: any) => {
-    if (searchQuery) return true;
+    if (searchQuery) return bankData.status.toLowerCase() === "operational";
     if (selectedCategory === "bank") {
       return (
         !eWallets.includes(bankData.bank_code) &&
