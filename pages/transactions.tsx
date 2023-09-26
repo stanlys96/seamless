@@ -53,7 +53,7 @@ export default function TransactionPage() {
     }
     setPageLoading(false);
   }, [transactionsData, account]);
-  console.log(transactionsData);
+  // console.log(transactionsData);
   return (
     <MainLayout>
       <div ref={scrollToTop}>
