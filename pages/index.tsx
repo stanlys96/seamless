@@ -1017,7 +1017,7 @@ export default function HomePage() {
                   defaultValue={0}
                   decimalsLimit={6}
                   disabled={loading}
-                  className={`skt-w border-b ${
+                  className={`skt-w border-b animated-input ${
                     receiveValueError
                       ? "border-red text-red"
                       : theme.theme === "dark"

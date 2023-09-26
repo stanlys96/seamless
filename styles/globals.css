@@ -283,3 +283,22 @@ input[type="number"] {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.animated-glow {
+  border-radius: 50%;
+  margin-left: 5px;
+  animation: glow 1s infinite alternate;
+}
+
+.animated-input {
+  animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px -10px #aef4af;
+  }
+  to {
+    box-shadow: 0 0 10px 10px #aef4af;
+  }
+}
