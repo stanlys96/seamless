@@ -1068,7 +1068,7 @@ export default function HomePage() {
                 </button>
               </span>
             </div>
-            <div
+            {/* <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
               } border-t border-gray`}
@@ -1102,7 +1102,7 @@ export default function HomePage() {
                   type="number"
                 />
               </div>
-            </div>
+            </div> */}
             <button
               disabled={loading || isCheckingBankAccount}
               onClick={async (e) => {

@@ -51,7 +51,6 @@ const config: Config = {
     [BSCTestnet.chainId]: BSC_TESTNET_RPC_URL,
     [Aurora.chainId]: AURORA_RPC_URL,
     [Base.chainId]: BASE_RPC_URL,
-    [59144]: LINEA_RPC_URL,
   },
 };
 
