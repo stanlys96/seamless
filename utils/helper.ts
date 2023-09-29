@@ -98,11 +98,20 @@ export const supportedChains = [
   // BSCTestnet.chainId,
   Aurora.chainId,
   Base.chainId,
+  59114,
 ];
 
-const ethereumSeamlessContract = "";
+const ethereumSeamlessContract =
+  process.env.NEXT_PUBLIC_ETHEREUM_CUSTOM_CONTRACT;
 const polygonSeamlessContract = process.env.NEXT_PUBLIC_POLYGON_CUSTOM_CONTRACT;
 const goerliSeamlessContract = process.env.NEXT_PUBLIC_GOERLI_CUSTOM_CONTRACT;
+const arbitrumSeamlessContract =
+  process.env.NEXT_PUBLIC_ARBITRUM_CUSTOM_CONTRACT;
+const binanceSeamlessContract = process.env.NEXT_PUBLIC_BINANCE_CUSTOM_CONTRACT;
+const baseSeamlessContract = process.env.NEXT_PUBLIC_BASE_CUSTOM_CONTRACT;
+const lineaSeamlessContract = process.env.NEXT_PUBLIC_LINEA_CUSTOM_CONTRACT;
+const optimismSeamlessContract =
+  process.env.NEXT_PUBLIC_OPTIMISM_CUSTOM_CONTRACT;
 
 export const chainData = [
   {
@@ -112,7 +121,7 @@ export const chainData = [
     imgUrl: "/img/Ether.svg",
     testNetwork: false,
     transactionUrl: "https://etherscan.io/tx/",
-    seamlessContract: "",
+    seamlessContract: ethereumSeamlessContract,
     tokenData: [
       {
         ...ethTokenData,
@@ -148,7 +157,7 @@ export const chainData = [
     imgUrl: "/img/Arbitrum.svg",
     testNetwork: false,
     transactionUrl: "https://arbiscan.io/tx/",
-    seamlessContract: "",
+    seamlessContract: arbitrumSeamlessContract,
     tokenData: [
       {
         ...daiTokenData,
@@ -220,7 +229,7 @@ export const chainData = [
     imgUrl: "/img/Optimism.svg",
     testNetwork: false,
     transactionUrl: "https://optimistic.etherscan.io/tx/",
-    seamlessContract: "",
+    seamlessContract: optimismSeamlessContract,
     tokenData: [
       {
         ...daiTokenData,
@@ -256,7 +265,7 @@ export const chainData = [
     imgUrl: "/img/BSC.svg",
     testNetwork: false,
     transactionUrl: "https://bscscan.com/tx/",
-    seamlessContract: "",
+    seamlessContract: binanceSeamlessContract,
     tokenData: [
       {
         ...bnbTokenData,
@@ -496,7 +505,23 @@ export const chainData = [
     imgUrl: "/img/base.png",
     testNetwork: false,
     transactionUrl: "https://basescan.org/tx/",
-    seamlessContract: "",
+    seamlessContract: baseSeamlessContract,
+    tokenData: [
+      {
+        ...ethTokenData,
+        native: true,
+        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      },
+    ],
+  },
+  {
+    id: 13,
+    chainId: 59114,
+    name: "Linea",
+    imgUrl: "/img/base.png",
+    testNetwork: false,
+    transactionUrl: "https://lineascan.build/tx/",
+    seamlessContract: lineaSeamlessContract,
     tokenData: [
       {
         ...ethTokenData,
