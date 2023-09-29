@@ -1177,6 +1177,13 @@ export default function HomePage() {
                     );
                     return;
                   }
+                  if (!currentChain?.seamlessContract) {
+                    return Swal.fire(
+                      "Internal Error!",
+                      "Internal error, please contact admin",
+                      "error"
+                    );
+                  }
                   if (!currentSelectedToken?.native) {
                     const tx1 = await approveErc20Send(
                       currentChain?.seamlessContract ?? "",
