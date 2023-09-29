@@ -165,8 +165,6 @@ export default function HomePage() {
     parseFloat(idrValue.replaceAll(",", "")) > (balanceData?.data.balance ?? 0);
   const chainSupported = supportedChains.includes(chainId ?? 0);
   const receiveValueError = receiveValue < 10000;
-  console.log(chainId);
-  console.log(chainSupported);
   useEffect(() => {
     setCurrentSelectedToken(
       currentChain?.tokenData.find((data) => data.name === "USDC")
@@ -183,7 +181,7 @@ export default function HomePage() {
         phone_number: phoneNumber,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((e) => {
         console.log(e);
@@ -231,7 +229,7 @@ export default function HomePage() {
       .then((res) => {
         addToWalletAccounts();
         setTransactionData(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((e) => {
         console.log(e);
@@ -459,7 +457,7 @@ export default function HomePage() {
     if (!historyData) {
       setHasLatestData(false);
     }
-    console.log(hasLatestData);
+    // console.log(hasLatestData);
   }, [historyData]);
 
   return (

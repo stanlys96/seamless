@@ -44,13 +44,22 @@ export const BankModal = ({
   };
 
   const filterCategory = (bankData: any) => {
-    if (searchQuery) return true;
+    if (searchQuery) return bankData.status.toLowerCase() === "operational";
     if (selectedCategory === "bank") {
-      return !eWallets.includes(bankData.bank_code);
+      return (
+        !eWallets.includes(bankData.bank_code) &&
+        bankData.status.toLowerCase() === "operational"
+      );
     } else if (selectedCategory === "e-wallet") {
-      return eWallets.includes(bankData.bank_code);
+      return (
+        eWallets.includes(bankData.bank_code) &&
+        bankData.status.toLowerCase() === "operational"
+      );
     } else if (selectedCategory === "va") {
-      return virtualAccounts.includes(bankData.bank_code);
+      return (
+        virtualAccounts.includes(bankData.bank_code) &&
+        bankData.status.toLowerCase() === "operational"
+      );
     }
   };
 
