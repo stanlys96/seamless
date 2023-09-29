@@ -1197,7 +1197,7 @@ export default function HomePage() {
                   const encryptedData = {
                     bankAccountName,
                     bankAccountValue,
-                    phoneNumber,
+                    // phoneNumber,
                   };
                   let secretKey;
                   if (process.env.NEXT_PUBLIC_SECRET_PHRASE) {
