@@ -1150,7 +1150,6 @@ export default function HomePage() {
                   }
                   if (
                     !cryptoValue ||
-                    !phoneNumber ||
                     !bankAccountValue ||
                     cryptoValue === "."
                   ) {
