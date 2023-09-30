@@ -115,7 +115,7 @@ export default function HomePage() {
       transactionName: "Transfer",
     });
 
-  const { data } = useSWR(
+  const { data, mutate: coingeckoMutate } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
   );
@@ -391,6 +391,7 @@ export default function HomePage() {
           addToTransactionHistory("Blockchain", tempState);
         } else {
           updateTransactionStatus("Blockchain", tempState);
+          setAlreadyApproved(false);
         }
       }
       if (
@@ -1087,6 +1088,7 @@ export default function HomePage() {
               disabled={loading || isCheckingBankAccount}
               onClick={async (e) => {
                 e.preventDefault();
+                coingeckoMutate();
                 try {
                   const encryptedData = {
                     bankAccountName,
