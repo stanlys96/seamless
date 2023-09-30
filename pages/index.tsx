@@ -13,6 +13,7 @@ import {
   useContractFunction,
   useSigner,
   useCall,
+  useBlockNumbers,
 } from "@usedapp/core";
 import useSWR from "swr";
 import {
@@ -780,9 +781,9 @@ export default function HomePage() {
             <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b border-bot flex justify-between`}
+              } border-b h-full border-bot flex justify-between items-center`}
             >
-              <div className="flex items-center">
+              <div className="flex items-center flex-wrap">
                 <p className="font-medium text-socket-primary sm:text-lg w-fit">
                   Account&nbsp;Number:&nbsp;
                 </p>
@@ -804,7 +805,7 @@ export default function HomePage() {
                     }
                     setBankAccountName("");
                   }}
-                  className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full overflow-hidden"
+                  className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full overflow-hidden"
                   placeholder="Account Number"
                   spellCheck={false}
                   type="number"
@@ -852,7 +853,7 @@ export default function HomePage() {
                     console.log(e, "<<< E!");
                   }
                 }}
-                className="p-2 cursor-pointer relative mx-auto flex items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
+                className="p-2 cursor-pointer w-fit h-full relative mx-auto flex items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
               >
                 {isCheckingBankAccount ? (
                   <ColorRing
@@ -1222,6 +1223,7 @@ export default function HomePage() {
                         ),
                       }
                     );
+                    // console.log(tx.)
                   } else {
                     const tx = await transferSeamless(
                       currentSelectedToken?.contractAddress,
