@@ -221,9 +221,9 @@ export default function HomePage() {
       })
       .then((res) => {
         console.log(res.data, "<<<< !!!");
-        setTransactionData(res.data);
 
         if (status === "Blockchain") {
+          setTransactionData(null);
           setTransactionLoading(false);
           setLoading(false);
           resetCurrency();
@@ -232,6 +232,8 @@ export default function HomePage() {
             "Transaction started successfully! Please wait approximately 1 minute to receive your IDR!",
             "success"
           );
+        } else {
+          setTransactionData(res.data);
         }
       })
       .catch((e) => {
@@ -319,6 +321,8 @@ export default function HomePage() {
           ? chainData.find((data: any) => data.chainId === chainId)?.name +
             `-${tempState?.transaction?.hash}`
           : "";
+        console.log(status, "<<< status");
+        console.log(transactionData?.data.id, "<<<< ID");
         const updateTransaction = await axiosStrapi.put(
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
           {
@@ -331,8 +335,10 @@ export default function HomePage() {
             },
           }
         );
+        console.log(updateTransaction, "<<< ???");
         setTransactionLoading(false);
         setLoading(false);
+        setTransactionData(null);
         resetCurrency();
         Swal.fire(
           "Success!",
