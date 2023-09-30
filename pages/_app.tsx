@@ -19,6 +19,7 @@ import {
   Aurora,
   Base,
 } from "@usedapp/core";
+import { WalletConnectV2Connector } from "@usedapp/wallet-connect-v2-connector";
 
 const GOERLI_RPC_URL = process.env.NEXT_PUBLIC_GOERLI_RPC_URL;
 const MAINNET_RPC_URL = process.env.NEXT_PUBLIC_MAINNET_RPC_URL;
@@ -51,6 +52,15 @@ const config: Config = {
     [BSCTestnet.chainId]: BSC_TESTNET_RPC_URL,
     [Aurora.chainId]: AURORA_RPC_URL,
     [Base.chainId]: BASE_RPC_URL,
+  },
+  connectors: {
+    walletConnectV2: new WalletConnectV2Connector({
+      projectId: "aa21f0b9145f1e9e96538c15dae35374",
+      chains: [Mainnet, Optimism, BSC, Arbitrum, Polygon, Aurora, Base],
+      rpcMap: {
+        1: MAINNET_RPC_URL,
+      },
+    }),
   },
 };
 

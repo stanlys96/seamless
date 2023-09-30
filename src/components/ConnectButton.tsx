@@ -104,7 +104,7 @@ export const ConnectButton = () => {
       <button
         className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
         onClick={async () => {
-          activateBrowserWallet({ type: "walletConnectv2" });
+          activateBrowserWallet();
         }}
       >
         Connect
