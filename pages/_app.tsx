@@ -53,15 +53,6 @@ const config: Config = {
     [Aurora.chainId]: AURORA_RPC_URL,
     [Base.chainId]: BASE_RPC_URL,
   },
-  connectors: {
-    walletConnectV2: new WalletConnectV2Connector({
-      projectId: "aa21f0b9145f1e9e96538c15dae35374",
-      chains: [Mainnet, Optimism, BSC, Arbitrum, Polygon, Aurora, Base],
-      rpcMap: {
-        1: MAINNET_RPC_URL,
-      },
-    }),
-  },
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
