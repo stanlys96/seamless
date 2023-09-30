@@ -144,7 +144,6 @@ export default function HomePage() {
   );
 
   const needApproval = parseFloat(cryptoValue) > tokenAllowance;
-  console.log(needApproval, "<<< need approval");
   const usedBalance = currentSelectedToken?.native
     ? parseFloat(
         formatUnits(
@@ -237,8 +236,6 @@ export default function HomePage() {
         },
       })
       .then((res) => {
-        console.log(res.data, "<<<< !!!");
-
         if (status === "Blockchain") {
           setTransactionData(null);
           setTransactionLoading(false);
@@ -339,8 +336,6 @@ export default function HomePage() {
           ? chainData.find((data: any) => data.chainId === chainId)?.name +
             `-${tempState?.transaction?.hash}`
           : "";
-        console.log(status, "<<< status");
-        console.log(transactionData?.data.id, "<<<< ID");
         const updateTransaction = await axiosStrapi.put(
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
           {
@@ -353,7 +348,6 @@ export default function HomePage() {
             },
           }
         );
-        console.log(updateTransaction, "<<< ???");
         setTransactionLoading(false);
         setLoading(false);
         setTransactionData(null);
@@ -385,7 +379,6 @@ export default function HomePage() {
         ? nativeSeamlessState
         : seamlessState;
       if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
-        console.log(tempState, "<<< TEMPSTATE");
         setTransactionLoading(true);
         if (tempState === nativeSeamlessState || !alreadyApproved) {
           addToTransactionHistory("Blockchain", tempState);
@@ -1108,7 +1101,6 @@ export default function HomePage() {
                       format: JsonFormatter,
                     }
                   );
-                  console.log(parseInt(encrypt.toString()), "<<< ??");
                   if (!account) {
                     activateBrowserWallet();
                     return;
