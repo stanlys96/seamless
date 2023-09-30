@@ -86,19 +86,19 @@ export const bnbTokenData = {
 };
 
 export const supportedChains = [
-  Mainnet.chainId,
+  // Mainnet.chainId,
   // Goerli.chainId,
-  Optimism.chainId,
-  BSC.chainId,
-  Arbitrum.chainId,
+  // Optimism.chainId,
+  // BSC.chainId,
+  // Arbitrum.chainId,
   Polygon.chainId,
   // ArbitrumGoerli.chainId,
   // OptimismGoerli.chainId,
   // Mumbai.chainId,
   // BSCTestnet.chainId,
-  Aurora.chainId,
-  Base.chainId,
-  59114,
+  // Aurora.chainId,
+  // Base.chainId,
+  // 59114,
 ];
 
 const ethereumSeamlessContract =
@@ -295,7 +295,7 @@ export const chainData = [
     chainId: Goerli.chainId,
     name: "Goerli",
     imgUrl: "/img/Ether.svg",
-    testNetwork: true,
+    testNetwork: false,
     seamlessContract: goerliSeamlessContract,
     transactionUrl: "https://goerli.etherscan.io/tx/",
     tokenData: [

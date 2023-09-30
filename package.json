@@ -24,6 +24,7 @@
     "crypto-js": "^4.1.1",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
+    "ethereum-input-data-decoder": "^0.4.2",
     "ethers": "^5.0.0",
     "next": "13.4.13",
     "postcss": "8.4.27",

@@ -1,10 +1,5 @@
 "use client";
-import {
-  AiOutlineArrowDown,
-  AiFillInfoCircle,
-  AiOutlineInsertRowBelow,
-  AiOutlineArrowUp,
-} from "react-icons/ai";
+import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
 import { useState } from "react";
 import {
   useEtherBalance,
@@ -13,7 +8,6 @@ import {
   useContractFunction,
   useSigner,
   useCall,
-  useBlockNumbers,
 } from "@usedapp/core";
 import useSWR from "swr";
 import {
@@ -41,9 +35,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, signActions } from "@/src/stores";
 import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
-import { Tooltip } from "antd";
 import Typed from "react-typed";
-import { Collapse } from "react-collapse";
 import { SelectNetworkModal } from "@/src/components/SelectNetworkModal";
 // delay
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
@@ -58,7 +50,6 @@ export default function HomePage() {
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const signer = useSigner();
-  const [openCollapse, setOpenCollapse] = useState(false);
   const { account, activateBrowserWallet, chainId } = useEthers();
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
@@ -82,9 +73,6 @@ export default function HomePage() {
   });
   const [receiveValue, setReceiveValue] = useState(0);
   const [transactionLoading, setTransactionLoading] = useState(false);
-  const [openData, setOpenData] = useState(
-    faqData.map((faq) => ({ id: faq.id, open: false }))
-  );
 
   const currentChain = chainData.find((data) => data.chainId === chainId);
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
@@ -101,7 +89,6 @@ export default function HomePage() {
       : currentChain.seamlessContract,
     seamlessInterface
   );
-
   const { send: approveErc20Send, state: approveErc20State } =
     useContractFunction(erc20Contract, "approve", {
       transactionName: "Approve ERC20 transfer",
@@ -126,13 +113,6 @@ export default function HomePage() {
       transactionName: "Transfer",
     });
 
-  const resetFields = () => {
-    setCryptoValue("");
-    setIdrValue("");
-    setFee(6000);
-    setExchangeFee("0");
-    setReceiveValue(0);
-  };
   const { data } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
@@ -140,7 +120,7 @@ export default function HomePage() {
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const { data: balanceData } = useSWR("/balance", fetcherFlip);
   const { data: historyData } = useSWR(
-    `/api/wallet-accounts?filters[wallet_address][$eq]=${account}&filters[bank_code][$eq]=${currentSelectedBank.bank_code}`,
+    `/api/wallet-accounts?filters[wallet_address][$eq]=${account}`,
     fetcherStrapi
   );
   const nativeBalance = useEtherBalance(account);
@@ -189,7 +169,10 @@ export default function HomePage() {
       });
   };
 
-  const addToTransactionHistory = (status: "Approval" | "Blockchain") => {
+  const addToTransactionHistory = (
+    status: "Approval" | "Blockchain",
+    tempState?: any
+  ) => {
     const date = new Date(Date.now());
     const dateStr =
       date.getFullYear() +
@@ -204,6 +187,11 @@ export default function HomePage() {
       ":" +
       ("00" + date.getSeconds()).slice(-2) +
       ("." + date.getMilliseconds()).slice(-4);
+    let idempotencyKey = "";
+    idempotencyKey = tempState
+      ? chainData.find((data: any) => data.chainId === chainId)?.name +
+        `-${tempState?.transaction?.hash}`
+      : "";
     axiosStrapi
       .post("/api/transaction-histories", {
         data: {
@@ -219,7 +207,11 @@ export default function HomePage() {
           idr_value: parseFloat(idrValue),
           transaction_success: false,
           wallet_destination: vaultAddress?.value[0] ?? "",
-          idempotency_key: "",
+          idempotency_key: idempotencyKey,
+          transaction_hash:
+            status === "Blockchain"
+              ? currentChain?.transactionUrl + tempState.transaction?.hash
+              : "",
           transaction_id: "",
           receipt: "",
           fee: fee,
@@ -228,81 +220,22 @@ export default function HomePage() {
         },
       })
       .then((res) => {
-        addToWalletAccounts();
+        console.log(res.data, "<<<< !!!");
         setTransactionData(res.data);
-        // console.log(res.data);
+
+        if (status === "Blockchain") {
+          setTransactionLoading(false);
+          setLoading(false);
+          resetCurrency();
+          Swal.fire(
+            "Success!",
+            "Transaction started successfully! Please wait approximately 1 minute to receive your IDR!",
+            "success"
+          );
+        }
       })
       .catch((e) => {
         console.log(e);
-      });
-  };
-  const blockchainSuccess = async (tempState: any) => {
-    const idempotencyKey =
-      chainData.find((data: any) => data.chainId === tempState.chainId)?.name +
-      `-${tempState?.transaction?.hash}`;
-    try {
-      const updateTransactionStatus = await axiosStrapi.put(
-        `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
-        {
-          data: {
-            status: "Blockchain Success",
-          },
-        }
-      );
-    } catch (e) {
-      console.log(e, "<<< Update Transaction Error");
-    }
-    axiosStrapi
-      .post("/api/disbursement", {
-        idempotency_key: idempotencyKey,
-        account_number: bankAccountValue,
-        bank_code: currentSelectedBank.bank_code,
-        amount: Math.ceil(receiveValue),
-        remark: "Seamless Finance",
-      })
-      .then(async (res) => {
-        const result = res.data;
-        await axiosStrapi.put(
-          `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
-          {
-            data: {
-              transaction_hash:
-                currentChain?.transactionUrl +
-                tempState.receipt?.transactionHash,
-              gas_price: parseFloat(
-                formatEther(tempState.receipt?.effectiveGasPrice ?? "0x0")
-              ),
-              transaction_success: true,
-              block_confirmation:
-                tempState.receipt?.confirmations.toString() ?? "0",
-              idempotency_key: idempotencyKey,
-              transaction_id: result.id.toString(),
-              status: "Flip",
-            },
-          }
-        );
-        await axiosStrapi.post("/api/flip-transactions", {
-          data: {
-            account_number: result.account_number,
-            amount: result.amount,
-            account_name: result.recipient_name,
-            idempotency_key: result.idempotency_key,
-            bank_code: result.bank_code,
-            sender_bank: result.sender_bank,
-            transaction_id: result.id.toString(),
-            fee: result.fee,
-            user_id: result.user_id.toString(),
-            receipt: "",
-          },
-        });
-        resetFields();
-        setTransactionData(null);
-        setTransactionLoading(false);
-        Swal.fire(
-          "Success!",
-          "Transaction successful! Please wait for our admin to contact you.",
-          "success"
-        );
       });
   };
 
@@ -363,7 +296,8 @@ export default function HomePage() {
       | "Approval"
       | "Approval Success"
       | "Blockchain"
-      | "Blockchain Success"
+      | "Blockchain Success",
+    tempState?: any
   ) => {
     try {
       if (status === "Blockchain") {
@@ -381,14 +315,29 @@ export default function HomePage() {
           ":" +
           ("00" + date.getSeconds()).slice(-2) +
           ("." + date.getMilliseconds()).slice(-4);
+        const idempotencyKey = tempState
+          ? chainData.find((data: any) => data.chainId === chainId)?.name +
+            `-${tempState?.transaction?.hash}`
+          : "";
         const updateTransaction = await axiosStrapi.put(
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
           {
             data: {
               status: status,
               start_progress: dateStr,
+              idempotency_key: idempotencyKey,
+              transaction_hash:
+                currentChain?.transactionUrl + tempState.transaction?.hash,
             },
           }
+        );
+        setTransactionLoading(false);
+        setLoading(false);
+        resetCurrency();
+        Swal.fire(
+          "Success!",
+          "Transaction started successfully! Please wait approximately 1 minute to receive your IDR!",
+          "success"
         );
       } else {
         const updateTransaction = await axiosStrapi.put(
@@ -401,6 +350,7 @@ export default function HomePage() {
         );
       }
     } catch (e) {
+      setTransactionLoading(false);
       console.log(e, status, "<<< ERR");
     }
   };
@@ -411,16 +361,13 @@ export default function HomePage() {
         ? nativeSeamlessState
         : seamlessState;
       if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
+        console.log(tempState, "<<< TEMPSTATE");
         setTransactionLoading(true);
         if (tempState === nativeSeamlessState) {
-          addToTransactionHistory("Blockchain");
+          addToTransactionHistory("Blockchain", tempState);
         } else {
-          updateTransactionStatus("Blockchain");
+          updateTransactionStatus("Blockchain", tempState);
         }
-      }
-      if (tempState.status.toLowerCase() === "success") {
-        setTransactionLoading(false);
-        blockchainSuccess(tempState);
       }
       if (
         tempState.status.toLowerCase() === "none" ||
@@ -445,8 +392,15 @@ export default function HomePage() {
   useEffect(() => {
     if (historyData && historyData.data.data.length > 0 && !bankAccountName) {
       const theResult = historyData.data.data;
-      const latestData = theResult.find((res: any) => res.attributes.latest);
-      if (latestData) {
+      const latestData = theResult.find(
+        (res: any) =>
+          res.attributes.latest &&
+          res.attributes.bank_code === currentSelectedBank.bank_code
+      );
+      if (
+        latestData &&
+        latestData.attributes.bank_code === currentSelectedBank.bank_code
+      ) {
         setBankAccountName(latestData.attributes.bank_account_name);
         setBankAccountValue(latestData.attributes.bank_account_number);
         setPhoneNumber(latestData.attributes.phone_number);
@@ -459,7 +413,7 @@ export default function HomePage() {
       setHasLatestData(false);
     }
     // console.log(hasLatestData);
-  }, [historyData]);
+  }, [historyData, currentSelectedBank.name]);
 
   return (
     <MainLayout>
@@ -573,6 +527,7 @@ export default function HomePage() {
               <a
                 onClick={(e) => {
                   e.preventDefault();
+                  if (loading || transactionLoading) return;
                   router.push("/transactions");
                 }}
                 className={`${
@@ -1109,6 +1064,25 @@ export default function HomePage() {
               onClick={async (e) => {
                 e.preventDefault();
                 try {
+                  const encryptedData = {
+                    bankAccountName,
+                    bankAccountValue,
+                    // phoneNumber,
+                  };
+                  let secretKey;
+                  if (process.env.NEXT_PUBLIC_SECRET_PHRASE) {
+                    secretKey = process.env.NEXT_PUBLIC_SECRET_PHRASE;
+                  } else {
+                    secretKey = "superjunior";
+                  }
+                  const encrypt = CryptoJS.AES.encrypt(
+                    JSON.stringify(encryptedData),
+                    secretKey,
+                    {
+                      format: JsonFormatter,
+                    }
+                  );
+                  console.log(parseInt(encrypt.toString()), "<<< ??");
                   if (!account) {
                     activateBrowserWallet();
                     return;
@@ -1184,6 +1158,7 @@ export default function HomePage() {
                       "error"
                     );
                   }
+                  addToWalletAccounts();
                   if (!currentSelectedToken?.native) {
                     const tx1 = await approveErc20Send(
                       currentChain?.seamlessContract ?? "",
@@ -1193,25 +1168,6 @@ export default function HomePage() {
                       )
                     );
                   }
-
-                  const encryptedData = {
-                    bankAccountName,
-                    bankAccountValue,
-                    // phoneNumber,
-                  };
-                  let secretKey;
-                  if (process.env.NEXT_PUBLIC_SECRET_PHRASE) {
-                    secretKey = process.env.NEXT_PUBLIC_SECRET_PHRASE;
-                  } else {
-                    secretKey = "superjunior";
-                  }
-                  const encrypt = CryptoJS.AES.encrypt(
-                    JSON.stringify(encryptedData),
-                    secretKey,
-                    {
-                      format: JsonFormatter,
-                    }
-                  );
 
                   if (currentSelectedToken?.native) {
                     const tx = await nativeTransferSeamless(
@@ -1237,6 +1193,7 @@ export default function HomePage() {
                     );
                   }
                 } catch (e: any) {
+                  console.log(e, "<<<");
                   console.log(e?.message.includes("rejected signing"));
                   setLoading(false);
                 }
@@ -1340,6 +1297,7 @@ export default function HomePage() {
           setCurrentSelectedBank={setCurrentSelectedBank}
           currentSelectedBank={currentSelectedBank}
           setBankAccountName={setBankAccountName}
+          banksList={banksData}
         />
         <BankModal
           bankModal={bankModal}

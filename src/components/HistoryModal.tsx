@@ -10,6 +10,7 @@ interface Props {
   historyList?: any;
   setBankAccountValue: (param1: any) => void;
   setPhoneNumber: (param1: any) => void;
+  banksList: any;
 }
 
 export const HistoryModal = ({
@@ -19,13 +20,14 @@ export const HistoryModal = ({
   setBankAccountValue,
   setPhoneNumber,
   historyList,
+  setCurrentSelectedBank,
+  banksList,
 }: Props) => {
   const [theList, setTheList] = useState(historyList?.data?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     setTheList(historyList?.data?.data ?? []);
   }, [historyList]);
-
   const filterName = (payload: any) => {
     return payload.attributes.bank_account_name
       .toLowerCase()
@@ -111,6 +113,18 @@ export const HistoryModal = ({
                   key={theData.id}
                   onClick={(e) => {
                     e.preventDefault();
+                    setCurrentSelectedBank({
+                      name: banksList.data.find(
+                        (bank: any) =>
+                          bank.bank_code === theData.attributes.bank_code
+                      ).name,
+                      bank_code: theData.attributes.bank_code,
+                      imgUrl: existBankData.includes(
+                        theData.attributes.bank_code
+                      )
+                        ? `/img/banks/${theData.attributes.bank_code}.png`
+                        : "/img/banks/bank.png",
+                    });
                     setBankAccountName(theData.attributes.bank_account_name);
                     setBankAccountValue(theData.attributes.bank_account_number);
                     setPhoneNumber(theData.attributes.phone_number);
