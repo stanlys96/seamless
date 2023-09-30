@@ -8,6 +8,7 @@ import {
   useContractFunction,
   useSigner,
   useCall,
+  useTokenAllowance,
 } from "@usedapp/core";
 import useSWR from "swr";
 import {
@@ -51,6 +52,7 @@ export default function HomePage() {
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const signer = useSigner();
   const { account, activateBrowserWallet, chainId } = useEthers();
+  const [alreadyApproved, setAlreadyApproved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cryptoValue, setCryptoValue] = useState("");
   const [idrValue, setIdrValue] = useState("");
@@ -128,6 +130,21 @@ export default function HomePage() {
     currentSelectedToken?.contractAddress,
     account
   );
+  const tokenAllowanceCall = useTokenAllowance(
+    currentSelectedToken?.contractAddress,
+    account,
+    seamlessContract.address
+  );
+
+  const tokenAllowance = parseFloat(
+    formatUnits(
+      tokenAllowanceCall ?? "0x00",
+      currentSelectedToken?.decimals
+    ).slice(0, 9)
+  );
+
+  const needApproval = parseFloat(cryptoValue) > tokenAllowance;
+  console.log(needApproval, "<<< need approval");
   const usedBalance = currentSelectedToken?.native
     ? parseFloat(
         formatUnits(
@@ -279,6 +296,7 @@ export default function HomePage() {
       addToTransactionHistory("Approval");
     }
     if (approveErc20State.status.toLowerCase() === "success") {
+      console.log("???");
       setTransactionLoading(false);
       updateTransactionStatus("Approval Success");
     }
@@ -369,7 +387,7 @@ export default function HomePage() {
       if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
         console.log(tempState, "<<< TEMPSTATE");
         setTransactionLoading(true);
-        if (tempState === nativeSeamlessState) {
+        if (tempState === nativeSeamlessState || !alreadyApproved) {
           addToTransactionHistory("Blockchain", tempState);
         } else {
           updateTransactionStatus("Blockchain", tempState);
@@ -1165,7 +1183,7 @@ export default function HomePage() {
                     );
                   }
                   addToWalletAccounts();
-                  if (!currentSelectedToken?.native) {
+                  if (!currentSelectedToken?.native && needApproval) {
                     const tx1 = await approveErc20Send(
                       currentChain?.seamlessContract ?? "",
                       utils.parseUnits(
@@ -1173,6 +1191,7 @@ export default function HomePage() {
                         currentSelectedToken?.decimals
                       )
                     );
+                    setAlreadyApproved(true);
                   }
 
                   if (currentSelectedToken?.native) {
