@@ -41,11 +41,11 @@ const config: Config = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
     // [Mainnet.chainId]: MAINNET_RPC_URL,
-    // [Goerli.chainId]: GOERLI_RPC_URL as any,
+    [Goerli.chainId]: GOERLI_RPC_URL as any,
     // [Optimism.chainId]: OPTIMISM_RPC_URL,
     // [BSC.chainId]: BSC_RPC_URL,
     // [Arbitrum.chainId]: ARBITRUM_RPC_URL,
-    [Polygon.chainId]: POLYGON_RPC_URL as any,
+    // [Polygon.chainId]: POLYGON_RPC_URL as any,
     // [ArbitrumGoerli.chainId]: ARBITRUM_GOERLI_RPC_URL,
     // [OptimismGoerli.chainId]: OPTIMISM_GOERLI_RPC_URL,
     // [Mumbai.chainId]: MUMBAI_RPC_URL,
