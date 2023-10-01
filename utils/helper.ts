@@ -86,17 +86,17 @@ export const bnbTokenData = {
 };
 
 export const supportedChains = [
-  // Mainnet.chainId,
+  Mainnet.chainId,
   // Goerli.chainId,
-  // Optimism.chainId,
-  // BSC.chainId,
-  // Arbitrum.chainId,
+  Optimism.chainId,
+  BSC.chainId,
+  Arbitrum.chainId,
   Polygon.chainId,
   // ArbitrumGoerli.chainId,
   // OptimismGoerli.chainId,
   // Mumbai.chainId,
   // BSCTestnet.chainId,
-  // Aurora.chainId,
+  Aurora.chainId,
   // Base.chainId,
   // 59114,
 ];
