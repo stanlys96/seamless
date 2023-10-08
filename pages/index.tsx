@@ -38,6 +38,7 @@ import { HistoryModal } from "@/src/components/HistoryModal";
 import CurrencyInput from "react-currency-input-field";
 import Typed from "react-typed";
 import { SelectNetworkModal } from "@/src/components/SelectNetworkModal";
+import { ReferralModal } from "@/src/components/ReferralModal";
 // delay
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -48,6 +49,7 @@ export default function HomePage() {
   const [theState, setTheState] = useState(0);
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
+  const referral = useSelector((state: RootState) => state.referral);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const signer = useSigner();
@@ -1328,6 +1330,7 @@ export default function HomePage() {
           setBankAccountValue={setBankAccountValue}
           setPhoneNumber={setPhoneNumber}
         />
+        <ReferralModal referralModal={!referral.isValid} />
       </div>
     </MainLayout>
   );

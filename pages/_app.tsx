@@ -37,7 +37,7 @@ const LINEA_RPC_URL = process.env.NEXT_PUBLIC_LINEA_RPC_URL;
 
 const config: Config = {
   noMetamaskDeactivate: true,
-  autoConnect: true,
+  autoConnect: false,
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
     [Mainnet.chainId]: MAINNET_RPC_URL as any,
