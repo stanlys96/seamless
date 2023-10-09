@@ -1,10 +1,11 @@
 import { chainData, supportedChains } from "@/utils/helper";
-import { useEthers } from "@usedapp/core";
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { RootState } from "../stores";
 import { useState } from "react";
 import { IoIosRadioButtonOn, IoIosRadioButtonOff } from "react-icons/io";
+import { useNetwork } from "wagmi";
+import { switchNetwork } from "@wagmi/core";
 
 interface Props {
   setDropdownActive: (param1: any) => void;
@@ -13,8 +14,8 @@ interface Props {
 
 export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const theme = useSelector((state: RootState) => state.theme);
-  const { chainId, switchNetwork } = useEthers();
-  const chainSupported = supportedChains.includes(chainId ?? 0);
+  const { chain, chains } = useNetwork();
+  const chainSupported = supportedChains.includes(chain?.id ?? 0);
   const [showTestNetwork, setShowTestNetwork] = useState(false);
   const resultData = chainData.filter((data: any) => !data.testNetwork);
   return (
@@ -50,7 +51,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             </div>
             <img
               className="h-7 w-7 rounded-full sm:h-8 sm:w-8"
-              src={chainData.find((data) => data.chainId === chainId)?.imgUrl}
+              src={chainData.find((data) => data.chainId === chain?.id)?.imgUrl}
             />
           </div>
         ) : (
@@ -85,11 +86,17 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             key={idx}
             onClick={async (e) => {
               e.preventDefault();
-              setDropdownActive(false);
-              await switchNetwork(data.chainId);
+              try {
+                setDropdownActive(false);
+                const network = await switchNetwork({
+                  chainId: data.chainId,
+                });
+              } catch (e) {
+                console.log(e);
+              }
             }}
             className={`${
-              chainId === data.chainId
+              chain?.id === data.chainId
                 ? `${theme.theme === "dark" ? "bg-mainGray" : "bg-white"}`
                 : `${
                     theme.theme === "dark"

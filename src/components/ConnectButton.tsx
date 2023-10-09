@@ -1,62 +1,92 @@
-import { useEthers, useEtherBalance, useSigner } from "@usedapp/core";
+import * as React from "react";
 import { formatEther } from "@ethersproject/units";
 import { chainData, supportedChains } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import { SwitchNetwork } from "./SwitchNetwork";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, signActions } from "../stores";
+import {
+  useConnect,
+  useAccount,
+  useNetwork,
+  useDisconnect,
+  useSignMessage,
+  useBalance,
+} from "wagmi";
+import { recoverMessageAddress } from "viem";
+import { ConnectModal } from "./ConnectModal";
 
 export const ConnectButton = () => {
+  const recoveredAddress = React.useRef<string>();
+  const [domLoaded, setDomLoaded] = useState(false);
+  const [connectModal, setConnectModal] = useState(false);
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
+  const {
+    data: signMessageData,
+    error: signError,
+    isLoading: signIsLoading,
+    signMessage,
+    variables,
+  } = useSignMessage();
+
+  const { chain, chains } = useNetwork();
+  const { disconnect } = useDisconnect();
+  const { address, connector, isConnected } = useAccount();
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
   const dispatch = useDispatch();
   const {
-    account,
-    deactivate,
-    activateBrowserWallet,
-    chainId,
-    switchNetwork,
-    isLoading,
-    library,
-    active,
-  } = useEthers();
-  const etherBalance = useEtherBalance(account);
+    data: etherData,
+    isError: etherIsError,
+    isLoading: etherIsLoading,
+  } = useBalance({ address });
   const [dropdownActive, setDropdownActive] = useState(false);
-  const chainSupported = supportedChains.includes(chainId ?? 0);
-  const signer = useSigner();
+  const chainSupported = supportedChains.includes(chain?.id ?? 0);
   const currentNative = chainData
-    .find((data) => data.chainId === chainId)
+    .find((data) => data.chainId === chain?.id)
     ?.tokenData.find((data) => data.native);
 
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setDomLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (signer && account && !signed.signed && !signed.isSigning) {
+    if (address && !signed.signed && !signed.isSigning) {
       dispatch(signActions.setIsSigning(true));
       setTimeout(() => {
-        signer
-          ?.signMessage(
-            "By signing this, you agree to Seamless Finance's terms and conditions."
-          )
-          .then((res) => {
-            dispatch(signActions.setIsSigning(false));
-            if (res) {
-              dispatch(signActions.setSign(true));
-            }
-          })
-          .catch((err) => {
-            dispatch(signActions.setIsSigning(false));
-            console.log(err, "<<< err");
-          });
+        signMessage({
+          message:
+            "By signing this, you have agreed to Seamless Finance's terms and conditions",
+        });
       }, 1500);
     }
-  }, [signer, account]);
+  }, [address]);
 
-  if (!chainSupported && !isLoading)
+  if (!domLoaded) return <div></div>;
+
+  if (!address) {
+    return (
+      <div>
+        <button
+          className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
+          onClick={async () => {
+            setConnectModal(true);
+          }}
+        >
+          Connect
+        </button>
+
+        <ConnectModal
+          connectModal={connectModal}
+          setConnectModal={setConnectModal}
+        />
+      </div>
+    );
+  } else if (!chainSupported && !isLoading)
     return (
       <div className="flex gap-x-2">
         <a className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg flex justify-center items-center">
@@ -68,7 +98,7 @@ export const ConnectButton = () => {
         />
       </div>
     );
-  else if (account)
+  else
     return (
       <div
         className={`${
@@ -77,7 +107,7 @@ export const ConnectButton = () => {
       >
         <button
           onClick={() => {
-            deactivate();
+            disconnect();
           }}
           className={`h-9 rounded ${
             theme.theme === "light" ? "bg-button-light" : "bg-[#262636]"
@@ -85,11 +115,9 @@ export const ConnectButton = () => {
             theme.theme === "light" ? "text-dark" : "text-light"
           } sm:h-[48px] transition duration-500  sm:text-lg`}
         >
-          {`${formatEther(etherBalance ?? "0x0").slice(0, 8)} ${
-            currentNative?.name
-          } ${
+          {`${etherData?.formatted.slice(0, 7)} ${currentNative?.name} ${
             windowWidth > 768
-              ? account.slice(0, 5) + "..." + account.slice(account.length - 4)
+              ? address.slice(0, 5) + "..." + address.slice(address.length - 4)
               : ""
           }`}
         </button>
@@ -98,16 +126,5 @@ export const ConnectButton = () => {
           dropdownActive={dropdownActive}
         />
       </div>
-    );
-  else
-    return (
-      <button
-        className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
-        onClick={async () => {
-          activateBrowserWallet();
-        }}
-      >
-        Connect
-      </button>
     );
 };

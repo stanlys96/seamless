@@ -39,6 +39,16 @@ import CurrencyInput from "react-currency-input-field";
 import Typed from "react-typed";
 import { SelectNetworkModal } from "@/src/components/SelectNetworkModal";
 import { ReferralModal } from "@/src/components/ReferralModal";
+import {
+  useAccount,
+  useNetwork,
+  useContractWrite,
+  usePrepareContractWrite,
+  useContractRead,
+  useBalance,
+  useToken,
+} from "wagmi";
+
 // delay
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -53,6 +63,8 @@ export default function HomePage() {
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
   const signer = useSigner();
+  const { chain, chains } = useNetwork();
+  const { address, connector, isConnected } = useAccount();
   const { account, activateBrowserWallet, chainId } = useEthers();
   const [alreadyApproved, setAlreadyApproved] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,7 +90,7 @@ export default function HomePage() {
   const [receiveValue, setReceiveValue] = useState(0);
   const [transactionLoading, setTransactionLoading] = useState(false);
 
-  const currentChain = chainData.find((data) => data.chainId === chainId);
+  const currentChain = chainData.find((data) => data.chainId === chain?.id);
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
     currentChain?.tokenData.find((data) => data.name === "USDC")
   );
@@ -93,29 +105,52 @@ export default function HomePage() {
       : currentChain.seamlessContract,
     seamlessInterface
   );
-  const { send: approveErc20Send, state: approveErc20State } =
-    useContractFunction(erc20Contract, "approve", {
-      transactionName: "Approve ERC20 transfer",
-    });
 
-  const { send: transferSeamless, state: seamlessState } = useContractFunction(
-    seamlessContract,
-    "transfer_erc20",
-    {
-      transactionName: "Transfer ERC20",
-    }
-  );
-
-  const vaultAddress = useCall({
-    contract: seamlessContract,
-    method: "vault_address",
-    args: [],
+  const {
+    data: erc20Data,
+    isLoading: erc20Loading,
+    isSuccess: erc20Success,
+    writeAsync: erc20Write,
+    status: erc20Status,
+  } = useContractWrite({
+    address: `0x${currentSelectedToken?.contractAddress ?? ""}`,
+    abi: erc20Abi,
+    functionName: "approve",
   });
 
-  const { send: nativeTransferSeamless, state: nativeSeamlessState } =
-    useContractFunction(seamlessContract, "transfer", {
-      transactionName: "Transfer",
-    });
+  const {
+    data: transferERC20Data,
+    isLoading: transferERC20Loading,
+    isSuccess: transferERC20Success,
+    writeAsync: transferERC20Write,
+    status: transferERC20Status,
+  } = useContractWrite({
+    address: `0x${currentChain?.seamlessContract ?? ""}`,
+    abi: seamlessAbi,
+    functionName: "transfer_erc20",
+  });
+
+  const {
+    data: vaultAddress,
+    isError,
+    isLoading,
+  } = useContractRead({
+    address: `0x${currentChain?.seamlessContract ?? ""}`,
+    abi: seamlessAbi,
+    functionName: "vault_address",
+  });
+
+  const {
+    data: transferData,
+    isLoading: transferLoading,
+    isSuccess: transferSuccess,
+    writeAsync: transferWrite,
+    status: transferStatus,
+  } = useContractWrite({
+    address: `0x${currentChain?.seamlessContract ?? ""}`,
+    abi: seamlessAbi,
+    functionName: "transfer",
+  });
 
   const { data, mutate: coingeckoMutate } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
@@ -124,38 +159,34 @@ export default function HomePage() {
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const { data: balanceData } = useSWR("/balance", fetcherFlip);
   const { data: historyData } = useSWR(
-    `/api/wallet-accounts?filters[wallet_address][$eq]=${account}`,
+    `/api/wallet-accounts?filters[wallet_address][$eq]=${address}`,
     fetcherStrapi
   );
-  const nativeBalance = useEtherBalance(account);
-  const tokenBalance = useTokenBalance(
-    currentSelectedToken?.contractAddress,
-    account
-  );
-  const tokenAllowanceCall = useTokenAllowance(
-    currentSelectedToken?.contractAddress,
-    account,
-    seamlessContract.address
-  );
-
-  const tokenAllowance = parseFloat(
-    formatUnits(
-      tokenAllowanceCall ?? "0x00",
-      currentSelectedToken?.decimals
-    ).slice(0, 9)
-  );
-
-  const needApproval = parseFloat(cryptoValue) > tokenAllowance;
+  const nativeBalance = useBalance({ address });
+  const tokenBalance = useBalance({
+    address,
+    token: `0x${currentSelectedToken?.contractAddress ?? ""}`,
+  });
+  console.log(tokenBalance, "<<<<");
+  const { data: tokenAllowance } = useContractRead({
+    address: `0x${currentSelectedToken?.contractAddress ?? ""}`,
+    abi: erc20Abi,
+    functionName: "allowance",
+    args: [address, `0x${currentChain?.seamlessContract}`],
+  });
+  console.log(parseFloat(tokenAllowance?.toString() ?? "0"));
+  const needApproval =
+    parseFloat(cryptoValue) > parseFloat(tokenAllowance?.toString() ?? "0");
   const usedBalance = currentSelectedToken?.native
     ? parseFloat(
         formatUnits(
-          nativeBalance ?? "0x00",
+          nativeBalance.data?.value ?? "0x00",
           currentSelectedToken?.decimals
         ).slice(0, 8)
       )
     : parseFloat(
         formatUnits(
-          tokenBalance ?? "0x00",
+          tokenBalance.data?.value ?? "0x00",
           currentSelectedToken?.decimals
         ).slice(0, 8)
       );
@@ -224,7 +255,7 @@ export default function HomePage() {
           token_value: parseFloat(cryptoValue),
           idr_value: parseFloat(idrValue),
           transaction_success: false,
-          wallet_destination: vaultAddress?.value[0] ?? "",
+          wallet_destination: vaultAddress ?? "",
           idempotency_key: idempotencyKey,
           transaction_hash:
             status === "Blockchain"
@@ -287,28 +318,24 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    if (
-      approveErc20State.status.toLowerCase() === "mining" &&
-      !transactionLoading
-    ) {
+    if (erc20Status.toLowerCase() === "loading" && !transactionLoading) {
       setTransactionLoading(true);
       addToTransactionHistory("Approval");
     }
-    if (approveErc20State.status.toLowerCase() === "success") {
-      console.log("???");
+    if (erc20Status.toLowerCase() === "success") {
       setTransactionLoading(false);
       updateTransactionStatus("Approval Success");
     }
     if (
-      approveErc20State.status.toLowerCase() === "none" ||
-      approveErc20State.status.toLowerCase() === "success" ||
-      approveErc20State.status.toLowerCase() === "exception"
+      erc20Status.toLowerCase() === "error" ||
+      erc20Status.toLowerCase() === "success" ||
+      erc20Status.toLowerCase() === "idle"
     ) {
       setLoading(false);
     } else {
       setLoading(true);
     }
-  }, [approveErc20State]);
+  }, [erc20Status]);
 
   const updateTransactionStatus = async (
     status:
@@ -377,12 +404,13 @@ export default function HomePage() {
 
   useEffect(() => {
     try {
+      // const tempState = currentSelectedToken?.native ? transferData : erc20Data;
       const tempState = currentSelectedToken?.native
-        ? nativeSeamlessState
-        : seamlessState;
-      if (tempState.status.toLowerCase() === "mining" && !transactionLoading) {
+        ? transferStatus
+        : transferERC20Status;
+      if (tempState.toLowerCase() === "loading" && !transactionLoading) {
         setTransactionLoading(true);
-        if (tempState === nativeSeamlessState || !alreadyApproved) {
+        if (tempState === transferStatus || !alreadyApproved) {
           addToTransactionHistory("Blockchain", tempState);
         } else {
           updateTransactionStatus("Blockchain", tempState);
@@ -390,9 +418,9 @@ export default function HomePage() {
         }
       }
       if (
-        tempState.status.toLowerCase() === "none" ||
-        tempState.status.toLowerCase() === "success" ||
-        tempState.status.toLowerCase() === "exception"
+        tempState.toLowerCase() === "idle" ||
+        tempState.toLowerCase() === "success" ||
+        tempState.toLowerCase() === "error"
       ) {
         setLoading(false);
       } else {
@@ -401,7 +429,13 @@ export default function HomePage() {
     } catch (e) {
       console.log(e, "<<< E!!");
     }
-  }, [seamlessState, nativeSeamlessState]);
+  }, [transferERC20Status, transferStatus]);
+
+  useEffect(() => {
+    setCurrentSelectedToken(
+      currentChain?.tokenData.find((data) => data.name === "USDC")
+    );
+  }, [chain]);
 
   useEffect(() => {
     setBankAccountName("");
@@ -1180,38 +1214,58 @@ export default function HomePage() {
                   }
                   addToWalletAccounts();
                   if (!currentSelectedToken?.native && needApproval) {
-                    const tx1 = await approveErc20Send(
-                      currentChain?.seamlessContract ?? "",
-                      utils.parseUnits(
-                        cryptoValue,
-                        currentSelectedToken?.decimals
-                      )
-                    );
+                    const tx1 = await erc20Write({
+                      value: utils
+                        .parseUnits(cryptoValue, currentSelectedToken?.decimals)
+                        .toBigInt(),
+                    });
+                    // const tx1 = await approveErc20Send(
+                    //   currentChain?.seamlessContract ?? "",
+                    //   utils.parseUnits(
+                    //     cryptoValue,
+                    //     currentSelectedToken?.decimals
+                    //   )
+                    // );
                     setAlreadyApproved(true);
                   }
 
                   if (currentSelectedToken?.native) {
-                    const tx = await nativeTransferSeamless(
-                      encrypt.toString(),
-                      {
-                        value: utils.parseUnits(
-                          cryptoValue,
-                          currentSelectedToken?.decimals
-                        ),
-                      }
-                    );
+                    const tx = await transferERC20Write({
+                      args: [encrypt.toString()],
+                      value: utils
+                        .parseUnits(cryptoValue, currentSelectedToken?.decimals)
+                        .toBigInt(),
+                    });
+                    // const tx = await nativeTransferSeamless(
+                    //   encrypt.toString(),
+                    //   {
+                    //     value: utils.parseUnits(
+                    //       cryptoValue,
+                    //       currentSelectedToken?.decimals
+                    //     ),
+                    //   }
+                    // );
                     // console.log(tx.)
                   } else {
-                    const tx = await transferSeamless(
-                      currentSelectedToken?.contractAddress,
-                      encrypt.toString(),
-                      {
-                        value: utils.parseUnits(
-                          cryptoValue,
-                          currentSelectedToken?.decimals
-                        ),
-                      }
-                    );
+                    const tx = await transferWrite({
+                      args: [
+                        currentSelectedToken?.contractAddress,
+                        encrypt.toString(),
+                      ],
+                      value: utils
+                        .parseUnits(cryptoValue, currentSelectedToken?.decimals)
+                        .toBigInt(),
+                    });
+                    // const tx = await transferSeamless(
+                    //   currentSelectedToken?.contractAddress,
+                    //   encrypt.toString(),
+                    //   {
+                    //     value: utils.parseUnits(
+                    //       cryptoValue,
+                    //       currentSelectedToken?.decimals
+                    //     ),
+                    //   }
+                    // );
                   }
                 } catch (e: any) {
                   console.log(e, "<<<");

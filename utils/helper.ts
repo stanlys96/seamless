@@ -126,27 +126,27 @@ export const chainData = [
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...daiTokenData,
-        contractAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
+        contractAddress: "6b175474e89094c44da98b954eedeac495271d0f",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        contractAddress: "A0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+        contractAddress: "dac17f958d2ee523a2206206994597c13d831ec7",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+        contractAddress: "2260fac5e5542a773aa44fbcfedf7c193bc2c599",
       },
       {
         ...wethTokenData,
-        contractAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        contractAddress: "C02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       },
     ],
   },
@@ -161,28 +161,28 @@ export const chainData = [
     tokenData: [
       {
         ...daiTokenData,
-        contractAddress: "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1",
+        contractAddress: "da10009cbd5d07dd0cecc66161fc93d7c9000da1",
       },
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+        contractAddress: "af88d065e77c8cc2239327c5edb3a432268e5831",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+        contractAddress: "fd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
+        contractAddress: "2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
       },
       {
         ...wethTokenData,
-        contractAddress: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        contractAddress: "82af49447d8a07e3bd95bd0d56f35241523fbab1",
       },
     ],
   },
@@ -197,28 +197,28 @@ export const chainData = [
     tokenData: [
       {
         ...daiTokenData,
-        contractAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        contractAddress: "8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
       },
       {
         ...maticTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+        contractAddress: "2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+        contractAddress: "c2132D05D31c914a87C6611C10748AEb04B58e8F",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+        contractAddress: "1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
       },
       {
         ...wethTokenData,
-        contractAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        contractAddress: "7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
       },
     ],
   },
@@ -233,28 +233,28 @@ export const chainData = [
     tokenData: [
       {
         ...daiTokenData,
-        contractAddress: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        contractAddress: "DA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
       },
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+        contractAddress: "7f5c764cbc14f9669b88837ca1490cca17c31607",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58",
+        contractAddress: "94b008aa00579c1307b0ef2c499ad98a8ce58e58",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0x68f180fcce6836688e9084f035309e29bf0a2095",
+        contractAddress: "68f180fcce6836688e9084f035309e29bf0a2095",
       },
       {
         ...wethTokenData,
-        contractAddress: "0x4200000000000000000000000000000000000006",
+        contractAddress: "4200000000000000000000000000000000000006",
       },
     ],
   },
@@ -270,23 +270,23 @@ export const chainData = [
       {
         ...bnbTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...ethTokenData,
-        contractAddress: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+        contractAddress: "2170Ed0880ac9A755fd29B2688956BD959F933F8",
       },
       {
         ...daiTokenData,
-        contractAddress: "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+        contractAddress: "1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+        contractAddress: "8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0x55d398326f99059fF775485246999027B3197955",
+        contractAddress: "55d398326f99059fF775485246999027B3197955",
       },
     ],
   },
@@ -302,27 +302,27 @@ export const chainData = [
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...daiTokenData,
-        contractAddress: "0xb93cba7013f4557cDFB590fD152d24Ef4063485f",
+        contractAddress: "b93cba7013f4557cDFB590fD152d24Ef4063485f",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x0d6B12630Db150559822bb5297227C107332A8bf",
+        contractAddress: "0d6B12630Db150559822bb5297227C107332A8bf",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0xfad6367E97217cC51b4cd838Cc086831f81d38C2",
+        contractAddress: "fad6367E97217cC51b4cd838Cc086831f81d38C2",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05",
+        contractAddress: "C04B0d3107736C32e19F1c62b2aF67BE61d63a05",
       },
       {
         ...wethTokenData,
-        contractAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+        contractAddress: "B4FBF271143F4FBf7B91A5ded31805e42b2208d6",
       },
     ],
   },
@@ -336,28 +336,28 @@ export const chainData = [
     tokenData: [
       {
         ...daiTokenData,
-        contractAddress: "0xD5e1E269abF5fb03b10F92b93c7065850144A32A",
+        contractAddress: "D5e1E269abF5fb03b10F92b93c7065850144A32A",
       },
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x2387e295a523347D1E12fB96C052210D49231a2B",
+        contractAddress: "2387e295a523347D1E12fB96C052210D49231a2B",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0xB3011837c08D3A447AC1e08CCBAb30caBFC50511",
+        contractAddress: "B3011837c08D3A447AC1e08CCBAb30caBFC50511",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0xd38637f7ce85d4468dbe1b523D92f499edf58244",
+        contractAddress: "d38637f7ce85d4468dbe1b523D92f499edf58244",
       },
       {
         ...wethTokenData,
-        contractAddress: "0x0b2Bb3D88c61E5734448A42984C3ef6c2e09649E",
+        contractAddress: "0b2Bb3D88c61E5734448A42984C3ef6c2e09649E",
       },
     ],
   },
@@ -371,28 +371,28 @@ export const chainData = [
     tokenData: [
       {
         ...daiTokenData,
-        contractAddress: "0x4A0eef739Fe45aE318831Fd02ffb609822C89931",
+        contractAddress: "4A0eef739Fe45aE318831Fd02ffb609822C89931",
       },
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0xD1D57Fd32AE51eB778730d4C740E8C041891F525",
+        contractAddress: "D1D57Fd32AE51eB778730d4C740E8C041891F525",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0x119df4B634d3dE1325c708a10f539D1a14e45874",
+        contractAddress: "119df4B634d3dE1325c708a10f539D1a14e45874",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0x3491d4649aeBC9f46370DFF87c9887f557fb5954",
+        contractAddress: "3491d4649aeBC9f46370DFF87c9887f557fb5954",
       },
       {
         ...wethTokenData,
-        contractAddress: "0x329B30e4c9B671ED7fC79AECe9e56215FC40073d",
+        contractAddress: "329B30e4c9B671ED7fC79AECe9e56215FC40073d",
       },
     ],
   },
@@ -406,28 +406,28 @@ export const chainData = [
     tokenData: [
       {
         ...daiTokenData,
-        contractAddress: "0xF14f9596430931E177469715c591513308244e8F",
+        contractAddress: "F14f9596430931E177469715c591513308244e8F",
       },
       {
         ...maticTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x65D177ec36cd8aC2e502C640b97662Cf28381915",
+        contractAddress: "65D177ec36cd8aC2e502C640b97662Cf28381915",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0xd28F8b631FAcC1E838FBA8bb84df23DC3480D51A",
+        contractAddress: "d28F8b631FAcC1E838FBA8bb84df23DC3480D51A",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0x0d787a4a1548f673ed375445535a6c7A1EE56180",
+        contractAddress: "0d787a4a1548f673ed375445535a6c7A1EE56180",
       },
       {
         ...wethTokenData,
-        contractAddress: "0x47cE7E72334Fe164954D4f9dd95f3D20A26e8e2b",
+        contractAddress: "47cE7E72334Fe164954D4f9dd95f3D20A26e8e2b",
       },
     ],
   },
@@ -442,23 +442,23 @@ export const chainData = [
       {
         ...bnbTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...ethTokenData,
-        contractAddress: "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+        contractAddress: "2170ed0880ac9a755fd29b2688956bd959f933f8",
       },
       {
         ...daiTokenData,
-        contractAddress: "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867",
+        contractAddress: "EC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0x8324F87e66a755C8b1439df09e95DFeA44D9247D",
+        contractAddress: "8324F87e66a755C8b1439df09e95DFeA44D9247D",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+        contractAddress: "337610d27c682E347C9cD60BD4b3b107C9d34dDd",
       },
     ],
   },
@@ -474,27 +474,27 @@ export const chainData = [
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
       {
         ...daiTokenData,
-        contractAddress: "0xe3520349f477a5f6eb06107066048508498a291b",
+        contractAddress: "e3520349f477a5f6eb06107066048508498a291b",
       },
       {
         ...usdcTokenData,
-        contractAddress: "0xb12bfca5a55806aaf64e99521918a4bf0fc40802",
+        contractAddress: "b12bfca5a55806aaf64e99521918a4bf0fc40802",
       },
       {
         ...usdtTokenData,
-        contractAddress: "0x4988a896b1227218e4a686fde5eabdcabd91571f",
+        contractAddress: "4988a896b1227218e4a686fde5eabdcabd91571f",
       },
       {
         ...wbtcTokenData,
-        contractAddress: "0xf4eb217ba2454613b15dbdea6e5f22276410e89e",
+        contractAddress: "f4eb217ba2454613b15dbdea6e5f22276410e89e",
       },
       {
         ...wethTokenData,
-        contractAddress: "0xC9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB",
+        contractAddress: "C9BdeEd33CD01541e1eeD10f90519d2C06Fe3feB",
       },
     ],
   },
@@ -510,7 +510,7 @@ export const chainData = [
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
     ],
   },
@@ -526,7 +526,7 @@ export const chainData = [
       {
         ...ethTokenData,
         native: true,
-        contractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        contractAddress: "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       },
     ],
   },

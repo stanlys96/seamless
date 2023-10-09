@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
 import { Pagination, ConfigProvider } from "antd";
+import { useAccount } from "wagmi";
 
 function sortById(a: any, b: any) {
   return b.id - a.id;
@@ -28,6 +29,7 @@ function sortByLatestId(a: any, b: any) {
 }
 
 export default function TransactionPage() {
+  const { address, connector, isConnected } = useAccount();
   const scrollToTop = useRef<HTMLInputElement>(null);
   const theme = useSelector((state: RootState) => state.theme);
   const [pageLoading, setPageLoading] = useState(false);
@@ -36,7 +38,7 @@ export default function TransactionPage() {
   const [userTransactions, setUserTransactions] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { data: transactionsData } = useSWR(
-    `/api/transaction-histories?sort[0]=id:desc&filters[wallet_address][$eq]=${account}&pagination[page]=${currentPage}&pagination[pageSize]=8`,
+    `/api/transaction-histories?sort[0]=id:desc&filters[wallet_address][$eq]=${address}&pagination[page]=${currentPage}&pagination[pageSize]=8`,
     fetcherStrapi
   );
   useEffect(() => {
