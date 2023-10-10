@@ -43,6 +43,7 @@ import {
 } from "wagmi";
 
 // delay
+// deploy
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function HomePage() {
