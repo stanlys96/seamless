@@ -16,9 +16,12 @@ export const MainLayout = ({ children }: Props) => {
   const router = useRouter();
   const [currentTheme, setCurrentTheme] = useState("light");
   const [windowWidth, setWindowWidth] = useState(0);
+  const [domLoaded, setDomLoaded] = useState(false);
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setDomLoaded(true);
   }, []);
+  if (!domLoaded) return <div></div>;
   return (
     <div
       className={`${
