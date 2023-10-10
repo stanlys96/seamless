@@ -139,13 +139,15 @@ export const ConnectButton = () => {
                 : ""
               : ensName
           }`}
+        </button>
+        <div className="flex justify-center items-center">
           {ensAvatar && (
             <img
               className="w-[30px] h-[30px] rounded-full"
               src={ensAvatar?.data ?? ""}
             />
           )}
-        </button>
+        </div>
         <SwitchNetwork
           setDropdownActive={setDropdownActive}
           dropdownActive={dropdownActive}
