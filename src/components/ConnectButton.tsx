@@ -84,7 +84,7 @@ export const ConnectButton = () => {
         >
           Connect
         </button> */}
-        <w3m-button size="sm" label="Connect" />
+        <w3m-button size="sm" label="Connect&nbsp;Wallet" />
 
         <ConnectModal
           connectModal={connectModal}
