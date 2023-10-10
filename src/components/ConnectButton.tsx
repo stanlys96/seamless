@@ -140,7 +140,10 @@ export const ConnectButton = () => {
               : ensName
           }`}
           {ensAvatar && (
-            <img className="w-[30px] h-[30px]" src={ensAvatar?.data ?? ""} />
+            <img
+              className="w-[30px] h-[30px] rounded-full"
+              src={ensAvatar?.data ?? ""}
+            />
           )}
         </button>
         <SwitchNetwork
