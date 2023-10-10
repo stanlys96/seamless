@@ -73,9 +73,9 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 );
 
 const metadata = {
-  name: "Web3Modal",
-  description: "Web3Modal Example",
-  url: "https://web3modal.com",
+  name: "Seamless Finance",
+  description: "Seamless Finance",
+  url: "https://seamless.finance",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
