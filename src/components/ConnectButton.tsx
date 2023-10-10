@@ -124,7 +124,7 @@ export const ConnectButton = () => {
           onClick={() => {
             disconnect();
           }}
-          className={`h-9 rounded ${
+          className={`h-9 rounded flex items-center gap-x-3 ${
             theme.theme === "light" ? "bg-button-light" : "bg-[#262636]"
           } ] px-4 font-semibold ${
             theme.theme === "light" ? "text-dark" : "text-light"
@@ -139,15 +139,13 @@ export const ConnectButton = () => {
                 : ""
               : ensName
           }`}
-        </button>
-        <div className="flex justify-center items-center">
-          {ensAvatar && (
+          {ensAvatar?.data && (
             <img
               className="w-[30px] h-[30px] rounded-full"
               src={ensAvatar?.data ?? ""}
             />
           )}
-        </div>
+        </button>
         <SwitchNetwork
           setDropdownActive={setDropdownActive}
           dropdownActive={dropdownActive}
