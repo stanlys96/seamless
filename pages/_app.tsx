@@ -7,7 +7,15 @@ import { createPublicClient, http } from "viem";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { infuraProvider } from "wagmi/providers/infura";
-import { arbitrum, base, bsc, linea, optimism, polygon } from "viem/chains";
+import {
+  arbitrum,
+  base,
+  bsc,
+  goerli,
+  linea,
+  optimism,
+  polygon,
+} from "viem/chains";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
@@ -52,12 +60,12 @@ const LINEA_RPC_URL = process.env.NEXT_PUBLIC_LINEA_RPC_URL;
 // };
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, arbitrum, linea, optimism, base],
+  [mainnet, polygon, arbitrum, linea, optimism, base, goerli],
   [
     infuraProvider({ apiKey: "1dc413f91d324bcbb42637434510ba98" }),
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: "https://polygon-mainnet.infura.io/v3/1dc413f91d324bcbb42637434510ba98",
+        http: "https://eth-goerli.g.alchemy.com/v2/rLwmBm4UMNg8uzNAn99Zr1Nhsc_zGE3L",
       }),
     }),
   ]

@@ -62,6 +62,7 @@ export const ConnectButton = () => {
           message:
             "By signing this, you have agreed to Seamless Finance's terms and conditions",
         });
+        dispatch(signActions.setSign(true));
       }, 1500);
     }
   }, [address]);
