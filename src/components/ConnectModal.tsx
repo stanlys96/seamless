@@ -59,8 +59,9 @@ export const ConnectModal = ({
               <div className="relative border-gray p-4">
                 <div>
                   <div className="noScrollbar gap-4 flex overflow-x-auto flex-wrap">
-                    {connectors.map((connector) => (
+                    {connectors.map((connector, idx) => (
                       <button
+                        key={idx}
                         className="h-9 flex gap-x-2 items-center rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
                         onClick={async () => {
                           try {
