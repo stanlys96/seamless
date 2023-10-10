@@ -65,7 +65,7 @@ export const ConnectModal = ({
                         className="h-9 flex gap-x-2 items-center rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
                         onClick={async () => {
                           try {
-                            if (isLoading) return;
+                            if (isLoading || !connector.ready) return;
                             connect({ connector });
                             setConnectModal(false);
                           } catch (e) {
