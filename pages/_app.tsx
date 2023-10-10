@@ -73,7 +73,8 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 const config = createConfig({
   autoConnect: false,
   connectors: [
-    new MetaMaskConnector({ chains }),
+    // new MetaMaskConnector({ chains }),
+    new InjectedConnector({ chains }),
     new CoinbaseWalletConnector({
       chains,
       options: {
