@@ -60,12 +60,11 @@ const LINEA_RPC_URL = process.env.NEXT_PUBLIC_LINEA_RPC_URL;
 // };
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, arbitrum, linea, optimism, base, goerli],
+  [mainnet, polygon, arbitrum, linea, optimism, base],
   [
-    infuraProvider({ apiKey: "1dc413f91d324bcbb42637434510ba98" }),
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: "https://eth-goerli.g.alchemy.com/v2/rLwmBm4UMNg8uzNAn99Zr1Nhsc_zGE3L",
+        http: chain.rpcUrls.public.http[0],
       }),
     }),
   ]

@@ -87,7 +87,7 @@ export const bnbTokenData = {
 
 export const supportedChains = [
   Mainnet.chainId,
-  Goerli.chainId,
+  // Goerli.chainId,
   Optimism.chainId,
   BSC.chainId,
   Arbitrum.chainId,
