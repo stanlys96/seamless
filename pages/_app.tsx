@@ -3,6 +3,7 @@ import { AppProps } from "next/app";
 import { store } from "@/src/stores";
 import { Provider } from "react-redux";
 import { WagmiConfig, configureChains, createConfig, mainnet } from "wagmi";
+import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
 import { createPublicClient, http } from "viem";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
@@ -38,6 +39,7 @@ const BSC_TESTNET_RPC_URL = process.env.NEXT_PUBLIC_BSC_TESTNET_RPC_URL;
 const AURORA_RPC_URL = process.env.NEXT_PUBLIC_AURORA_RPC_URL;
 const BASE_RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC_URL;
 const LINEA_RPC_URL = process.env.NEXT_PUBLIC_LINEA_RPC_URL;
+const PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID;
 
 // const config: Config = {
 //   noMetamaskDeactivate: true,
@@ -70,6 +72,19 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   ]
 );
 
+const metadata = {
+  name: "Web3Modal",
+  description: "Web3Modal Example",
+  url: "https://web3modal.com",
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+};
+
+const wagmiConfig = defaultWagmiConfig({
+  chains,
+  projectId: PROJECT_ID ?? "",
+  metadata,
+});
+
 const config = createConfig({
   autoConnect: false,
   connectors: [
@@ -84,7 +99,7 @@ const config = createConfig({
     new WalletConnectConnector({
       chains,
       options: {
-        projectId: "85bb78d3e28a1aa94144cacb71c3e242",
+        projectId: PROJECT_ID,
       },
     }),
   ],
@@ -92,10 +107,17 @@ const config = createConfig({
   webSocketPublicClient,
 });
 
+// 3. Create modal
+createWeb3Modal({
+  wagmiConfig,
+  projectId: PROJECT_ID ?? "",
+  chains,
+});
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <WagmiConfig config={config}>
+      <WagmiConfig config={wagmiConfig}>
         <Provider store={store}>
           <Component {...pageProps} />
         </Provider>

@@ -16,6 +16,10 @@ import {
 import { recoverMessageAddress } from "viem";
 import { ConnectModal } from "./ConnectModal";
 
+// export default function ConnectButton() {
+//   return ;
+// }
+
 export const ConnectButton = () => {
   const recoveredAddress = React.useRef<string>();
   const [domLoaded, setDomLoaded] = useState(false);
@@ -72,14 +76,15 @@ export const ConnectButton = () => {
   if (!address) {
     return (
       <div>
-        <button
+        {/* <button
           className="h-9 rounded bg-[#262636] px-4 font-semibold text-white sm:h-[48px] sm:text-lg"
           onClick={async () => {
             setConnectModal(true);
           }}
         >
           Connect
-        </button>
+        </button> */}
+        <w3m-button />
 
         <ConnectModal
           connectModal={connectModal}
