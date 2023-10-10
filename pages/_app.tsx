@@ -46,10 +46,10 @@ const rpcUrlHelper = [
     chainId: 42161,
     rpcUrl: ARBITRUM_RPC_URL,
   },
-  {
-    chainId: 59144,
-    rpcUrl: LINEA_RPC_URL,
-  },
+  // {
+  //   chainId: 59144,
+  //   rpcUrl: LINEA_RPC_URL,
+  // },
   {
     chainId: 10,
     rpcUrl: OPTIMISM_RPC_URL,
@@ -65,7 +65,7 @@ const rpcUrlHelper = [
 ];
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, arbitrum, linea, optimism, base, bsc],
+  [mainnet, polygon, arbitrum, optimism, base, bsc],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
