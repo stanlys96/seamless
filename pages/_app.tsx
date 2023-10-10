@@ -41,6 +41,37 @@ const BASE_RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC_URL;
 const LINEA_RPC_URL = process.env.NEXT_PUBLIC_LINEA_RPC_URL;
 const PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID;
 
+const rpcUrlHelper = [
+  {
+    chainId: 1,
+    rpcUrl: MAINNET_RPC_URL,
+  },
+  {
+    chainId: 137,
+    rpcUrl: POLYGON_RPC_URL,
+  },
+  {
+    chainId: 42161,
+    rpcUrl: ARBITRUM_RPC_URL,
+  },
+  {
+    chainId: 59144,
+    rpcUrl: LINEA_RPC_URL,
+  },
+  {
+    chainId: 10,
+    rpcUrl: OPTIMISM_RPC_URL,
+  },
+  {
+    chainId: 8453,
+    rpcUrl: BASE_RPC_URL,
+  },
+  {
+    chainId: 56,
+    rpcUrl: BSC_RPC_URL,
+  },
+];
+
 // const config: Config = {
 //   noMetamaskDeactivate: true,
 //   autoConnect: false,
@@ -62,11 +93,13 @@ const PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID;
 // };
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, arbitrum, linea, optimism, base],
+  [mainnet, polygon, arbitrum, linea, optimism, base, bsc],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: chain.rpcUrls.public.http[0],
+        http:
+          rpcUrlHelper.find((theData) => theData.chainId === chain.id)
+            ?.rpcUrl ?? "",
       }),
     }),
   ]
