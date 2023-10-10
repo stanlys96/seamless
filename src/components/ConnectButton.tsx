@@ -1,5 +1,4 @@
 import * as React from "react";
-import { formatEther } from "@ethersproject/units";
 import { chainData, supportedChains } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import { SwitchNetwork } from "./SwitchNetwork";
@@ -15,12 +14,7 @@ import {
   useEnsName,
   useEnsAvatar,
 } from "wagmi";
-import { recoverMessageAddress } from "viem";
 import { ConnectModal } from "./ConnectModal";
-
-// export default function ConnectButton() {
-//   return ;
-// }
 
 export const ConnectButton = () => {
   const recoveredAddress = React.useRef<string>();

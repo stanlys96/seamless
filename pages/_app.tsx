@@ -4,10 +4,6 @@ import { store } from "@/src/stores";
 import { Provider } from "react-redux";
 import { WagmiConfig, configureChains, createConfig, mainnet } from "wagmi";
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
-import { createPublicClient, http } from "viem";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
-import { infuraProvider } from "wagmi/providers/infura";
 import {
   arbitrum,
   base,
@@ -19,12 +15,8 @@ import {
 } from "viem/chains";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
-import { Web3Modal } from "@web3modal/react";
-// import ethe from "@web3modal/ethereum"
-import { EthereumClient } from "@web3modal/ethereum";
 
 const GOERLI_RPC_URL = process.env.NEXT_PUBLIC_GOERLI_RPC_URL;
 const MAINNET_RPC_URL = process.env.NEXT_PUBLIC_MAINNET_RPC_URL;
@@ -71,26 +63,6 @@ const rpcUrlHelper = [
     rpcUrl: BSC_RPC_URL,
   },
 ];
-
-// const config: Config = {
-//   noMetamaskDeactivate: true,
-//   autoConnect: false,
-//   readOnlyChainId: Mainnet.chainId,
-//   readOnlyUrls: {
-//     [Mainnet.chainId]: MAINNET_RPC_URL as any,
-//     // [Goerli.chainId]: GOERLI_RPC_URL as any,
-//     [Optimism.chainId]: OPTIMISM_RPC_URL,
-//     [BSC.chainId]: BSC_RPC_URL,
-//     [Arbitrum.chainId]: ARBITRUM_RPC_URL,
-//     [Polygon.chainId]: POLYGON_RPC_URL as any,
-//     // [ArbitrumGoerli.chainId]: ARBITRUM_GOERLI_RPC_URL,
-//     // [OptimismGoerli.chainId]: OPTIMISM_GOERLI_RPC_URL,
-//     // [Mumbai.chainId]: MUMBAI_RPC_URL,
-//     // [BSCTestnet.chainId]: BSC_TESTNET_RPC_URL,
-//     [Aurora.chainId]: AURORA_RPC_URL,
-//     // [Base.chainId]: BASE_RPC_URL,
-//   },
-// };
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, polygon, arbitrum, linea, optimism, base, bsc],
