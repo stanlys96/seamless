@@ -13,6 +13,7 @@ import {
   useSignMessage,
   useBalance,
   useEnsName,
+  useEnsAvatar,
 } from "wagmi";
 import { recoverMessageAddress } from "viem";
 import { ConnectModal } from "./ConnectModal";
@@ -41,6 +42,10 @@ export const ConnectButton = () => {
   const { data: ensName } = useEnsName({
     address,
   });
+  const ensAvatar = useEnsAvatar({
+    name: ensName,
+  });
+  console.log(ensAvatar);
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
   const dispatch = useDispatch();
@@ -134,6 +139,9 @@ export const ConnectButton = () => {
                 : ""
               : ensName
           }`}
+          {ensAvatar && (
+            <img className="w-[30px] h-[30px]" src={ensAvatar?.data ?? ""} />
+          )}
         </button>
         <SwitchNetwork
           setDropdownActive={setDropdownActive}
