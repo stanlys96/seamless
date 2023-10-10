@@ -1,15 +1,6 @@
 "use client";
 import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
 import { useState } from "react";
-import {
-  useEtherBalance,
-  useEthers,
-  useTokenBalance,
-  useContractFunction,
-  useSigner,
-  useCall,
-  useTokenAllowance,
-} from "@usedapp/core";
 import useSWR from "swr";
 import {
   axiosFlip,
@@ -48,6 +39,7 @@ import {
   useBalance,
   useToken,
   useWaitForTransaction,
+  useSignMessage,
 } from "wagmi";
 
 // delay
@@ -63,7 +55,6 @@ export default function HomePage() {
   const referral = useSelector((state: RootState) => state.referral);
   const erc20Interface = new utils.Interface(erc20Abi);
   const seamlessInterface = new utils.Interface(seamlessAbi);
-  const signer = useSigner();
   const { chain, chains } = useNetwork();
   const { address, connector, isConnected } = useAccount();
   const [alreadyApproved, setAlreadyApproved] = useState(false);
@@ -94,6 +85,14 @@ export default function HomePage() {
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
     currentChain?.tokenData.find((data) => data.name === "USDC")
   );
+
+  const {
+    data: signMessageData,
+    error: signError,
+    isLoading: signIsLoading,
+    signMessage,
+    variables,
+  } = useSignMessage();
 
   const {
     data: erc20Data,
@@ -1209,20 +1208,11 @@ export default function HomePage() {
                   }
                   if (!signed.signed) {
                     dispatch(signActions.setIsSigning(true));
-                    signer
-                      ?.signMessage(
-                        "By signing this, you agree to Seamless Finance's terms and conditions."
-                      )
-                      .then((res) => {
-                        dispatch(signActions.setIsSigning(false));
-                        if (res) {
-                          dispatch(signActions.setSign(true));
-                        }
-                      })
-                      .catch((err) => {
-                        dispatch(signActions.setIsSigning(false));
-                        console.log(err, "<<< err");
-                      });
+                    signMessage({
+                      message:
+                        "By signing this, you have agreed to Seamless Finance's terms and conditions",
+                    });
+                    dispatch(signActions.setSign(true));
                     return;
                   }
                   if (

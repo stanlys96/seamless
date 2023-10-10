@@ -12,6 +12,7 @@ import {
   useDisconnect,
   useSignMessage,
   useBalance,
+  useEnsName,
 } from "wagmi";
 import { recoverMessageAddress } from "viem";
 import { ConnectModal } from "./ConnectModal";
@@ -37,6 +38,9 @@ export const ConnectButton = () => {
   const { chain, chains } = useNetwork();
   const { disconnect } = useDisconnect();
   const { address, connector, isConnected } = useAccount();
+  const { data: ensName } = useEnsName({
+    address,
+  });
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
   const dispatch = useDispatch();
@@ -122,9 +126,13 @@ export const ConnectButton = () => {
           } sm:h-[48px] transition duration-500  sm:text-lg`}
         >
           {`${etherData?.formatted.slice(0, 7)} ${currentNative?.name} ${
-            windowWidth > 768
-              ? address.slice(0, 5) + "..." + address.slice(address.length - 4)
-              : ""
+            !ensName
+              ? windowWidth > 768
+                ? address.slice(0, 5) +
+                  "..." +
+                  address.slice(address.length - 4)
+                : ""
+              : ensName
           }`}
         </button>
         <SwitchNetwork
