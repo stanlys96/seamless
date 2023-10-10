@@ -124,7 +124,7 @@ export const ConnectButton = () => {
           onClick={() => {
             disconnect();
           }}
-          className={`h-9 rounded flex items-center gap-x-3 ${
+          className={`h-9 rounded flex items-center gap-x-1 ${
             theme.theme === "light" ? "bg-button-light" : "bg-[#262636]"
           } ] px-4 font-semibold ${
             theme.theme === "light" ? "text-dark" : "text-light"
