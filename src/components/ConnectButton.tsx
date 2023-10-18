@@ -15,6 +15,7 @@ import {
   useEnsAvatar,
 } from "wagmi";
 import { ConnectModal } from "./ConnectModal";
+import Swal from "sweetalert2";
 
 export const ConnectButton = () => {
   const recoveredAddress = React.useRef<string>();
@@ -39,9 +40,9 @@ export const ConnectButton = () => {
   const ensAvatar = useEnsAvatar({
     name: ensName,
   });
-  console.log(ensAvatar);
   const theme = useSelector((state: RootState) => state.theme);
   const signed = useSelector((state: RootState) => state.sign);
+  const referral = useSelector((state: RootState) => state.referral);
   const dispatch = useDispatch();
   const {
     data: etherData,
@@ -62,15 +63,38 @@ export const ConnectButton = () => {
   }, []);
 
   useEffect(() => {
-    if (address && !signed.signed && !signed.isSigning) {
-      dispatch(signActions.setIsSigning(true));
-      setTimeout(() => {
-        signMessage({
-          message:
-            "By signing this, you have agreed to Seamless Finance's terms and conditions",
-        });
-        dispatch(signActions.setSign(true));
-      }, 1500);
+    if (referral.free) {
+      if (address && !signed.signed && !signed.isSigning) {
+        dispatch(signActions.setIsSigning(true));
+        setTimeout(() => {
+          signMessage({
+            message:
+              "By signing this, you have agreed to Seamless Finance's terms and conditions",
+          });
+          dispatch(signActions.setSign(true));
+        }, 1500);
+      }
+    } else {
+      console.log(address, "<<<<");
+      if (address && address !== referral.walletAddress) {
+        Swal.fire(
+          "Info!",
+          "Wallet address not the same with referral code! Please change your account from the Wallet Browser!",
+          "info"
+        );
+        disconnect();
+      } else {
+        if (address && !signed.signed && !signed.isSigning) {
+          dispatch(signActions.setIsSigning(true));
+          setTimeout(() => {
+            signMessage({
+              message:
+                "By signing this, you have agreed to Seamless Finance's terms and conditions",
+            });
+            dispatch(signActions.setSign(true));
+          }, 1500);
+        }
+      }
     }
   }, [address]);
 

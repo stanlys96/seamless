@@ -62,6 +62,10 @@ const rpcUrlHelper = [
     chainId: 56,
     rpcUrl: BSC_RPC_URL,
   },
+  {
+    chainId: 5,
+    rpcUrl: GOERLI_RPC_URL,
+  },
 ];
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(

@@ -47,21 +47,44 @@ export const ReferralModal = ({ referralModal }: Props) => {
                     try {
                       setLoading(true);
                       const data = await axiosStrapi.get(
-                        `/api/referral-codes?filters[code][$eq]=${referralCode}`
+                        `/api/referrals?filters[referral_code][$eq]=${referralCode}`
                       );
                       if (data.data.data.length > 0) {
                         dispatch(referralActions.setIsValid(true));
                         dispatch(
                           referralActions.setReferralCode(
-                            data.data.data[0].attributes.code
+                            data.data.data[0].attributes.referral_code
+                          )
+                        );
+                        dispatch(
+                          referralActions.setWalletAddress(
+                            data.data.data[0].attributes.referring_to
                           )
                         );
                       } else {
-                        Swal.fire(
-                          "Referral code not registered",
-                          "Referral code not registered. Please go to our discord to get one",
-                          "info"
+                        const specialData = await axiosStrapi.get(
+                          `/api/special-wallets?filters[access_code][$eq]=${referralCode}`
                         );
+                        if (specialData.data.data.length > 0) {
+                          dispatch(referralActions.setIsValid(true));
+                          dispatch(
+                            referralActions.setReferralCode(
+                              specialData.data.data[0].attributes.access_code
+                            )
+                          );
+                          dispatch(
+                            referralActions.setWalletAddress(
+                              specialData.data.data[0].attributes.wallet_address
+                            )
+                          );
+                          dispatch(referralActions.setFree(true));
+                        } else {
+                          Swal.fire(
+                            "Referral code not registered",
+                            "Referral code not registered. Please go to our discord to get one",
+                            "info"
+                          );
+                        }
                       }
                       setLoading(false);
                     } catch (e) {

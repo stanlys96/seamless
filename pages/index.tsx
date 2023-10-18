@@ -222,7 +222,6 @@ export default function HomePage() {
   } = useWaitForTransaction({
     hash: `0x${approvalHash}`,
   });
-  console.log(approvalHash, "<< APPROVAL HASH");
   useEffect(() => {
     setCurrentSelectedToken(
       currentChain?.tokenData.find((data) => data.name === "USDC")
