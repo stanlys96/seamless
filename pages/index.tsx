@@ -619,7 +619,7 @@ export default function HomePage() {
             } transition duration-500 w-[100vw] rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
           >
             <div
-              className={`flex w-full justify-center items-center transition duration-500 mb-4 ${
+              className={`flex w-full justify-center gap-x-10 items-center transition duration-500 mb-4 ${
                 theme.theme === "light" ? "text-dark" : "text-light"
               }`}
             >
@@ -637,6 +637,21 @@ export default function HomePage() {
                 } font-bold cursor-pointer transfer-btn`}
               >
                 TRANSFER
+              </a>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/referral");
+                }}
+                className={`${
+                  router.pathname === "/referral"
+                    ? `${
+                        theme.theme === "light" ? "text-black" : "text-white"
+                      } underline`
+                    : `text-gray`
+                } font-bold cursor-pointer transfer-btn`}
+              >
+                REFERRAL
               </a>
               <a
                 onClick={(e) => {

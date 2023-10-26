@@ -76,24 +76,15 @@ export const ConnectButton = () => {
       }
     } else {
       console.log(address, "<<<<");
-      if (address && address !== referral.walletAddress) {
-        Swal.fire(
-          "Info!",
-          "Wallet address not the same with referral code! Please change your account from the Wallet Browser!",
-          "info"
-        );
-        disconnect();
-      } else {
-        if (address && !signed.signed && !signed.isSigning) {
-          dispatch(signActions.setIsSigning(true));
-          setTimeout(() => {
-            signMessage({
-              message:
-                "By signing this, you have agreed to Seamless Finance's terms and conditions",
-            });
-            dispatch(signActions.setSign(true));
-          }, 1500);
-        }
+      if (address && !signed.signed && !signed.isSigning) {
+        dispatch(signActions.setIsSigning(true));
+        setTimeout(() => {
+          signMessage({
+            message:
+              "By signing this, you have agreed to Seamless Finance's terms and conditions",
+          });
+          dispatch(signActions.setSign(true));
+        }, 1500);
       }
     }
   }, [address]);

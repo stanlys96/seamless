@@ -56,7 +56,7 @@ body {
 }
 
 .primary-container-dark {
-  width: 100vw;
+  /* width: 100vw; */
   color: white;
   background-color: #171721;
 }
@@ -137,7 +137,6 @@ input[type="number"] {
 }
 
 .transfer-btn {
-  margin-right: 100px;
   background-color: transparent;
   font-weight: bold;
   /* font-display: up; */
@@ -292,6 +291,10 @@ input[type="number"] {
 
 .animated-input {
   animation: glow 1s infinite alternate;
+}
+
+.input-border {
+  border: 1px solid #222230;
 }
 
 @keyframes glow {
