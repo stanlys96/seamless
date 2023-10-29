@@ -237,8 +237,8 @@ export default function TransactionPage() {
                 <div>
                   <p className="text-center">Generate Referral Code</p>
                   <p className="mt-2 text-center">
-                    Looks like you don't have a referral code to share. Create
-                    one now and start earning rebates!
+                    Looks like you don&apos;t have a referral code to share.
+                    Create one now and start earning rebates!
                   </p>
                   <input
                     disabled={codesData?.data?.data?.length !== 0}
