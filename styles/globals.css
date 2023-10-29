@@ -29,7 +29,10 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background-image: linear-gradient(to bottom right, #feeae8, #feeab5);
+  background: url("../public/img/Group\ 4.png");
+  background-color: #181d23;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .main-container {

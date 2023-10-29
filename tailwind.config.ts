@@ -27,6 +27,7 @@ const config: Config = {
         layer3: "rgb(38,38,54)",
         "socket-primary": "rgb(34,34,48)",
         lightGray: "#F2F3F9",
+        darkGray: "#666666",
       },
       backgroundColor: {
         main: "#171721",

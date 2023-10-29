@@ -35,25 +35,23 @@ export const MainLayout = ({ children }: Props) => {
           content="upgrade-insecure-requests"
         /> */}
       </Head>
-      <div className="z-50 navbar w-full flex justify-end p-5 items-center">
-        <div className="flex gap-x-2 items-center">
-          <div className="flex gap-x-4 items-center lg:absolute left-[43%]">
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                router.push("/");
-              }}
-              className="font-bold text-xl text-gray cursor-pointer mr-2"
-            >
-              <img
-                src={`/img/${
-                  theme.theme === "dark" ? "light" : "dark"
-                }-seamless.png`}
-                className="w-[150px]"
-              />
-            </a>
-          </div>
+      <div className="z-50 bg-[#181D23] border-b border-darkGray navbar w-full flex justify-end p-5 items-center">
+        <div className="flex gap-x-2 items-center justify-between w-full">
           <div className="dark_mode">
+            <div className="flex gap-x-4 items-center">
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/");
+                }}
+                className="font-bold text-xl text-gray cursor-pointer mr-2"
+              >
+                <img src={`/img/Logo.png`} className="w-[150px]" />
+              </a>
+            </div>
+          </div>
+          <div className="flex gap-x-1">
+            <ConnectButton />
             <input
               value={theme.theme}
               checked={theme.theme === "light"}
@@ -73,7 +71,6 @@ export const MainLayout = ({ children }: Props) => {
               htmlFor="darkmode-toggle"
             ></label>
           </div>
-          <ConnectButton />
         </div>
       </div>
       <div className="layout-container">{children}</div>
