@@ -102,7 +102,9 @@ export const ConnectButton = () => {
         >
           Connect
         </button> */}
-        <w3m-button size="sm" label="Connect&nbsp;Wallet" />
+        <div className="my-2">
+          <w3m-button size="sm" label="Connect&nbsp;Wallet" />
+        </div>
 
         <ConnectModal
           connectModal={connectModal}
@@ -133,11 +135,11 @@ export const ConnectButton = () => {
           onClick={() => {
             disconnect();
           }}
-          className={`h-9 rounded flex items-center gap-x-1 ${
-            theme.theme === "light" ? "bg-button-light" : "bg-[#262636]"
+          className={`rounded flex items-center gap-x-1 ${
+            theme.theme === "light" ? "bg-btn" : "bg-[#262636]"
           } ] px-4 font-semibold ${
-            theme.theme === "light" ? "text-dark" : "text-light"
-          } sm:h-[48px] transition duration-500  sm:text-lg`}
+            theme.theme === "light" ? "text-white" : "text-light"
+          }  transition duration-500  sm:text-lg`}
         >
           {`${etherData?.formatted.slice(0, 7)} ${currentNative?.name} ${
             !ensName

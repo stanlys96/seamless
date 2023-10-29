@@ -25,11 +25,11 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
           e.preventDefault();
           setDropdownActive((prevValue: any) => !prevValue);
         }}
-        className={`h-9 rounded ${
+        className={`rounded ${
           chainSupported ? "bg-[#262636]" : "bg-pink"
         } px-2 font-semibold ${
-          theme.theme === "light" ? "bg-button-light" : ""
-        } sm:h-[48px] sm:text-lg flex gap-x-1 items-center`}
+          theme.theme === "light" ? "bg-btn" : ""
+        } py-2 sm:text-lg flex gap-x-1 items-center`}
       >
         {chainSupported ? (
           <div>

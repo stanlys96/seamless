@@ -532,93 +532,32 @@ export default function HomePage() {
   return (
     <MainLayout>
       <div className="the-container relative">
-        <p className={`text-gray text-center py-3 text-[11px] md:text-[16px]`}>
-          This product is still in beta.
-          <br />
-          If you run into any issue please let us know in our discord server
-        </p>
-        <div className="w-full flex justify-center items-center gap-x-[30px]">
-          <div className="text-black md:grid hidden grid grid-cols-2 text-[35px] font-bold gap-y-[30px] gap-x-[10px]">
-            <div
-              className={`text-right ${
-                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
-              }`}
-            >
-              You Can Use
+        <div className="w-full flex flex-col justify-center items-center mt-[40px]">
+          <div className="flex gap-x-[40px] items-center">
+            <div>
+              <a className="text-gradient font-bold text-[24px] cursor-pointer">
+                Transfer
+              </a>
+              <div className="border border-goodBlue w-[45px] h-[2px] mx-auto"></div>
             </div>
-            {/* <div className="text-left underline">USDC</div> */}
-            <Typed
-              strings={["USDC", "Matic", "USDT", "Dai", "WBTC", "WETH"]}
-              typeSpeed={150}
-              backSpeed={100}
-              loop
-              className={`underline ${
-                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
-              }`}
-            />
-            <div
-              className={`text-right ${
-                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
-              }`}
+            <div className="border-l h-[40px] border-anotherGray"></div>
+            <a
+              onClick={() => {
+                router.push("/transactions");
+              }}
+              className="font-bold text-[24px] cursor-pointer text-[#616161]"
             >
-              From
-            </div>
-            <Typed
-              strings={[
-                "Ethereum",
-                "Arbitrum",
-                "Polygon",
-                "Optimism",
-                "Aurora",
-                "Base",
-                "Binance",
-              ]}
-              typeSpeed={150}
-              backSpeed={100}
-              loop
-              className={`underline ${
-                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
-              }`}
-            />
-            <div
-              className={`text-right ${
-                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
-              }`}
-            >
-              To
-            </div>
-            <div
-              className={`underline text-left ${
-                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
-              }`}
-            >
-              Pay
-            </div>
-            <div
-              className={`text-right ${
-                theme.theme === "light" ? "text-[#4c4c4c]" : "text-white"
-              }`}
-            >
-              Directly To
-            </div>
-            <Typed
-              strings={["BCA", "GoPay", "OVO", "Shopee Pay", "Tokopedia"]}
-              typeSpeed={150}
-              backSpeed={100}
-              loop
-              className={`underline ${
-                theme.theme === "light" ? "text-dark" : "text-[#FFE7BE]"
-              }`}
-            />
+              History
+            </a>
           </div>
           <div
             className={`${
               theme.theme === "light"
                 ? "primary-container"
                 : "primary-container-dark"
-            } transition duration-500 w-[100vw] rounded-xl p-6 sm:w-[520px] sm:min-w-[520px]`}
+            } transition duration-500 rounded-xl p-6 mt-[20px]`}
           >
-            <div
+            {/* <div
               className={`flex w-full justify-center gap-x-10 items-center transition duration-500 mb-4 ${
                 theme.theme === "light" ? "text-dark" : "text-light"
               }`}
@@ -669,164 +608,130 @@ export default function HomePage() {
               >
                 HISTORY
               </a>
-            </div>
+            </div> */}
             {/* <p className="text-gray">
               Max disburse: Rp{" "}
               {balanceData?.data.balance.toLocaleString("en-US") ?? 0}
             </p> */}
-            <p className="font-bold text-xl">Sending</p>
-            <div
-              className={`rounded-t p-2 ${
-                theme.theme === "light"
-                  ? "from-container"
-                  : "from-container-dark"
-              } mt-2 flex justify-between  ${
-                insufficientBalance || receiveValueError
-                  ? "border-l border-t border-r border-red"
-                  : "border-l border-t border-r border-transparent"
-              }`}
-            >
-              <div className="flex">
-                <p className="text-gray">From</p>
-                <button
-                  onClick={() => {
-                    setNetworkModal(true);
-                  }}
-                  className={`skt-w cursor-pointer skt-w-input skt-w-button flex items-center p-2 flex-shrink-0 w-auto py-0 hover:bg-transparent bg-transparent justify-start sm:justify-between cursor-default`}
-                >
-                  <span className="flex items-center">
-                    <div className="relative flex h-fit w-fit">
-                      <div className="skt-w rounded-full overflow-hidden w-5 h-5 sm:w-6 sm:h-6">
-                        <img
-                          src={currentChain?.imgUrl ?? "/img/Ether.svg"}
-                          width="100%"
-                          height="100%"
-                        />
-                      </div>
-                      {currentChain ? (
-                        <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75"></span>
-                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#22c55e]"></span>
-                        </span>
-                      ) : null}
-                    </div>
-                    <span className="skt-w ml-1 -mb-0.5 font-medium text-socket-primary sm:text-lg">
-                      {currentChain?.name ?? "Ethereum"}
-                    </span>
-                    <AiOutlineArrowDown />
-                  </span>
-                </button>
-              </div>
-              <p className="text-gray">
-                Bal: {`${usedBalance} ${currentSelectedToken?.name}`}
-              </p>
-            </div>
-            <div
-              className={`${
-                insufficientBalance || receiveValueError
-                  ? "border-t border-red"
-                  : "border-t border-mainGray2"
-              }`}
-            >
-              <div
-                className={`rounded-b ${
-                  theme.theme === "light" ? "to-container" : "to-container-dark"
-                } flex items-center justify-between px-3 py-[14px] sm:py-4 ${
-                  insufficientBalance || receiveValueError
-                    ? "border-l border-r border-b border-red"
-                    : "border-l border-r border-b border-transparent"
-                }`}
-              >
-                <div className="relative flex w-[35vw] items-center overflow-hidden">
-                  <CurrencyInput
-                    id="input-example"
-                    name="input-name"
-                    placeholder="0"
-                    disabled={loading}
-                    value={cryptoValue}
-                    defaultValue={0}
-                    decimalsLimit={6}
-                    onFocus={undefined}
-                    onKeyUp={undefined}
-                    onSubmit={undefined}
-                    onSubmitCapture={undefined}
-                    onChangeCapture={undefined}
-                    className={`skt-w border-b ${
-                      insufficientBalance || receiveValueError
-                        ? "border-red"
-                        : theme.theme === "dark"
-                        ? "border-white"
-                        : "border-black"
-                    } skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full`}
-                    onValueChange={(value, name) => {
-                      if (value === cryptoValue) return;
-                      setCryptoValue(value ?? "0");
-                      if (data) {
-                        const idr = (
-                          data.data[0].current_price * parseFloat(value ?? "0")
-                        ).toFixed(2);
-                        const idrFloat = parseFloat(idr);
-                        const thisFee = parseFloat(
-                          (6000 + idrFloat * 0.005).toFixed(2)
-                        );
-                        setExchangeFee((idrFloat * 0.005).toFixed(2));
-                        setFee(thisFee);
-                        setIdrValue(idr === "NaN" ? "0" : idr);
-                        setReceiveValue(
-                          parseFloat((parseFloat(idr) - thisFee).toFixed(2))
-                        );
-                      }
-                    }}
-                  />
-                  <div className="invisible absolute w-fit text-xl font-bold"></div>
-                </div>
-                <span className="-z-1">
+            <div className="flex justify-between bg-container md:px-[24px] px-[10px] py-[10px] rounded-[12px] ">
+              <div className="flex flex-col gap-y-2">
+                <div className="flex items-center text-white">
+                  <span className="text-[16px]">Sending from </span>
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (loading || isCheckingBankAccount) return;
-                      setTokenModal(true);
+                    onClick={() => {
+                      setNetworkModal(true);
                     }}
-                    className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent"
+                    className={`skt-w text-[16px] cursor-pointer skt-w-input skt-w-button flex items-center p-2 flex-shrink-0 w-auto py-0 hover:bg-transparent bg-transparent justify-start sm:justify-between cursor-default`}
                   >
                     <span className="flex items-center">
                       <div className="relative flex h-fit w-fit">
-                        <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
+                        <div className="skt-w rounded-full overflow-hidden w-5 h-5 sm:w-6 sm:h-6">
                           <img
-                            src={currentSelectedToken?.imgUrl ?? ""}
+                            src={currentChain?.imgUrl ?? "/img/Ether.svg"}
                             width="100%"
                             height="100%"
                           />
                         </div>
+                        {currentChain ? (
+                          <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75"></span>
+                            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#22c55e]"></span>
+                          </span>
+                        ) : null}
                       </div>
-                      <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-center items-center gap-x-1">
-                        {currentSelectedToken?.name ?? ""}
-                        <AiOutlineArrowDown />
+                      <span className="skt-w ml-1 -mb-0.5 font-medium text-white text-[16px]">
+                        {currentChain?.name ?? "Ethereum"}
                       </span>
+                      <AiOutlineArrowDown />
                     </span>
                   </button>
-                </span>
+                </div>
+                <CurrencyInput
+                  id="input-example"
+                  name="input-name"
+                  placeholder="0"
+                  disabled={loading}
+                  value={cryptoValue}
+                  defaultValue={0}
+                  decimalsLimit={6}
+                  onFocus={undefined}
+                  onKeyUp={undefined}
+                  onSubmit={undefined}
+                  onSubmitCapture={undefined}
+                  onChangeCapture={undefined}
+                  className={`skt-w 
+                  ${
+                    insufficientBalance || receiveValueError
+                      ? "border-red"
+                      : theme.theme === "dark"
+                      ? "border-white"
+                      : "border-black"
+                  } 
+                  skt-w-input text-[20px] md:text-[34px] text-cute bg-transparent font-bold pt-0.5 focus-visible:outline-none focus:max-w-none sm:max-w-full`}
+                  onValueChange={(value, name) => {
+                    if (value === cryptoValue) return;
+                    setCryptoValue(value ?? "0");
+                    if (data) {
+                      const idr = (
+                        data.data[0].current_price * parseFloat(value ?? "0")
+                      ).toFixed(2);
+                      const idrFloat = parseFloat(idr);
+                      const thisFee = parseFloat(
+                        (6000 + idrFloat * 0.005).toFixed(2)
+                      );
+                      setExchangeFee((idrFloat * 0.005).toFixed(2));
+                      setFee(thisFee);
+                      setIdrValue(idr === "NaN" ? "0" : idr);
+                      setReceiveValue(
+                        parseFloat((parseFloat(idr) - thisFee).toFixed(2))
+                      );
+                    }
+                  }}
+                />
+                <div className="flex items-center gap-x-1">
+                  <img src="/img/mingcute_warning-fill.svg" />
+                  <span className="text-cute text-[11px] md:text-[14px]">
+                    Minimal receive value is 10,000 IDR
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col items-center justify-center gap-y-2">
+                <p className="text-cute">Balance:&nbsp;{`${usedBalance}`}</p>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (loading || isCheckingBankAccount) return;
+                    setTokenModal(true);
+                  }}
+                  className="skt-w text-white skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent"
+                >
+                  <span className="flex items-center">
+                    <div className="relative flex h-fit w-fit">
+                      <div className="skt-w h-6 w-6 rounded-full overflow-hidden">
+                        <img
+                          src={currentSelectedToken?.imgUrl ?? ""}
+                          width="100%"
+                          height="100%"
+                        />
+                      </div>
+                    </div>
+                    <span className="cursor-pointer skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1 flex justify-center items-center gap-x-1">
+                      {currentSelectedToken?.name ?? ""}
+                      <AiOutlineArrowDown />
+                    </span>
+                  </span>
+                </button>
               </div>
             </div>
-            <p className="text-red mt-1">
-              {insufficientBalance
-                ? "You have inputted value more than your balance"
-                : receiveValueError
-                ? "Minimal receive value is 10,000 IDR"
-                : ""}
-            </p>
+            <div className="my-[15px] relative h-[40px] flex justify-center items-center">
+              <div className="border-b border-someDark w-full"></div>
+              <img className="absolute left-1/2" src="/img/btn.svg" />
+            </div>
             {/* <a className="relative mx-auto -mt-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white">
               <AiOutlineArrowDown />
             </a> */}
-            <p className="font-bold text-xl mt-4 mb-2">Receiving</p>
-            <div
-              className={`rounded-t p-2 ${
-                theme.theme === "light"
-                  ? "from-container border-bot"
-                  : "from-container-dark border-bot"
-              } flex gap-x-1 items-center justify-between`}
-            >
-              <div className="flex">
+            <div className="bg-container flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+              <div className="flex text-white">
                 <p className="font-medium text-socket-primary sm:text-lg">
                   Destination: &nbsp;
                 </p>
@@ -857,19 +762,16 @@ export default function HomePage() {
                   }
                   setHistoryModal(true);
                 }}
-                className="bg-gray p-2 rounded-xl text-white"
+                className="bg-gray py-[12px] px-[16px] bg-btn rounded-xl text-white font-bold"
               >
                 History
               </button>
             </div>
-            <div
-              className={`px-3 py-[14px] ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b h-full border-bot flex justify-between items-center`}
-            >
-              <div className="flex items-center flex-wrap">
-                <p className="font-medium text-socket-primary sm:text-lg w-fit">
-                  Account&nbsp;Number:&nbsp;
+
+            <div className="bg-container my-[25px] flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+              <div className="text-white">
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Account Number: &nbsp;
                 </p>
                 <input
                   disabled={loading}
@@ -889,14 +791,14 @@ export default function HomePage() {
                     }
                     setBankAccountName("");
                   }}
-                  className="skt-w w-full skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full overflow-hidden"
+                  className="skt-w w-full text-[20px] md:text-[34px] text-cute skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                   placeholder="Account Number"
                   spellCheck={false}
                   type="number"
                 />
               </div>
-              <a
-                onClick={async () => {
+              <button
+                onClick={async (e) => {
                   if (loading || isCheckingBankAccount) return;
                   if (!bankAccountValue) {
                     return Swal.fire(
@@ -937,7 +839,7 @@ export default function HomePage() {
                     console.log(e, "<<< E!");
                   }
                 }}
-                className="p-2 cursor-pointer w-fit h-full relative mx-auto flex items-center justify-center rounded-full border-4 disabled:opacity-60 middle-btn text-white"
+                className="bg-gray py-[12px] px-[16px] bg-btn rounded-xl text-white font-bold"
               >
                 {isCheckingBankAccount ? (
                   <ColorRing
@@ -958,30 +860,79 @@ export default function HomePage() {
                 ) : (
                   "Check"
                 )}
-              </a>
+              </button>
             </div>
-
-            <div
-              className={`px-3 py-[14px] ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-b border-bot`}
-            >
-              <div className="flex items-center flex-wrap">
-                <p className="font-medium text-socket-primary sm:text-lg w-fit">
-                  Account&nbsp;Name:&nbsp;
+            <div className="bg-container my-[25px] flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+              <div className="text-white">
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Account Name: &nbsp;
                 </p>
                 <input
-                  value={bankAccountName}
                   disabled
-                  onChange={(e) => {
-                    setBankAccountName(e.target.value);
-                  }}
-                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl"
+                  value={bankAccountName}
+                  onChange={(e) => {}}
+                  className="skt-w w-full text-[20px] md:text-[34px] text-cute skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                   placeholder="Account Name"
                   spellCheck={false}
                   type="text"
                 />
               </div>
+            </div>
+            <div className="bg-container my-[25px] flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+              <div className="text-white">
+                <p className="font-medium text-socket-primary sm:text-lg">
+                  Receiving (Exact Value)
+                </p>
+                <CurrencyInput
+                  name="input-name"
+                  placeholder="0"
+                  value={!receiveValue ? 0 : receiveValue}
+                  defaultValue={0}
+                  decimalsLimit={6}
+                  disabled={loading}
+                  className={`skt-w 
+                  ${
+                    insufficientBalance || receiveValueError
+                      ? "border-red"
+                      : theme.theme === "dark"
+                      ? "border-white"
+                      : "border-black"
+                  } 
+                  skt-w-input text-[20px] md:text-[34px] text-cute bg-transparent font-bold pt-0.5 focus-visible:outline-none focus:max-w-none sm:max-w-full`}
+                  onValueChange={(value, name) => {
+                    if (value === receiveValue.toString()) return;
+                    setReceiveValue(parseFloat(value ?? "0"));
+                    const idrValueFloat =
+                      (parseFloat(value ?? "0") + 6000) * 1.005;
+                    setIdrValue(idrValueFloat.toFixed(2));
+                    const theFee = parseFloat(
+                      (idrValueFloat - parseFloat(value ?? "0")).toFixed(2)
+                    );
+                    setFee(theFee);
+                    setExchangeFee((theFee - 6000).toFixed(2));
+                    if (data) {
+                      const crypto = (
+                        (1 / data.data[0].current_price) *
+                        idrValueFloat
+                      ).toFixed(6);
+                      setCryptoValue(crypto === "NaN" ? "0" : crypto);
+                    }
+                  }}
+                />
+              </div>
+              <span>
+                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
+                  <span className="flex justify-center items-center relative h-fit w-fit">
+                    <img
+                      className="skt-w mr-1 w-[40px] h-[40px] rounded-full"
+                      src="img/indo2.png"
+                    />
+                    <span className="skt-w ml-1 font-medium text-socket-primary text-[18px] text-white mx-1">
+                      IDR
+                    </span>
+                  </span>
+                </button>
+              </span>
             </div>
             {/* <div
               className={`rounded-b ${
@@ -1092,67 +1043,6 @@ export default function HomePage() {
                 </button>
               </span>
             </div> */}
-            <div
-              className={`rounded-b ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] border-gray flex justify-between items-center`}
-            >
-              <div className="flex gap-x-2 items-center">
-                <p className="font-medium text-socket-primary sm:text-lg">
-                  Amount&nbsp;Receiving:
-                </p>
-                <CurrencyInput
-                  id="input-example"
-                  name="input-name"
-                  placeholder="0"
-                  value={!receiveValue ? 0 : receiveValue}
-                  defaultValue={0}
-                  decimalsLimit={6}
-                  disabled={loading}
-                  className={`skt-w border-b animated-input ${
-                    receiveValueError
-                      ? "border-red text-red"
-                      : theme.theme === "dark"
-                      ? "border-white text-white"
-                      : "border-black text-black"
-                  } skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full`}
-                  onValueChange={(value, name) => {
-                    if (value === receiveValue.toString()) return;
-                    setReceiveValue(parseFloat(value ?? "0"));
-                    const idrValueFloat =
-                      (parseFloat(value ?? "0") + 6000) * 1.005;
-                    setIdrValue(idrValueFloat.toFixed(2));
-                    const theFee = parseFloat(
-                      (idrValueFloat - parseFloat(value ?? "0")).toFixed(2)
-                    );
-                    setFee(theFee);
-                    setExchangeFee((theFee - 6000).toFixed(2));
-                    if (data) {
-                      const crypto = (
-                        (1 / data.data[0].current_price) *
-                        idrValueFloat
-                      ).toFixed(6);
-                      setCryptoValue(crypto === "NaN" ? "0" : crypto);
-                    }
-                  }}
-                />
-              </div>
-              <span>
-                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
-                  <span className="flex justify-center items-center relative h-fit w-fit">
-                    <img
-                      className="skt-w mr-1 h-6 w-6 rounded-full"
-                      src="img/indo2.png"
-                      width="100%"
-                      height="100%"
-                    />
-                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
-                      IDR
-                    </span>
-                  </span>
-                </button>
-              </span>
-            </div>
             {/* <div
               className={`px-3 py-[14px] ${
                 theme.theme === "light" ? "to-container" : "to-container-dark"
@@ -1338,17 +1228,17 @@ export default function HomePage() {
                   setLoading(false);
                 }
               }}
-              className={`mt-5 rounded font-bold ${
+              className={`mt-5 rounded-[12px] text-white font-bold ${
                 loading
                   ? "bg-darkGray cursor-not-allowed"
                   : !address || !signed.signed
-                  ? "mainBtn"
+                  ? "bg-btn"
                   : insufficientBalance ||
                     insufficientDisburse ||
                     !chainSupported ||
                     receiveValueError
                   ? "bg-red/30 cursor-not-allowed"
-                  : "mainBtn"
+                  : "bg-btn"
               } ${
                 theme.theme === "dark" ? "text-white" : "text-black"
               } w-full leading-[24px] px-4 py-[13px] flex items-center justify-center`}
@@ -1380,41 +1270,6 @@ export default function HomePage() {
               )}
             </button>
           </div>
-        </div>
-        <div
-          className={`flex flex-col justify-center items-center mt-5 w-full px-[20px] lg:px-[325px] ${
-            theme.theme === "light" ? "text-black" : "text-white"
-          }`}
-        >
-          <p className="text-[40px]">FAQ</p>
-          {faqData.map((faq: any, idx: number) => (
-            <div
-              key={faq.id}
-              className={`flex collapsie flex-col justify-between items-center w-full text-[16px] md:text-[20px] py-2 border-t no-scrollbar ${
-                faq.id === faqData.length && "border-b"
-              }`}
-            >
-              <div
-                onClick={() => {
-                  faq.open = !faq.open;
-                  setTheState((prevState) => prevState + 1);
-                }}
-                className="flex w-full justify-between items-center cursor-pointer collapse-content overflow-hidden no-scrollbar"
-              >
-                <p>{faq.question}</p>
-                <div className={`${faq.open ? "rotate-0" : "rotate-180"}`}>
-                  <AiOutlineArrowUp />
-                </div>{" "}
-              </div>
-              <div
-                className="collapse-content no-scrollbar overflow-x-scroll"
-                style={{
-                  maxHeight: faq.open ? "400px" : 0,
-                }}
-                dangerouslySetInnerHTML={{ __html: faq.answer }}
-              />
-            </div>
-          ))}
         </div>
         <SelectNetworkModal
           networkModal={networkModal}

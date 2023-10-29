@@ -52,7 +52,7 @@ export const MainLayout = ({ children }: Props) => {
           </div>
           <div className="flex gap-x-1">
             <ConnectButton />
-            <input
+            {/* <input
               value={theme.theme}
               checked={theme.theme === "light"}
               onChange={(e) => {
@@ -69,7 +69,7 @@ export const MainLayout = ({ children }: Props) => {
             <label
               className="dark_mode_label"
               htmlFor="darkmode-toggle"
-            ></label>
+            ></label> */}
           </div>
         </div>
       </div>

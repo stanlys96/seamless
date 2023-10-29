@@ -402,7 +402,7 @@ export default function TransactionPage() {
         ) : (
           <div
             className={`${
-              theme.theme === "light" ? "text-black" : "text-white"
+              theme.theme === "light" ? "text-white" : "text-white"
             } relative pt-[100px] flex flex-col items-center lg:justify-center`}
           >
             <img
