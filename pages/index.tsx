@@ -1304,7 +1304,7 @@ export default function HomePage() {
           setBankAccountValue={setBankAccountValue}
           setPhoneNumber={setPhoneNumber}
         />
-        <ReferralModal referralModal={!referral.isValid} />
+        {/* <ReferralModal referralModal={!referral.isValid} /> */}
       </div>
     </MainLayout>
   );
