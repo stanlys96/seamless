@@ -62,7 +62,7 @@ export default function TransactionPage() {
           <div>
             <div
               className={`px-[20px] md:px-[100px] font-bold text-xl ${
-                theme.theme === "light" ? "text-dark" : "text-white"
+                theme.theme === "light" ? "text-white" : "text-white"
               }`}
             >
               Transactions
@@ -97,7 +97,7 @@ export default function TransactionPage() {
                         <button
                           className={`mb-2 hidden w-max min-w-full justify-between items-center rounded ${
                             theme.theme === "light"
-                              ? "primary-container border-b border-l border-r border-orange text-black"
+                              ? "primary-container border-b border-l border-r border-orange text-white"
                               : "bg-socket-layers-1 border-b border-l border-r border-socket-primary text-white"
                           } cursor-default px-2 py-3 text-left hover:bg-socket-layers-2 disabled:hover:bg-socket-layers-1 sm:mb-0 sm:rounded-none sm:border-b sm:py-4 sm:pl-8 sm:pr-5 sm:last:border-0 lg:flex`}
                         >
