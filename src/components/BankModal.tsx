@@ -1,5 +1,6 @@
 import {
   bankTypes,
+  donationData,
   eWallets,
   existBankData,
   virtualAccounts,
@@ -30,7 +31,7 @@ export const BankModal = ({
   const [theList, setTheList] = useState(banksList?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<
-    "bank" | "e-wallet" | "va"
+    "bank" | "e-wallet" | "va" | "donation"
   >("bank");
   useEffect(() => {
     setTheList(banksList?.data ?? []);
@@ -167,26 +168,84 @@ export const BankModal = ({
             </div>
           </div>
           <div className="flex-1 overflow-y-auto py-2 h-[500px] max-h-[60vh] border-t border-gray">
-            {listResult.length > 0 ? (
-              listResult.map((bankData: any, idx: number) => (
+            {selectedCategory !== "donation" &&
+              (listResult.length > 0 ? (
+                listResult.map((bankData: any, idx: number) => (
+                  <button
+                    key={bankData.code}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.preventDefault();
+                      setCurrentSelectedBank({
+                        name: bankData.name,
+                        bank_code: bankData.bank_code,
+                        imgUrl: existBankData.includes(bankData.bank_code)
+                          ? `/img/banks/${bankData.bank_code}.png`
+                          : "/img/banks/bank.png",
+                      });
+                      if (
+                        currentSelectedBank.bank_code !== bankData.bank_code
+                      ) {
+                        setBankAccountName("");
+                        setBankAccountValue("");
+                        setSelectedCategory("bank");
+                        setPhoneNumber("");
+                      }
+                      setBankModal(false);
+                      setSearchQuery("");
+                    }}
+                    className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
+                  >
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="skt-w rounded-full overflow-hidden w-9 h-full mr-3">
+                          <img
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null; // prevents looping
+                              currentTarget.src = "/img/banks/bank.png";
+                            }}
+                            src={
+                              existBankData.includes(bankData.bank_code)
+                                ? `/img/banks/${bankData.bank_code}.png`
+                                : "/img/banks/bank.png"
+                            }
+                            width="100%"
+                            height="100%"
+                            alt="Bank"
+                          />
+                        </div>
+                        <div className="text-left">
+                          <p className="flex items-center font-semibold text-socket-primary">
+                            <span>{bankData.name}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <span className="flex items-center font-medium text-socket-secondary"></span>
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <p className="px-6 py-3 font-bold text-center">
+                  Query not found!
+                </p>
+              ))}
+            {selectedCategory === "donation" &&
+              donationData.map((theData: any, idx: number) => (
                 <button
-                  key={bankData.code}
+                  key={theData.id}
                   onClick={(e) => {
                     e.preventDefault();
-                    e.preventDefault();
                     setCurrentSelectedBank({
-                      name: bankData.name,
-                      bank_code: bankData.bank_code,
-                      imgUrl: existBankData.includes(bankData.bank_code)
-                        ? `/img/banks/${bankData.bank_code}.png`
+                      name: banksList.data.find(
+                        (bank: any) => bank.bank_code === theData.bank_code
+                      ).name,
+                      bank_code: theData.bank_code,
+                      imgUrl: existBankData.includes(theData.bank_code)
+                        ? `/img/banks/${theData.bank_code}.png`
                         : "/img/banks/bank.png",
                     });
-                    if (currentSelectedBank.bank_code !== bankData.bank_code) {
-                      setBankAccountName("");
-                      setBankAccountValue("");
-                      setSelectedCategory("bank");
-                      setPhoneNumber("");
-                    }
+                    setBankAccountName(theData.bank_account_name);
+                    setBankAccountValue(theData.bank_account_number);
                     setBankModal(false);
                     setSearchQuery("");
                   }}
@@ -201,8 +260,8 @@ export const BankModal = ({
                             currentTarget.src = "/img/banks/bank.png";
                           }}
                           src={
-                            existBankData.includes(bankData.bank_code)
-                              ? `/img/banks/${bankData.bank_code}.png`
+                            existBankData.includes(theData.bank_code)
+                              ? `/img/banks/${theData.bank_code}.png`
                               : "/img/banks/bank.png"
                           }
                           width="100%"
@@ -212,19 +271,17 @@ export const BankModal = ({
                       </div>
                       <div className="text-left">
                         <p className="flex items-center font-semibold text-socket-primary">
-                          <span>{bankData.name}</span>
+                          <span>{theData.bank_account_name}</span>
+                        </p>
+                        <p className="flex items-center font-semibold text-socket-primary">
+                          <span>{theData.bank_account_number}</span>
                         </p>
                       </div>
                     </div>
                     <span className="flex items-center font-medium text-socket-secondary"></span>
                   </div>
                 </button>
-              ))
-            ) : (
-              <p className="px-6 py-3 font-bold text-center">
-                Query not found!
-              </p>
-            )}
+              ))}
           </div>
         </div>
       </div>

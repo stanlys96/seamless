@@ -548,6 +548,20 @@ export const bankTypes = [
     name: "E-Wallet",
     imgUrl: "/img/banks/ewallet.png",
   },
+  {
+    id: 4,
+    name: "Donation",
+    imgUrl: "/img/donation.png",
+  },
+];
+
+export const donationData = [
+  {
+    id: 1,
+    bank_code: "mandiri",
+    bank_account_name: "LAZISNU",
+    bank_account_number: "1230007771910",
+  },
 ];
 
 export const existBankData = [
