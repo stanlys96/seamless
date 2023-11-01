@@ -659,6 +659,12 @@ export default function HomePage() {
                   onSubmit={undefined}
                   onSubmitCapture={undefined}
                   onChangeCapture={undefined}
+                  transformRawValue={(value: any) => {
+                    if (value[value.length - 1] === ",") {
+                      return value + ".";
+                    }
+                    return value;
+                  }}
                   className={`skt-w 
                   ${
                     insufficientBalance || receiveValueError
