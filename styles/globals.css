@@ -159,7 +159,7 @@ input[type="number"] {
 }
 
 .mainBtn {
-  background-image: linear-gradient(to right, #fed47d, #ff9d9d);
+  background-image: linear-gradient(to right, #667eea, #764ba2);
 }
 
 .transfer-btn {
@@ -262,7 +262,7 @@ input[type="number"] {
 }
 
 .bg-button-light {
-  background-image: linear-gradient(to right, #fed47d, #ff9d9d);
+  background-image: linear-gradient(to right, #667eea, #764ba2);
 }
 
 .bg-button-dark {
