@@ -1,5 +1,6 @@
 "use client";
 import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
+import Image from "next/image";
 import { useState } from "react";
 import useSWR from "swr";
 import {
@@ -41,12 +42,15 @@ import {
   useWaitForTransaction,
   useSignMessage,
 } from "wagmi";
+import { Timeline } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
 
 // delay
 // deploy
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function HomePage() {
+  const [feesOpen, setFeesOpen] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   let periodCheckBank = 0;
@@ -157,6 +161,7 @@ export default function HomePage() {
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
   );
+  const currentPrice = data?.data[0].current_price;
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const { data: balanceData } = useSWR("/balance", fetcherFlip);
   const { data: historyData } = useSWR(
@@ -557,62 +562,6 @@ export default function HomePage() {
                 : "primary-container-dark"
             } transition duration-500 rounded-xl p-6 mt-[20px]`}
           >
-            {/* <div
-              className={`flex w-full justify-center gap-x-10 items-center transition duration-500 mb-4 ${
-                theme.theme === "light" ? "text-dark" : "text-light"
-              }`}
-            >
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push("/");
-                }}
-                className={`${
-                  router.pathname === "/"
-                    ? `${
-                        theme.theme === "light" ? "text-black" : "text-white"
-                      } underline`
-                    : `text-gray`
-                } font-bold cursor-pointer transfer-btn`}
-              >
-                TRANSFER
-              </a>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push("/referral");
-                }}
-                className={`${
-                  router.pathname === "/referral"
-                    ? `${
-                        theme.theme === "light" ? "text-black" : "text-white"
-                      } underline`
-                    : `text-gray`
-                } font-bold cursor-pointer transfer-btn`}
-              >
-                REFERRAL
-              </a>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (loading || transactionLoading) return;
-                  router.push("/transactions");
-                }}
-                className={`${
-                  router.pathname === "/"
-                    ? "text-gray"
-                    : `${
-                        theme.theme === "light" ? "text-black" : "text-white"
-                      } underline`
-                } font-bold cursor-pointer transfer-btn-light`}
-              >
-                HISTORY
-              </a>
-            </div> */}
-            {/* <p className="text-gray">
-              Max disburse: Rp{" "}
-              {balanceData?.data.balance.toLocaleString("en-US") ?? 0}
-            </p> */}
             <div className="flex justify-between bg-container md:px-[24px] px-[10px] py-[10px] rounded-[12px] ">
               <div className="flex flex-col gap-y-2">
                 <div className="flex items-center text-white">
@@ -683,9 +632,9 @@ export default function HomePage() {
                       ).toFixed(2);
                       const idrFloat = parseFloat(idr);
                       const thisFee = parseFloat(
-                        (6000 + idrFloat * 0.005).toFixed(2)
+                        (6000 + idrFloat * 0.008).toFixed(2)
                       );
-                      setExchangeFee((idrFloat * 0.005).toFixed(2));
+                      setExchangeFee((idrFloat * 0.008).toFixed(2));
                       setFee(thisFee);
                       setIdrValue(idr === "NaN" ? "0" : idr);
                       setReceiveValue(
@@ -868,7 +817,7 @@ export default function HomePage() {
                 )}
               </button>
             </div>
-            <div className="bg-container my-[25px] flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+            <div className="bg-container flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
               <div className="text-white">
                 <p className="font-medium text-socket-primary sm:text-lg">
                   Account Name: &nbsp;
@@ -884,7 +833,72 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <div className="bg-container my-[25px] flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+            <div
+              className={`ml-[10px] relative ${
+                !feesOpen ? "vertical-line" : "vertical-line-open"
+              }`}
+            >
+              <div className="first-item flex gap-x-2">
+                <Image src="/img/item.svg" height={24} width={24} alt="walao" />
+                <span className="text-secondGray">
+                  1 {currentSelectedToken?.name} ={" "}
+                  {currentPrice?.toLocaleString("US")} IDR
+                </span>
+              </div>
+              <div
+                onClick={() => setFeesOpen((prevState) => !prevState)}
+                className="second-item flex gap-x-2 cursor-pointer"
+              >
+                <Image src="/img/hide.svg" height={24} width={24} alt="walao" />
+                <span className="text-secondGray">
+                  {!feesOpen ? "See fees calculation" : "Hide"}
+                </span>
+              </div>
+              {feesOpen && (
+                <div className="third-item flex gap-x-2">
+                  <Image
+                    src="/img/small-dot.svg"
+                    height={8}
+                    width={8}
+                    alt="walao"
+                  />
+                  <span className="text-secondGray">
+                    6,000 IDR Processing Fee
+                  </span>
+                </div>
+              )}
+              {feesOpen && (
+                <div className="fourth-item flex gap-x-2">
+                  <Image
+                    src="/img/small-dot.svg"
+                    height={8}
+                    width={8}
+                    alt="walao"
+                  />
+                  <span className="text-secondGray">
+                    {parseFloat(exchangeFee ?? "0").toLocaleString("US")} IDR
+                    Seamless Fee
+                  </span>
+                </div>
+              )}
+              <div
+                className={`${
+                  feesOpen ? "fifth-item-opened" : "fifth-item-closed"
+                } flex gap-x-2`}
+              >
+                <Image
+                  src="/img/minus.svg"
+                  height={24}
+                  width={24}
+                  alt="walao"
+                />
+                <span className="text-secondGray">
+                  {fee?.toLocaleString("US")} IDR{" "}
+                  <span className="text-white ml-1">Total fees</span>
+                </span>
+              </div>
+            </div>
+            <div className="bg-container flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
               <div className="text-white">
                 <p className="font-medium text-socket-primary sm:text-lg">
                   Receiving (Exact Value)
@@ -940,150 +954,6 @@ export default function HomePage() {
                 </button>
               </span>
             </div>
-            {/* <div
-              className={`rounded-b ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] flex justify-between items-center`}
-            >
-              <div className="flex gap-x-2 items-center">
-                <p className="font-medium text-socket-primary sm:text-lg">
-                  Value:
-                </p>
-                <CurrencyInput
-                  id="input-example"
-                  name="input-name"
-                  placeholder="0"
-                  value={idrValue}
-                  defaultValue={0}
-                  decimalsLimit={2}
-                  disabled
-                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                  onValueChange={(value, name) => {
-                    setIdrValue(value ?? "0");
-                    const idrFloat = parseFloat(value ?? "0");
-                    setExchangeFee((idrFloat * 0.005).toFixed(2));
-                    const thisFee = parseFloat(
-                      (6000 + idrFloat * 0.005).toFixed(2)
-                    );
-                    setFee(thisFee);
-                    setReceiveValue(idrFloat - thisFee);
-                    if (data) {
-                      const crypto = (
-                        (1 / data.data[0].current_price) *
-                        parseFloat(value ?? "0")
-                      ).toFixed(6);
-                      setCryptoValue(crypto === "NaN" ? "0" : crypto);
-                    }
-                  }}
-                />
-              </div>
-              <span>
-                <button className="skt-w skt-w-input skt-w-button flex items-center justify-between flex-shrink-0 w-auto p-0 hover:bg-transparent bg-transparent cursor-default">
-                  <span className="flex items-center relative h-fit w-fit mr-2">
-                    <img
-                      className="skt-w mr-1 h-6 w-6 rounded-full"
-                      src="img/indo2.png"
-                      width="100%"
-                      height="100%"
-                    />
-                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
-                      IDR
-                    </span>
-                  </span>
-                </button>
-              </span>
-            </div> */}
-            {/* <div
-              className={`rounded-b ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } px-3 py-[14px] flex w-full justify-between items-center`}
-            >
-              <div className="flex gap-x-2 items-center">
-                <div className="flex font-medium text-socket-primary sm:text-lg">
-                  <Tooltip
-                    title={`Gas Fee: 3,000 IDR
-                    Transfer Fee: 3,000 IDR
-                    Exchange Fee (0.5%): ${parseFloat(
-                      exchangeFee
-                    ).toLocaleString("en-US")} IDR
-                    Total Fee: ${fee.toLocaleString("en-US")} IDR`}
-                  >
-                    <AiFillInfoCircle />
-                  </Tooltip>
-                  <div
-                    id="tooltip-light"
-                    role="tooltip"
-                    className="absolute z-100 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip"
-                  >
-                    Tooltip content
-                    <div className="tooltip-arrow" data-popper-arrow></div>
-                  </div>
-                  <span className="ml-1">Fee</span>
-                  <span>:</span>
-                </div>
-                <CurrencyInput
-                  id="input-example"
-                  name="input-name"
-                  placeholder="0"
-                  disabled
-                  value={fee}
-                  defaultValue={0}
-                  decimalsLimit={6}
-                  className="skt-w skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none text-lg sm:text-xl max-w-[180px] sm:max-w-full"
-                  onValueChange={(value, name) => {}}
-                />
-              </div>
-              <span>
-                <button className="skt-w skt-w-input skt-w-button flex items-center  p-0 hover:bg-transparent bg-transparent cursor-default">
-                  <span className="flex items-center relative h-fit w-fit mr-2">
-                    <img
-                      className="skt-w mr-1 h-6 w-6 rounded-full"
-                      src="img/indo2.png"
-                      width="100%"
-                      height="100%"
-                    />
-                    <span className="skt-w ml-1 font-medium text-socket-primary sm:text-lg mx-1">
-                      IDR
-                    </span>
-                  </span>
-                </button>
-              </span>
-            </div> */}
-            {/* <div
-              className={`px-3 py-[14px] ${
-                theme.theme === "light" ? "to-container" : "to-container-dark"
-              } border-t border-gray`}
-            >
-              <div className="flex items-center">
-                <p className="font-medium text-socket-primary sm:text-lg w-fit">
-                  Phone&nbsp;Number&nbsp;(WhatsApp):&nbsp;
-                </p>
-                <input
-                  disabled={loading || hasLatestData}
-                  onKeyDown={(evt) => {
-                    ["e", "E", "+", "-"].includes(evt.key) &&
-                      evt.preventDefault();
-                  }}
-                  value={phoneNumber}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    const re = /^[0-9]*[.,]?[0-9]*$/;
-
-                    // if value is not blank, then test the regex
-
-                    if (e.target.value === "" || re.test(e.target.value)) {
-                      let temp = e.target.value.replaceAll(",", "");
-                      let lastTemp = temp.replaceAll(".", "");
-                      setPhoneNumber(lastTemp);
-                    }
-                  }}
-                  className="skt-w skt-w-input text-socket-primary w-1/2 bg-transparent font-bold pt-0.5 focus-visible:outline-none w-fit focus:max-w-none text-lg sm:text-xl overflow-hidden"
-                  placeholder="Phone"
-                  spellCheck={false}
-                  type="number"
-                />
-              </div>
-            </div> */}
             <button
               disabled={loading || isCheckingBankAccount}
               onClick={async (e) => {

@@ -20,6 +20,7 @@ const config: Config = {
         black: "#000000",
         white: "#FFFFFF",
         cute: "#A6A0BB",
+        secondGray: "#696F75",
       },
       borderColor: {
         primaryGray: "#1C1C28",

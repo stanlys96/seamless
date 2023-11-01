@@ -321,6 +321,59 @@ input[type="number"] {
   border: 1px solid #222230;
 }
 
+.vertical-line,
+.vertical-line-open {
+  border-left: 3px solid white;
+}
+
+.vertical-line {
+  height: 180px;
+}
+
+.vertical-line-open {
+  height: 260px;
+}
+
+.first-item,
+.second-item,
+.fifth-item,
+.fifth-item-closed,
+.fifth-item-opened {
+  position: absolute;
+  left: -13px;
+}
+
+.third-item,
+.fourth-item {
+  position: absolute;
+  left: -5.5px;
+  z-index: 50;
+}
+
+.first-item {
+  top: 30px;
+}
+
+.second-item {
+  top: 75px;
+}
+
+.third-item {
+  top: 120px;
+}
+
+.fourth-item {
+  top: 165px;
+}
+
+.fifth-item-closed {
+  top: 120px;
+}
+
+.fifth-item-opened {
+  top: 210px;
+}
+
 @keyframes glow {
   from {
     box-shadow: 0 0 10px -10px #aef4af;
