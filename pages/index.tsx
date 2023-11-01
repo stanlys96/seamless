@@ -817,7 +817,7 @@ export default function HomePage() {
                 )}
               </button>
             </div>
-            <div className="bg-container flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+            <div className="bg-container md:px-[24px] px-[10px] py-[10px] rounded-[12px] w-full">
               <div className="text-white">
                 <p className="font-medium text-socket-primary sm:text-lg">
                   Account Name: &nbsp;
@@ -826,9 +826,8 @@ export default function HomePage() {
                   disabled
                   value={bankAccountName}
                   onChange={(e) => {}}
-                  className="skt-w w-full text-[20px] md:text-[34px] text-cute skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                  className=" text-[20px] md:text-[34px] text-cute text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none focus:max-w-none w-full"
                   placeholder="Account Name"
-                  spellCheck={false}
                   type="text"
                 />
               </div>
