@@ -31,10 +31,12 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background: url("../public/img/Group\ 4.png");
+  background-image: url("../public/img/Group\ 4.png");
   background-color: #181d23;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
+  background-clip: border-box;
 }
 
 .main-container {
