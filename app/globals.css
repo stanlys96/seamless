@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+* {
+  font-family: "Raleway", sans-serif;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.nav-container {
+  background-color: #0d0d2b;
+}
+
+.btn-launch {
+  background-image: linear-gradient(to right, #667eea, #764ba2);
+}
+
+.text-gradient {
+  background: linear-gradient(to left, #667eea, #764ba2);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.justTextGradient {
+  background: linear-gradient(to left, #667eea, #764ba2);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.content-card {
+  background-image: linear-gradient(to right, #1c1c1c00, #1c1c1c);
+  border: 1px solid #1c1c1c;
+}
+
+.btn-activate {
+  background-image: linear-gradient(to right, #bdc2e8, #e6dee9);
+}
+
+.ant-carousel .slick-prev,
+.ant-carousel .slick-next,
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover {
+  font-size: inherit;
+  color: white;
+}
