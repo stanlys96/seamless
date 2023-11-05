@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
   return (
     <main className="text-white">
-      <nav className="flex z-50 justify-between items-center flex-wrap nav-container lg:px-[80px] px-[15px] h-[11vh] fixed w-full">
+      <nav className="flex justify-between items-center flex-wrap nav-container lg:px-[80px] px-[15px] h-[11vh] fixed w-full">
         <Image src="/Logo.svg" width={208} height={56} alt="walao" />
         <div className="hidden lg:block">
           <a
