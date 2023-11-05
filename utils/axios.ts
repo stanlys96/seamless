@@ -1,19 +1,19 @@
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 
 export const axiosCustom = axios.create({
-  baseURL: "https://api.coingecko.com/api/v3/coins",
+  baseURL: process.env.NEXT_PUBLIC_AXIOS_CUSTOM,
 });
 
 export const axiosFlip = axios.create({
-  baseURL: "https://invoker.cloud/api",
+  baseURL: process.env.NEXT_PUBLIC_AXIOS_SECONDARY,
 });
 
 export const fetcher = (url: string) => axiosCustom.get(url).then((res) => res);
 
 export const axiosStrapi = axios.create({
-  baseURL: "https://invoker.cloud",
+  baseURL: process.env.NEXT_PUBLIC_AXIOS_API,
   headers: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`,
+    Authorization: process.env.NEXT_PUBLIC_STRAPI_TOKEN,
   },
 });
 

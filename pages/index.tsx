@@ -254,7 +254,6 @@ export default function HomePage() {
     status: "Approval" | "Blockchain",
     tempState?: any
   ) => {
-    console.log(tempState);
     const date = new Date(Date.now());
     const dateStr =
       date.getFullYear() +
@@ -351,7 +350,6 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    console.log(erc20Status, "<<< STATUS ERC20");
     if (erc20Status.toLowerCase() === "loading" && !transactionLoading) {
       setTransactionLoading(true);
       addToTransactionHistory("Approval");
@@ -525,7 +523,6 @@ export default function HomePage() {
         ],
       })
         .then((res) => {
-          console.log(res, "<<<< RES");
           updateTransactionStatus("Blockchain", res?.hash ?? "");
         })
         .catch((err) => {
@@ -1058,7 +1055,6 @@ export default function HomePage() {
                           .toBigInt(),
                       ],
                     });
-                    console.log(tx?.hash, "<<< APPROVAL HASH");
                     setApprovalHash(tx?.hash.slice(2));
                     setAlreadyApproved(true);
                     gotApproved = true;
@@ -1076,7 +1072,6 @@ export default function HomePage() {
                     }
                   } else {
                     if (!gotApproved) {
-                      console.log("????!!!");
                       const tx = await transferERC20Write({
                         value: utils
                           .parseUnits(
@@ -1098,7 +1093,6 @@ export default function HomePage() {
                     setAlreadyApproved(false);
                   }
                 } catch (e: any) {
-                  console.log(e, "<<<");
                   console.log(e?.message.includes("rejected signing"));
                   setLoading(false);
                 }

@@ -39,7 +39,6 @@ export default function TransactionPage() {
     `/api/wallets-referreds?filters[wallet_address][$eq]=${address}&populate=*`,
     fetcherStrapi
   );
-  console.log(referralsData);
   useEffect(() => {
     if (
       transactionsData &&
