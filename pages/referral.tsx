@@ -1,7 +1,7 @@
 "use client";
 import { MainLayout } from "@/src/layouts/Main";
 import useSWR from "swr";
-import { fetcherStrapi, axiosStrapi } from "@/utils/axios";
+import { fetcherStrapi, axiosApi } from "@/utils/axios";
 import { useEffect, useRef, useState } from "react";
 import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData, existBankData } from "@/utils/helper";
@@ -138,9 +138,7 @@ export default function TransactionPage() {
                     try {
                       setLoading(true);
                       let found = false;
-                      const codes = await axiosStrapi.get(
-                        "/api/referral-codes"
-                      );
+                      const codes = await axiosApi.get("/api/referral-codes");
                       const codesData = codes.data.data;
                       let currentData;
                       for (let i = 0; i < codesData.length; i++) {
@@ -167,7 +165,7 @@ export default function TransactionPage() {
                         );
                       }
 
-                      await axiosStrapi.post("/api/wallets-referreds", {
+                      await axiosApi.post("/api/wallets-referreds", {
                         data: {
                           referral_code: currentData.id,
                           wallet_address: address,
@@ -267,9 +265,7 @@ export default function TransactionPage() {
                       }
                       try {
                         setLoading(true);
-                        const codes = await axiosStrapi.get(
-                          "/api/referral-codes"
-                        );
+                        const codes = await axiosApi.get("/api/referral-codes");
                         const codesData = codes.data.data;
                         for (let i = 0; i < codesData.length; i++) {
                           if (codesData[i].attributes.code === code) {
@@ -281,7 +277,7 @@ export default function TransactionPage() {
                             );
                           }
                         }
-                        await axiosStrapi.post("/api/referral-codes", {
+                        await axiosApi.post("/api/referral-codes", {
                           data: { code, wallet_address: address },
                         });
                         setLoading(false);

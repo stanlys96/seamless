@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import useSWR from "swr";
 import {
-  axiosFlip,
-  axiosStrapi,
+  axiosSecondary,
+  axiosApi,
   fetcher,
   fetcherFlip,
   fetcherStrapi,
@@ -234,7 +234,7 @@ export default function HomePage() {
   }, [chain?.id]);
 
   const addToWalletAccounts = () => {
-    axiosStrapi
+    axiosApi
       .post("/api/check-wallet-accounts", {
         wallet_address: address,
         bank_code: currentSelectedBank.bank_code,
@@ -273,7 +273,7 @@ export default function HomePage() {
       ? chainData.find((data: any) => data.chainId === chain?.id)?.name +
         `-${tempState}`
       : "";
-    axiosStrapi
+    axiosApi
       .post("/api/transaction-histories", {
         data: {
           wallet_address: address,
@@ -329,7 +329,7 @@ export default function HomePage() {
   };
 
   const checkBankInquiry: any = async () => {
-    const getBankAccount = await axiosFlip.post("/inquiry", {
+    const getBankAccount = await axiosSecondary.post("/inquiry", {
       account_number: bankAccountValue,
       bank_code: currentSelectedBank.bank_code.toLowerCase(),
     });
@@ -398,7 +398,7 @@ export default function HomePage() {
           ? chainData.find((data: any) => data.chainId === chain?.id)?.name +
             `-${tempState}`
           : "";
-        const updateTransaction = await axiosStrapi.put(
+        const updateTransaction = await axiosApi.put(
           `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
           {
             data: {
@@ -420,7 +420,7 @@ export default function HomePage() {
         resetCurrency();
       } else {
         if (status === "Approval Success") {
-          const updateTransaction = await axiosStrapi.put(
+          const updateTransaction = await axiosApi.put(
             `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
             {
               data: {
@@ -430,7 +430,7 @@ export default function HomePage() {
             }
           );
         } else {
-          const updateTransaction = await axiosStrapi.put(
+          const updateTransaction = await axiosApi.put(
             `/api/transaction-histories/${transactionData?.data.id ?? ""}`,
             {
               data: {

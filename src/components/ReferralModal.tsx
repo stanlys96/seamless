@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
 import { referralActions } from "../stores";
-import { axiosStrapi } from "@/utils/axios";
+import { axiosApi } from "@/utils/axios";
 import Swal from "sweetalert2";
 
 interface Props {
@@ -46,7 +46,7 @@ export const ReferralModal = ({ referralModal }: Props) => {
                   onClick={async () => {
                     try {
                       setLoading(true);
-                      const data = await axiosStrapi.get(
+                      const data = await axiosApi.get(
                         `/api/referrals?filters[referral_code][$eq]=${referralCode}`
                       );
                       if (data.data.data.length > 0) {
@@ -62,7 +62,7 @@ export const ReferralModal = ({ referralModal }: Props) => {
                           )
                         );
                       } else {
-                        const specialData = await axiosStrapi.get(
+                        const specialData = await axiosApi.get(
                           `/api/special-wallets?filters[access_code][$eq]=${referralCode}`
                         );
                         if (specialData.data.data.length > 0) {
