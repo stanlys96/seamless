@@ -340,7 +340,7 @@ export default function Home() {
           </Carousel>
           {currentSlide === 0 && (
             <div className="flex gap-y-[15px] gap-x-[10px] lg:gap-[24px] justify-center lg:justify-start mt-[40px] lg:mt-0 flex-wrap">
-              <Image width={112} height={80} alt="mandiri" src="/MANDIRI.svg" />
+              <Image width={112} height={80} alt="mandiri" src="/mandiri.svg" />
               <Image width={112} height={80} alt="bni" src="/bni.svg" />
               <Image width={112} height={80} alt="bri" src="/bri.svg" />
               <Image width={112} height={80} alt="bca" src="/bca.svg" />
