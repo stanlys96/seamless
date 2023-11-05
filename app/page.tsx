@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
   return (
     <main className="text-white">
-      <nav className="flex justify-between items-center flex-wrap nav-container lg:px-[80px] px-[15px] h-[11vh] fixed w-full">
+      <nav className="flex z-50 justify-between items-center flex-wrap nav-container lg:px-[80px] px-[15px] h-[11vh] fixed w-full">
         <Image src="/Logo.svg" width={208} height={56} alt="walao" />
         <div className="hidden lg:block">
           <a
@@ -120,7 +120,7 @@ export default function Home() {
               onClick={() =>
                 (window.location.href = "https://app.seamless.finance")
               }
-              className="btn-launch z-50 p-[16px] w-fit rounded-[16px] font-bold flex items-center gap-x-3 text-white"
+              className="btn-launch p-[16px] w-fit rounded-[16px] font-bold flex items-center gap-x-3 text-white"
             >
               Launch App{" "}
               <Image

@@ -45,10 +45,6 @@ body {
   /* padding: 0 100px; */
 }
 
-.nav-container {
-  z-index: 100;
-}
-
 .navbar {
   display: flex;
   padding: 15px 100px;
