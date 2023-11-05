@@ -95,7 +95,9 @@ export default function Home() {
           </a>
         </div>
         <button
-          onClick={() => (window.location.href = "https://seamless.finance")}
+          onClick={() =>
+            (window.location.href = "https://app.seamless.finance")
+          }
           className="btn-launch px-[12px] py-[10px] lg:px-[24px] lg:py-[13px] rounded-[10px] text-white"
         >
           Launch App
@@ -116,7 +118,7 @@ export default function Home() {
           <div className="flex justify-center lg:justify-start">
             <button
               onClick={() =>
-                (window.location.href = "https://seamless.finance")
+                (window.location.href = "https://app.seamless.finance")
               }
               className="btn-launch z-50 p-[16px] w-fit rounded-[16px] font-bold flex items-center gap-x-3 text-white"
             >
