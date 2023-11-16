@@ -17,7 +17,9 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const { chain, chains } = useNetwork();
   const chainSupported = supportedChains.includes(chain?.id ?? 0);
   const [showTestNetwork, setShowTestNetwork] = useState(false);
-  const resultData = chainData.filter((data: any) => !data.testNetwork);
+  const resultData = chainData.filter(
+    (data: any) => !data.testNetwork && supportedChains.includes(data.chainId)
+  );
   return (
     <div className="relative z-100">
       <button
