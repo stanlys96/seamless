@@ -67,7 +67,7 @@ const rpcUrlHelper = [
     rpcUrl: GOERLI_RPC_URL,
   },
 ];
-
+// asdjkl
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, polygon, arbitrum, optimism, bsc],
   [
