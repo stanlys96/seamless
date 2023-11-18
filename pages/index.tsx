@@ -47,6 +47,7 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 
 // delay
 // deploy
+// Deploy
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function HomePage() {
