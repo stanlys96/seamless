@@ -280,6 +280,7 @@ export default function HomePage() {
           token: currentSelectedToken?.name,
           chain: chain?.id?.toString(),
           bank_name: currentSelectedBank.name,
+          bank_code: currentSelectedBank.bank_code,
           bank_account_number: bankAccountValue,
           status: status,
           bank_account_name: bankAccountName,
