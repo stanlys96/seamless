@@ -34,6 +34,7 @@ export const MainLayout = ({ children }: Props) => {
           httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"
         /> */}
+        <link rel="shortcut icon" href="/img/favicon.ico" />
       </Head>
       <div className="z-50 bg-[#181D23] border-b border-darkGray navbar w-full flex justify-end p-5 items-center">
         <div className="flex gap-x-2 items-center justify-between w-full">
