@@ -432,8 +432,8 @@ input[type="number"] {
 :where(.css-dev-only-do-not-override-pr0fja).ant-pagination
   .ant-pagination-item
   a {
-  color: white;
-  position: relative;
+  color: white !important;
+  position: relative !important;
   /* margin: 0 auto; */
 }
 
@@ -444,13 +444,13 @@ input[type="number"] {
 }
 
 :where(.css-dev-only-do-not-override-pr0fja).ant-pagination {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100% !important;
 }
 
 :where(.css-dev-only-do-not-override-pr0fja).ant-pagination::after {
-  display: none;
+  display: none !important;
 }
 
 .ant-pagination-item-ellipsis {
