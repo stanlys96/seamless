@@ -47,7 +47,6 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 
 // delay
 // deploy
-// Deploy
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
 export default function HomePage() {
@@ -281,7 +280,6 @@ export default function HomePage() {
           token: currentSelectedToken?.name,
           chain: chain?.id?.toString(),
           bank_name: currentSelectedBank.name,
-          bank_code: currentSelectedBank.bank_code,
           bank_account_number: bankAccountValue,
           status: status,
           bank_account_name: bankAccountName,
@@ -535,25 +533,8 @@ export default function HomePage() {
 
   return (
     <MainLayout>
-      <div className="the-container relative">
-        <div className="w-full flex flex-col justify-center items-center mt-[40px]">
-          <div className="flex gap-x-[40px] items-center">
-            <div>
-              <a className="text-gradient font-bold text-[24px] cursor-pointer">
-                Transfer
-              </a>
-              <div className="border border-goodBlue w-[45px] h-[2px] mx-auto"></div>
-            </div>
-            <div className="border-l h-[40px] border-anotherGray"></div>
-            <a
-              onClick={() => {
-                router.push("/transactions");
-              }}
-              className="font-bold text-[24px] cursor-pointer text-[#616161]"
-            >
-              History
-            </a>
-          </div>
+      <div className="the-container relative mb-5">
+        <div className="w-full flex flex-col justify-center items-center">
           <div
             className={`${
               theme.theme === "light"

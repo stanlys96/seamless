@@ -96,7 +96,7 @@ export const supportedChains = [
   // OptimismGoerli.chainId,
   // Mumbai.chainId,
   // BSCTestnet.chainId,
-  // Aurora.chainId,
+  Aurora.chainId,
   // Base.chainId,
   // 59114,
 ];
@@ -295,7 +295,7 @@ export const chainData = [
     chainId: Goerli.chainId,
     name: "Goerli",
     imgUrl: "/img/Ether.svg",
-    testNetwork: true,
+    testNetwork: false,
     seamlessContract: goerliSeamlessContract,
     transactionUrl: "https://goerli.etherscan.io/tx/",
     tokenData: [

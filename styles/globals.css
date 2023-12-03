@@ -31,7 +31,6 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background-image: url("../public/img/Group\ 4.png");
   background-color: #181d23;
   background-repeat: no-repeat;
   background-size: cover;
@@ -383,4 +382,77 @@ input[type="number"] {
   to {
     box-shadow: 0 0 10px 10px #aef4af;
   }
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-select:not(
+    .ant-select-customize-input
+  )
+  .ant-select-selector {
+  background-color: transparent;
+  border: 1px solid #374151;
+  color: white !important;
+}
+
+.anticon {
+  color: white !important;
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-select-single
+  .ant-select-selector
+  .ant-select-selection-placeholder {
+  color: white !important;
+}
+
+.ant-select-open {
+  color: white !important;
+}
+
+.ant-select-selector {
+  color: white !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}
+
+.ant-select-selection-item {
+  color: white !important;
+  /* margin: 0 500px !important; */
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > th,
+:where(.css-dev-only-do-not-override-pr0fja).ant-table-wrapper
+  .ant-table-tbody
+  > tr
+  > td {
+  border-bottom: none !important;
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-pagination
+  .ant-pagination-item
+  a {
+  color: white;
+  position: relative;
+  /* margin: 0 auto; */
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-pagination
+  .ant-pagination-item-active
+  a {
+  color: #1677ff !important;
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-pagination {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+:where(.css-dev-only-do-not-override-pr0fja).ant-pagination::after {
+  display: none;
+}
+
+.ant-pagination-item-ellipsis {
+  color: white !important;
 }
