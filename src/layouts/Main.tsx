@@ -59,7 +59,7 @@ export const MainLayout = ({ children }: Props) => {
                 {theData.children &&
                   theData.children.map(
                     (childDataFirst: any, firstIndex: number) => (
-                      <div>
+                      <div key={firstIndex}>
                         <div
                           onClick={() => {
                             router.push(childDataFirst.route);
