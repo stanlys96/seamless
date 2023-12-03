@@ -388,8 +388,8 @@ input[type="number"] {
     .ant-select-customize-input
   )
   .ant-select-selector {
-  background-color: transparent;
-  border: 1px solid #374151;
+  background-color: transparent !important;
+  border: 1px solid #374151 !important;
   color: white !important;
 }
 
