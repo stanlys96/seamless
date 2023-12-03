@@ -347,7 +347,7 @@ export default function TransactionPage() {
               rowClassName="bg-[#21222D] border-none text-[#B3B3B3]"
               pagination={false}
             />
-            <div className="w-full p-[20px] bg-[#21222D] rounded-b-[10px]">
+            <div className="w-full p-[20px] bg-[#21222D] rounded-b-[10px] flex justify-center items-center">
               <Pagination
                 showSizeChanger={false}
                 defaultCurrent={1}
