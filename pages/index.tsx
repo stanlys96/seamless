@@ -298,6 +298,7 @@ export default function HomePage() {
           fee: fee,
           receive: Math.ceil(receiveValue),
           start_progress: status === "Blockchain" ? dateStr : null,
+          bank_code: currentSelectedBank.bank_code,
         },
       })
       .then((res) => {
