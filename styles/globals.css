@@ -82,6 +82,12 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.text-gradient-2 {
+  background-image: linear-gradient(to right, #9890e3, #b1f4cf);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .text-active {
   border-bottom: 2px solid #1461db;
 }

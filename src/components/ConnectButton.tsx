@@ -16,6 +16,7 @@ import {
 } from "wagmi";
 import { ConnectModal } from "./ConnectModal";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 export const ConnectButton = () => {
   const recoveredAddress = React.useRef<string>();
@@ -131,17 +132,32 @@ export const ConnectButton = () => {
           theme.theme === "light" ? "text-dark" : "text-light"
         } transition duration-500 flex gap-x-2`}
       >
+        <button className="bg-[#333333] font-bold rounded-[12px] flex items-center gap-x-2 sm:text-lg px-4 text-white">
+          <Image src="/img/mini-logo.svg" width={24} height={24} alt="logo" />
+          <span className="text-gradient-2">0 Pts</span>
+        </button>
+        <button className="bg-[#333333] font-bold rounded-[12px] flex items-center gap-x-1 sm:text-lg px-4 text-white">
+          <span className="text-gradient-2">{`${etherData?.formatted.slice(
+            0,
+            7
+          )} ETH`}</span>
+        </button>
+        <SwitchNetwork
+          setDropdownActive={setDropdownActive}
+          dropdownActive={dropdownActive}
+        />
         <button
           onClick={() => {
             disconnect();
           }}
-          className={`rounded flex items-center gap-x-1 ${
-            theme.theme === "light" ? "bg-btn" : "bg-[#262636]"
-          } ] px-4 font-semibold ${
-            theme.theme === "light" ? "text-white" : "text-light"
-          }  transition duration-500  sm:text-lg`}
+          className={`flex items-center gap-x-1 ${
+            theme.theme === "light" ? "bg-[#333333]" : "bg-[#262636]"
+          } ] px-4 font-semibold transition duration-500 rounded-[12px] sm:text-lg`}
         >
-          {`${etherData?.formatted.slice(0, 7)} ${currentNative?.name} ${
+          <span className="text-gradient-2">{`${etherData?.formatted.slice(
+            0,
+            7
+          )} ${currentNative?.name} ${
             !ensName
               ? windowWidth > 768
                 ? address.slice(0, 5) +
@@ -149,7 +165,7 @@ export const ConnectButton = () => {
                   address.slice(address.length - 4)
                 : ""
               : ensName
-          }`}
+          }`}</span>
           {ensAvatar?.data && (
             <img
               className="w-[30px] h-[30px] rounded-full"
@@ -157,10 +173,6 @@ export const ConnectButton = () => {
             />
           )}
         </button>
-        <SwitchNetwork
-          setDropdownActive={setDropdownActive}
-          dropdownActive={dropdownActive}
-        />
       </div>
     );
 };

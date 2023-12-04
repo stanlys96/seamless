@@ -6,6 +6,7 @@ import { useState } from "react";
 import { IoIosRadioButtonOn, IoIosRadioButtonOff } from "react-icons/io";
 import { useNetwork } from "wagmi";
 import { switchNetwork } from "@wagmi/core";
+import Image from "next/image";
 
 interface Props {
   setDropdownActive: (param1: any) => void;
@@ -27,33 +28,29 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
           e.preventDefault();
           setDropdownActive((prevValue: any) => !prevValue);
         }}
-        className={`rounded ${
+        className={`rounded-[12px] ${
           chainSupported ? "bg-[#262636]" : "bg-pink"
         } px-2 font-semibold ${
-          theme.theme === "light" ? "bg-btn" : ""
+          theme.theme === "light" ? "bg-[#333333]" : ""
         } py-2 sm:text-lg flex gap-x-1 items-center`}
       >
         {chainSupported ? (
-          <div>
-            <div className="z-100 text-socket-tag-green-text absolute bottom-1 right-1 items-center justify-center rounded-full bg-white pt-[0.5px] sm:bottom-1.5 sm:right-0.5 sm:h-4 sm:w-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="#000000"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-2.5 w-2.5 text-inherit sm:h-4 sm:w-4"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
-            <img
-              className="h-7 w-7 rounded-full sm:h-8 sm:w-8"
-              src={chainData.find((data) => data.chainId === chain?.id)?.imgUrl}
+          <div className="flex gap-x-2 items-center">
+            <Image
+              width={24}
+              height={24}
+              alt="token"
+              src={
+                chainData.find((data) => data.chainId === chain?.id)?.imgUrl ??
+                ""
+              }
+              className="rounded-full"
+            />
+            <Image
+              src="/img/arrow-down.svg"
+              width={24}
+              height={24}
+              alt="arrow"
             />
           </div>
         ) : (
@@ -79,9 +76,9 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
         )}
       </button>
       <div
-        className={`absolute dropdown-top right-0 top-14 w-[240px] rounded-lg border border-gray transition ${
-          theme.theme === "light" ? "bg-button-light" : "bg-button-dark"
-        } p-3 ${dropdownActive ? "block" : "hidden"}`}
+        className={`absolute dropdown-top right-0 top-14 w-[240px] rounded-lg border border-gray transition bg-[#333333] text-white p-3 ${
+          dropdownActive ? "block" : "hidden"
+        }`}
       >
         {resultData.map((data, idx) => (
           <button
@@ -99,7 +96,11 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             }}
             className={`${
               chain?.id === data.chainId
-                ? `${theme.theme === "dark" ? "bg-mainGray" : "bg-white"}`
+                ? `${
+                    theme.theme === "dark"
+                      ? "bg-mainGray text-black"
+                      : "bg-white text-black"
+                  }`
                 : `${
                     theme.theme === "dark"
                       ? `hover:bg-mainGray2`
