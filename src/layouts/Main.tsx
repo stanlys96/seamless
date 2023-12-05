@@ -7,6 +7,8 @@ import { RootState, themeActions } from "../stores";
 import Head from "next/head";
 import Image from "next/image";
 import { dropdownDataHelper } from "../utils/helper";
+import { useAccount } from "wagmi";
+import Swal from "sweetalert2";
 
 interface Props {
   children: any;
@@ -20,6 +22,7 @@ export const MainLayout = ({ children }: Props) => {
   const [windowWidth, setWindowWidth] = useState(0);
   const [domLoaded, setDomLoaded] = useState(false);
   const [dropdownData, setDropdownData] = useState(dropdownDataHelper);
+  const { address, connector, isConnected } = useAccount();
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     setDomLoaded(true);
@@ -62,6 +65,24 @@ export const MainLayout = ({ children }: Props) => {
                       <div key={firstIndex}>
                         <div
                           onClick={() => {
+                            if (
+                              (childDataFirst.route === "/settings" ||
+                                childDataFirst.route === "/verify") &&
+                              !address
+                            ) {
+                              return Swal.fire(
+                                "Info!",
+                                "Please login with your wallet!",
+                                "info"
+                              );
+                            }
+                            if (!childDataFirst.route) {
+                              return Swal.fire(
+                                "Info!",
+                                "Page still in development!",
+                                "info"
+                              );
+                            }
                             router.push(childDataFirst.route);
                           }}
                           className={`flex gap-x-2 items-center cursor-pointer mt-2 p-3 ${

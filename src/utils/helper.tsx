@@ -84,6 +84,7 @@ export const dropdownDataHelper = [
           <Image src={`/img/settings.svg`} width={20} height={20} alt="logo" />
         ),
         isActive: false,
+        route: "/settings",
       },
       {
         id: 2,

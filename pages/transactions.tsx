@@ -260,7 +260,7 @@ export default function TransactionPage() {
               color: "white",
             }}
             optionLabelProp="label"
-            className="bg-transparent w-[260px] flex items-center rounded-[50px]"
+            className="bg-transparent w-[260px] flex items-center rounded-[50px] transaction "
           >
             {[
               { value: "jack", label: "Jack" },
@@ -309,7 +309,7 @@ export default function TransactionPage() {
               color: "white",
             }}
             optionLabelProp="label"
-            className="bg-transparent w-[260px] flex items-center rounded-[50px]"
+            className="bg-transparent w-[260px] flex items-center rounded-[50px] transaction"
           >
             {[
               { value: "jack", label: "Jack" },
@@ -344,7 +344,7 @@ export default function TransactionPage() {
               className="mt-[40px] w-full"
               dataSource={userTransactions}
               columns={columns}
-              rowClassName="bg-[#21222D] border-none text-[#B3B3B3]"
+              rowClassName="bg-[#21222D] transaction text-[#B3B3B3]"
               pagination={false}
             />
             <div className="w-full p-[20px] bg-[#21222D] rounded-b-[10px] flex justify-center items-center">

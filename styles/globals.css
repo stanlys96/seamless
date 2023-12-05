@@ -406,15 +406,15 @@ input[type="number"] {
 :where(.css-dev-only-do-not-override-pr0fja).ant-select-single
   .ant-select-selector
   .ant-select-selection-placeholder {
-  color: white !important;
+  /* color: white !important; */
 }
 
 .ant-select-open {
-  color: white !important;
+  /* color: white !important; */
 }
 
-.ant-select-selector {
-  color: white !important;
+.transaction > .ant-select-selector {
+  /* color: white !important; */
   padding-top: 20px !important;
   padding-bottom: 20px !important;
 }
@@ -430,7 +430,7 @@ input[type="number"] {
   > th,
 :where(.css-dev-only-do-not-override-pr0fja).ant-table-wrapper
   .ant-table-tbody
-  > tr
+  > tr.transaction
   > td {
   border-bottom: none !important;
 }
@@ -461,4 +461,16 @@ input[type="number"] {
 
 .ant-pagination-item-ellipsis {
   color: white !important;
+}
+
+.ant-select-selection-placeholder {
+  color: white !important;
+}
+
+.ant-picker-input input::placeholder {
+  color: white !important;
+}
+
+.ant-select-selection__placeholder {
+  color: blue !important;
 }
