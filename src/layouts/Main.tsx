@@ -66,7 +66,7 @@ export const MainLayout = ({ children }: Props) => {
                         <div
                           onClick={() => {
                             if (childDataFirst.url) {
-                              return (window.location = childDataFirst.url);
+                              return window.open(childDataFirst.url);
                             }
                             if (
                               (childDataFirst.route === "/settings" ||
