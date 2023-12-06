@@ -12,10 +12,11 @@ interface Props {
   setBankModal: (param1: any) => void;
   setCurrentSelectedBank: (param1: any) => void;
   currentSelectedBank: any;
-  setBankAccountName: (param1: any) => void;
-  setBankAccountValue: (param1: any) => void;
+  setBankAccountName?: (param1: any) => void;
+  setBankAccountValue?: (param1: any) => void;
   banksList?: any;
-  setPhoneNumber: (param1: any) => void;
+  setPhoneNumber?: (param1: any) => void;
+  hideDonation?: boolean;
 }
 
 export const BankModal = ({
@@ -27,6 +28,7 @@ export const BankModal = ({
   banksList,
   setBankAccountValue,
   setPhoneNumber,
+  hideDonation,
 }: Props) => {
   const [theList, setTheList] = useState(banksList?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,6 +64,13 @@ export const BankModal = ({
         bankData.status.toLowerCase() === "operational"
       );
     }
+  };
+
+  const filterBankType = (bankType: any) => {
+    if (hideDonation) {
+      return bankType.name !== "Donation";
+    }
+    return bankType;
   };
 
   const listResult = theList.filter(filterBank).filter(filterCategory);
@@ -137,31 +146,33 @@ export const BankModal = ({
                 </div>
                 <div className={`${!searchQuery ? "block" : "hidden"}`}>
                   <div className="noScrollbar flex overflow-x-auto sm:flex-wrap items-center mt-4">
-                    {bankTypes.map((bank: any, idx: any) => (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSelectedCategory(bank.name.toLowerCase());
-                        }}
-                        key={bank.id}
-                        className={`m-1 transition duration-500  flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
-                          selectedCategory.toLowerCase() ===
-                          bank.name.toLowerCase()
-                            ? "bg-layer3 hover:border-layer3"
-                            : "hover:border-transparent hover:bg-mainGray2"
-                        }`}
-                      >
-                        <img
-                          className="skt-w bg-white rounded-full overflow-hidden h-6 w-6 mr-1.5"
-                          src={bank.imgUrl}
-                          width="100%"
-                          height="100%"
-                        />
-                        <span className="pt-px font-medium text-socket-primary sm:text-lg">
-                          {bank.name}
-                        </span>
-                      </button>
-                    ))}
+                    {bankTypes
+                      .filter(filterBankType)
+                      .map((bank: any, idx: any) => (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedCategory(bank.name.toLowerCase());
+                          }}
+                          key={bank.id}
+                          className={`m-1 transition duration-500  flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
+                            selectedCategory.toLowerCase() ===
+                            bank.name.toLowerCase()
+                              ? "bg-layer3 hover:border-layer3"
+                              : "hover:border-transparent hover:bg-mainGray2"
+                          }`}
+                        >
+                          <img
+                            className="skt-w bg-white rounded-full overflow-hidden h-6 w-6 mr-1.5"
+                            src={bank.imgUrl}
+                            width="100%"
+                            height="100%"
+                          />
+                          <span className="pt-px font-medium text-socket-primary sm:text-lg">
+                            {bank.name}
+                          </span>
+                        </button>
+                      ))}
                   </div>
                 </div>
               </div>
@@ -186,10 +197,10 @@ export const BankModal = ({
                       if (
                         currentSelectedBank.bank_code !== bankData.bank_code
                       ) {
-                        setBankAccountName("");
-                        setBankAccountValue("");
+                        setBankAccountName && setBankAccountName("");
+                        setBankAccountValue && setBankAccountValue("");
                         setSelectedCategory("bank");
-                        setPhoneNumber("");
+                        setPhoneNumber && setPhoneNumber("");
                       }
                       setBankModal(false);
                       setSearchQuery("");
@@ -244,8 +255,10 @@ export const BankModal = ({
                         ? `/img/banks/${theData.bank_code}.png`
                         : "/img/banks/bank.png",
                     });
-                    setBankAccountName(theData.bank_account_name);
-                    setBankAccountValue(theData.bank_account_number);
+                    setBankAccountName &&
+                      setBankAccountName(theData.bank_account_name);
+                    setBankAccountValue &&
+                      setBankAccountValue(theData.bank_account_number);
                     setBankModal(false);
                     setSearchQuery("");
                   }}

@@ -1,18 +1,22 @@
 "use client";
 import { MainLayout } from "@/src/layouts/Main";
 import useSWR from "swr";
-import { fetcherStrapi } from "@/utils/axios";
+import { fetcherFlip, fetcherStrapi } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData, existBankData } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
-import { Pagination, ConfigProvider, Select, Table, Input } from "antd";
+import { Pagination, ConfigProvider, Table, Input } from "antd";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 import { ColumnsType } from "antd/es/table";
 import { eWallets } from "@/utils/helper";
+import Head from "next/head";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { BankModal } from "@/src/components/BankModal";
 
 export interface DataType {
   key: React.Key;
@@ -48,9 +52,16 @@ const columns = [
 ];
 
 export default function TransactionPage() {
+  const [bankModal, setBankModal] = useState(false);
   const { address, connector, isConnected } = useAccount();
   const [userWalletData, setUserWalletData] = useState<any>([]);
   const scrollToTop = useRef<HTMLInputElement>(null);
+  const [currentSelectedBank, setCurrentSelectedBank] = useState({
+    name: "",
+    bank_code: "",
+    imgUrl: "",
+  });
+  const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const theme = useSelector((state: RootState) => state.theme);
   const [pageLoading, setPageLoading] = useState(false);
   const router = useRouter();
@@ -92,6 +103,13 @@ export default function TransactionPage() {
 
   return (
     <MainLayout>
+      <Head>
+        <link
+          href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+          rel="stylesheet"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+      </Head>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
         <p className="text-[32px] font-bold">Profile Account</p>
         <div className="bg-[#21222D] p-[20px] rounded-[12px] flex justify-between">
@@ -172,7 +190,12 @@ export default function TransactionPage() {
             rowClassName="bg-[#21222D] text-white border hover:text-black"
           />
           <div className="flex gap-x-2 p-[10px] border-b items-center mb-[10px]">
-            <div className="relative w-[260px]">
+            <div
+              onClick={() => {
+                setBankModal(true);
+              }}
+              className="relative cursor-pointer w-[260px]"
+            >
               <Image
                 src="/img/arrow-down.svg"
                 width={18}
@@ -180,11 +203,13 @@ export default function TransactionPage() {
                 alt="arrow"
                 className="absolute right-2 bottom-[8px]"
               />
-              <select className="flex-1 h-[36px] bg-transparent border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
-                <option>Walao</option>
-                <option>Walao</option>
-                <option>Walao</option>
-              </select>
+              <div className="flex-1 items-center flex h-[36px] bg-transparent border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
+                <p>
+                  {!currentSelectedBank?.name
+                    ? "Select Destination"
+                    : currentSelectedBank?.name}
+                </p>
+              </div>
             </div>
             <input
               placeholder="Enter Account Number"
@@ -230,6 +255,14 @@ export default function TransactionPage() {
           </div>
         </div>
       </div>
+      <BankModal
+        bankModal={bankModal}
+        setBankModal={setBankModal}
+        banksList={banksData}
+        setCurrentSelectedBank={setCurrentSelectedBank}
+        currentSelectedBank={currentSelectedBank}
+        hideDonation
+      />
     </MainLayout>
   );
 }
