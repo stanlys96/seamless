@@ -172,14 +172,20 @@ export default function TransactionPage() {
             rowClassName="bg-[#21222D] text-white border hover:text-black"
           />
           <div className="flex gap-x-2 p-[10px] border-b items-center mb-[10px]">
-            <Select
-              options={[
-                { value: "jack", label: "Jack" },
-                { value: "lucy", label: "Lucy" },
-                { value: "Yiminghe", label: "yiminghe" },
-              ]}
-              className="flex-1 h-fit focus-visible:outline-none bg-transparent border rounded-[8px] border-white"
-            />
+            <div className="relative w-[260px]">
+              <Image
+                src="/img/arrow-down.svg"
+                width={18}
+                height={17}
+                alt="arrow"
+                className="absolute right-2 bottom-[8px]"
+              />
+              <select className="flex-1 h-[36px] bg-transparent border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
+                <option>Walao</option>
+                <option>Walao</option>
+                <option>Walao</option>
+              </select>
+            </div>
             <input
               placeholder="Enter Account Number"
               className="flex-1 h-[36px] border rounded-[8px] px-[10px] text-cute text-socket-primary bg-transparent focus-visible:outline-none w-full focus:max-w-none overflow-hidden"

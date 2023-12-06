@@ -474,3 +474,14 @@ input[type="number"] {
 .ant-select-selection__placeholder {
   color: blue !important;
 }
+
+label {
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
+}
+
+#upload-file {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}

@@ -239,104 +239,54 @@ export default function TransactionPage() {
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
         <p className="text-[32px] font-bold">Transaction History</p>
         <div className="flex justify-between mt-4">
-          <Select
-            style={{
-              color: "white",
-            }}
-            placeholder={
-              <React.Fragment>
-                <div className="flex gap-x-1">
-                  <Image
-                    src={`/img/filter.svg`}
-                    width={20}
-                    height={20}
-                    alt="logo"
-                  />
-                  <span>&nbsp;History Type</span>
-                </div>
-              </React.Fragment>
-            }
-            dropdownStyle={{
-              color: "white",
-            }}
-            optionLabelProp="label"
-            className="bg-transparent w-[260px] flex items-center rounded-[50px] transaction "
-          >
-            {[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-            ].map((data) => (
-              <Select.Option
-                key={data.value}
-                value={data.value}
-                label={
-                  <React.Fragment>
-                    <div className="flex gap-x-1">
-                      <Image
-                        src={`/img/filter.svg`}
-                        width={20}
-                        height={20}
-                        alt="logo"
-                      />
-                      <span>&nbsp;{data.label}</span>
-                    </div>
-                  </React.Fragment>
-                }
-              >
-                {data.label}
-              </Select.Option>
-            ))}
-          </Select>
-          <Select
-            style={{
-              color: "white",
-            }}
-            placeholder={
-              <React.Fragment>
-                <div className="flex gap-x-1">
-                  <Image
-                    src={`/img/time.svg`}
-                    width={20}
-                    height={20}
-                    alt="logo"
-                  />
-                  <span>&nbsp;Select Time</span>
-                </div>
-              </React.Fragment>
-            }
-            dropdownStyle={{
-              color: "white",
-            }}
-            optionLabelProp="label"
-            className="bg-transparent w-[260px] flex items-center rounded-[50px] transaction"
-          >
-            {[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-            ].map((data) => (
-              <Select.Option
-                key={data.value}
-                value={data.value}
-                label={
-                  <React.Fragment>
-                    <div className="flex gap-x-1">
-                      <Image
-                        src={`/img/time.svg`}
-                        width={20}
-                        height={20}
-                        alt="logo"
-                      />
-                      <span>&nbsp;{data.label}</span>
-                    </div>
-                  </React.Fragment>
-                }
-              >
-                {data.label}
-              </Select.Option>
-            ))}
-          </Select>
+          <div className="relative w-[260px]">
+            <Image
+              src={`/img/filter.svg`}
+              width={20}
+              height={20}
+              alt="logo"
+              className="absolute left-2 z-1 bottom-[10px]"
+            />
+            <Image
+              src="/img/arrow-down.svg"
+              width={18}
+              height={17}
+              alt="arrow"
+              className="absolute right-2 z-1 bottom-[10px]"
+            />
+            <select
+              placeholder="History Type"
+              className="flex-1 pl-[40px] z-50 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+            >
+              <option>History Type</option>
+              <option>Walao</option>
+              <option>Walao</option>
+            </select>
+          </div>
+          <div className="relative w-[260px]">
+            <Image
+              src={`/img/time.svg`}
+              width={20}
+              height={20}
+              alt="logo"
+              className="absolute left-2 z-1 bottom-[10px]"
+            />
+            <Image
+              src="/img/arrow-down.svg"
+              width={18}
+              height={17}
+              alt="arrow"
+              className="absolute right-2 z-1 bottom-[10px]"
+            />
+            <select
+              placeholder="Select Time"
+              className="flex-1 pl-[40px] z-50 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+            >
+              <option>Select Time</option>
+              <option>Walao</option>
+              <option>Walao</option>
+            </select>
+          </div>
         </div>
         {userTransactions.length > 0 ? (
           <div className="flex flex-col justify-center w-full">
