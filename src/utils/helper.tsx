@@ -64,7 +64,7 @@ export const dropdownDataHelper = [
       },
       {
         id: 2,
-        name: "Activity History",
+        name: "Transaction History",
         route: "/transactions",
         isActive: false,
         icon: (
@@ -79,6 +79,14 @@ export const dropdownDataHelper = [
     children: [
       {
         id: 1,
+        name: "Activity History",
+        isActive: false,
+        icon: (
+          <Image src={`/img/history.svg`} width={20} height={20} alt="logo" />
+        ),
+      },
+      {
+        id: 2,
         name: "Settings",
         icon: (
           <Image src={`/img/settings.svg`} width={20} height={20} alt="logo" />
@@ -87,11 +95,28 @@ export const dropdownDataHelper = [
         route: "/settings",
       },
       {
-        id: 2,
+        id: 3,
         name: "Documentations",
         isActive: false,
+        isUrl: true,
+        url: "https://docs.seamless.finance",
         icon: (
-          <Image src={`/img/question.svg`} width={20} height={20} alt="logo" />
+          <Image
+            src={`/img/documentation.svg`}
+            width={20}
+            height={20}
+            alt="logo"
+          />
+        ),
+      },
+      {
+        id: 4,
+        name: "Support",
+        isActive: false,
+        isUrl: true,
+        url: "https://t.me/seamlessfi/2",
+        icon: (
+          <Image src={`/img/support.svg`} width={20} height={20} alt="logo" />
         ),
       },
     ],
