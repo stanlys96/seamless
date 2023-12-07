@@ -165,12 +165,29 @@ export default function TransactionPage() {
               />
             </div>
           </div>
-          <div className="mt-4 text-white">
-            <p>Default Destination</p>
-            <input
-              placeholder="Enter Account Number"
-              className="flex-1 h-[50px] bg-[#333333] mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
-            />
+          <p className="mt-4">Default Destination</p>
+          <div className="flex gap-x-2 h-[50px] bg-[#333333] items-center mt-[15px]">
+            <div
+              onClick={() => {
+                setBankModal(true);
+              }}
+              className="relative cursor-pointer h-full w-full"
+            >
+              <Image
+                src="/img/arrow-down.svg"
+                width={18}
+                height={17}
+                alt="arrow"
+                className="absolute right-2 bottom-[15px]"
+              />
+              <div className="flex-1 h-full items-center flex bg-transparent border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
+                <p>
+                  {!currentSelectedBank?.name
+                    ? "Select Destination"
+                    : currentSelectedBank?.name}
+                </p>
+              </div>
+            </div>
           </div>
           <div className="mt-4 flex justify-end">
             <button className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[20px]">
