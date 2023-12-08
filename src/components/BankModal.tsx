@@ -6,7 +6,7 @@ import {
   virtualAccounts,
 } from "@/utils/helper";
 import { useState, useEffect } from "react";
-// Walao
+
 interface Props {
   bankModal: any;
   setBankModal: (param1: any) => void;
