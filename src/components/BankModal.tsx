@@ -17,6 +17,10 @@ interface Props {
   banksList?: any;
   setPhoneNumber?: (param1: any) => void;
   hideDonation?: boolean;
+  setCurrentSecondaryBank?: (param1: any) => void;
+  currentSecondaryBank?: any;
+  isSecondaryBank?: boolean;
+  setIsSecondaryBank?: (param1: any) => void;
 }
 
 export const BankModal = ({
@@ -29,6 +33,10 @@ export const BankModal = ({
   setBankAccountValue,
   setPhoneNumber,
   hideDonation,
+  setCurrentSecondaryBank,
+  currentSecondaryBank,
+  isSecondaryBank,
+  setIsSecondaryBank,
 }: Props) => {
   const [theList, setTheList] = useState(banksList?.data ?? []);
   const [searchQuery, setSearchQuery] = useState("");
@@ -187,23 +195,34 @@ export const BankModal = ({
                     onClick={(e) => {
                       e.preventDefault();
                       e.preventDefault();
-                      setCurrentSelectedBank({
-                        name: bankData.name,
-                        bank_code: bankData.bank_code,
-                        imgUrl: existBankData.includes(bankData.bank_code)
-                          ? `/img/banks/${bankData.bank_code}.png`
-                          : "/img/banks/bank.png",
-                      });
-                      if (
-                        currentSelectedBank.bank_code !== bankData.bank_code
-                      ) {
-                        setBankAccountName && setBankAccountName("");
-                        setBankAccountValue && setBankAccountValue("");
-                        setSelectedCategory("bank");
-                        setPhoneNumber && setPhoneNumber("");
+                      if (isSecondaryBank && setCurrentSecondaryBank) {
+                        setCurrentSecondaryBank({
+                          name: bankData.name,
+                          bank_code: bankData.bank_code,
+                          imgUrl: existBankData.includes(bankData.bank_code)
+                            ? `/img/banks/${bankData.bank_code}.png`
+                            : "/img/banks/bank.png",
+                        });
+                      } else {
+                        setCurrentSelectedBank({
+                          name: bankData.name,
+                          bank_code: bankData.bank_code,
+                          imgUrl: existBankData.includes(bankData.bank_code)
+                            ? `/img/banks/${bankData.bank_code}.png`
+                            : "/img/banks/bank.png",
+                        });
+                        if (
+                          currentSelectedBank.bank_code !== bankData.bank_code
+                        ) {
+                          setBankAccountName && setBankAccountName("");
+                          setBankAccountValue && setBankAccountValue("");
+                          setSelectedCategory("bank");
+                          setPhoneNumber && setPhoneNumber("");
+                        }
+                        setSearchQuery("");
                       }
+                      setIsSecondaryBank && setIsSecondaryBank(false);
                       setBankModal(false);
-                      setSearchQuery("");
                     }}
                     className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
                   >
@@ -246,21 +265,34 @@ export const BankModal = ({
                   key={theData.id}
                   onClick={(e) => {
                     e.preventDefault();
-                    setCurrentSelectedBank({
-                      name: banksList.data.find(
-                        (bank: any) => bank.bank_code === theData.bank_code
-                      ).name,
-                      bank_code: theData.bank_code,
-                      imgUrl: existBankData.includes(theData.bank_code)
-                        ? `/img/banks/${theData.bank_code}.png`
-                        : "/img/banks/bank.png",
-                    });
-                    setBankAccountName &&
-                      setBankAccountName(theData.bank_account_name);
-                    setBankAccountValue &&
-                      setBankAccountValue(theData.bank_account_number);
+                    if (isSecondaryBank && setCurrentSecondaryBank) {
+                      setCurrentSecondaryBank({
+                        name: banksList.data.find(
+                          (bank: any) => bank.bank_code === theData.bank_code
+                        ).name,
+                        bank_code: theData.bank_code,
+                        imgUrl: existBankData.includes(theData.bank_code)
+                          ? `/img/banks/${theData.bank_code}.png`
+                          : "/img/banks/bank.png",
+                      });
+                    } else {
+                      setCurrentSelectedBank({
+                        name: banksList.data.find(
+                          (bank: any) => bank.bank_code === theData.bank_code
+                        ).name,
+                        bank_code: theData.bank_code,
+                        imgUrl: existBankData.includes(theData.bank_code)
+                          ? `/img/banks/${theData.bank_code}.png`
+                          : "/img/banks/bank.png",
+                      });
+                      setBankAccountName &&
+                        setBankAccountName(theData.bank_account_name);
+                      setBankAccountValue &&
+                        setBankAccountValue(theData.bank_account_number);
+                      setSearchQuery("");
+                    }
+                    setIsSecondaryBank && setIsSecondaryBank(false);
                     setBankModal(false);
-                    setSearchQuery("");
                   }}
                   className="flex w-full items-center justify-between px-6 py-3 last:border-b-0 disabled:opacity-40 disabled:hover:bg-transparent hover:bg-socket-layers-2"
                 >
