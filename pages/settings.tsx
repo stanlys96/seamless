@@ -425,6 +425,7 @@ export default function TransactionPage() {
               onClick={() => {
                 setIsSecondaryBank(false);
                 setBankModal(true);
+                setBankAccountName("");
               }}
               className="relative cursor-pointer w-[260px]"
             >
@@ -516,7 +517,12 @@ export default function TransactionPage() {
             <button
               disabled={saveLoading}
               onClick={async () => {
-                console.log(historyData?.data?.data, "<<<");
+                if (!bankAccountName)
+                  return Swal.fire(
+                    "Info!",
+                    "Please fill all the data and click check!",
+                    "info"
+                  );
                 for (let theData of historyData?.data?.data) {
                   if (
                     theData.attributes.bank_account_number.toLowerCase() ===
@@ -529,12 +535,7 @@ export default function TransactionPage() {
                     );
                   }
                 }
-                if (!bankAccountName)
-                  return Swal.fire(
-                    "Info!",
-                    "Please fill all the data and click check!",
-                    "info"
-                  );
+
                 setSaveLoading(true);
                 axiosApi
                   .post("/api/check-wallet-accounts", {
