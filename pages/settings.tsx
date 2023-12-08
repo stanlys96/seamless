@@ -203,13 +203,6 @@ export default function TransactionPage() {
 
   return (
     <MainLayout>
-      <Head>
-        <link
-          href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-          rel="stylesheet"
-        />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-      </Head>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
         <p className="text-[32px] font-bold">Profile Account</p>
         <div className="bg-[#21222D] p-[20px] rounded-[12px] flex justify-between">
