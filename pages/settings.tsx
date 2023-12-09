@@ -320,7 +320,7 @@ export default function TransactionPage() {
               disabled={personalInformationLoading}
               onClick={async () => {
                 if (
-                  !userData.defaultDestination ||
+                  !currentSecondaryBank?.name ||
                   !userData.displayName ||
                   !userData.email ||
                   !userData.username
