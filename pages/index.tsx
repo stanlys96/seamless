@@ -541,7 +541,7 @@ export default function HomePage() {
               theme.theme === "light"
                 ? "primary-container"
                 : "primary-container-dark"
-            } transition duration-500 rounded-xl p-6 mt-[20px]`}
+            } transition duration-500 rounded-xl p-6 mt-[20px] w-[80vw] md:w-fit`}
           >
             <div className="flex justify-between bg-container md:px-[24px] px-[10px] py-[10px] rounded-[12px] ">
               <div className="flex flex-col gap-y-2">
