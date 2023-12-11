@@ -85,7 +85,7 @@ export const BankModal = ({
   return (
     <div className={`${bankModal ? "block" : "hidden"}`}>
       <div
-        className="z-50 bg-[#828282]/50 dark:bg-[#101016CC] backdrop-blur-sm w-full sm:p-5 md:p-10 fixed top-0 left-0 items-center justify-center flex h-full"
+        className="z-50 bg-[#828282]/50 text-white dark:bg-[#101016CC] backdrop-blur-sm w-full sm:p-5 md:p-10 fixed top-0 left-0 items-center justify-center flex h-full"
         style={{ opacity: 1 }}
       >
         <div className="flex flex-col rounded-xl bg-theGray sm:overflow-clip border border-gray sm:w-[520px] sm:rounded-b-xl static bottom-0 w-full h-fit">
