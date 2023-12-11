@@ -136,7 +136,7 @@ export const ConnectButton = () => {
           <Image src="/img/mini-logo.svg" width={24} height={24} alt="logo" />
           <span className="text-gradient-2">0 Pts</span>
         </button>
-        <button className="bg-[#333333] font-bold rounded-[12px] flex items-center gap-x-1 sm:text-lg px-4 text-white">
+        <button className="bg-[#333333] hidden md:block font-bold rounded-[12px] flex items-center gap-x-1 sm:text-lg px-4 text-white">
           <span className="text-gradient-2">{`${etherData?.formatted.slice(
             0,
             7
@@ -168,7 +168,7 @@ export const ConnectButton = () => {
           }`}</span>
           {ensAvatar?.data && (
             <img
-              className="w-[30px] h-[30px] rounded-full"
+              className="w-[30px] h-[30px] hidden md:block rounded-full"
               src={ensAvatar?.data ?? ""}
             />
           )}

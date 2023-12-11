@@ -43,7 +43,7 @@ export default function VerifyPage() {
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
         <p className="text-[32px] font-bold">Verify Your Account</p>
-        <div className="bg-[#21222D] p-[10px] rounded-[12px] flex gap-x-4 mt-[25px]">
+        <div className="bg-[#21222D] p-[10px] rounded-[12px] flex flex-col md:flex-row gap-4 mt-[25px]">
           <div className="bg-[#090D1F] flex flex-col justify-center items-center p-[10px] rounded-[10px] h-fit">
             <label className="" htmlFor="upload-file">
               <Image

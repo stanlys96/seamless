@@ -9,6 +9,8 @@ import Image from "next/image";
 import { dropdownDataHelper } from "../utils/helper";
 import { useAccount } from "wagmi";
 import Swal from "sweetalert2";
+import Menu from "../components/Icons/Menu";
+import SideDrawer from "../components/SideDrawer";
 
 interface Props {
   children: any;
@@ -18,6 +20,7 @@ export const MainLayout = ({ children }: Props) => {
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.theme);
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("light");
   const [windowWidth, setWindowWidth] = useState(0);
   const [domLoaded, setDomLoaded] = useState(false);
@@ -43,7 +46,7 @@ export const MainLayout = ({ children }: Props) => {
         <link rel="shortcut icon" href="/img/favicon.ico" />
       </Head>
       <div className="flex">
-        <div className="w-[20vw] min-h-[100vh] flex flex-col items-center border-r border-darkGray p-[20px]">
+        <div className="w-[20vw] min-h-[100vh] flex flex-col items-center border-r border-darkGray p-[20px] hidden md:block">
           <a
             onClick={(e) => {
               e.preventDefault();
@@ -162,6 +165,16 @@ export const MainLayout = ({ children }: Props) => {
 
         <div className="layout-container w-full">
           <div className="z-50 bg-[#181D23] border-b border-darkGray navbar w-full flex justify-end p-5 items-center">
+            <div className="relative md:hidden">
+              <button
+                className="flex items-center justify-center ml-auto p-3 md:p-4"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                <Menu props={undefined} />
+              </button>
+            </div>
             <div className="flex gap-x-2 items-center justify-between w-full">
               <div className="dark_mode">
                 <div className="flex gap-x-4 items-center"></div>
@@ -191,6 +204,11 @@ export const MainLayout = ({ children }: Props) => {
           </div>
           <div>{children}</div>
         </div>
+        <SideDrawer
+          setOpen={setOpen}
+          handleClose={() => setOpen(false)}
+          open={open}
+        />
       </div>
     </div>
   );

@@ -238,7 +238,7 @@ export default function TransactionPage() {
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
         <p className="text-[32px] font-bold">Transaction History</p>
-        <div className="flex justify-between mt-4">
+        <div className="flex flex-col md:flex-row justify-between mt-4">
           <div className="relative w-[260px]">
             <Image
               src={`/img/filter.svg`}
@@ -336,14 +336,14 @@ export default function TransactionPage() {
               theme.theme === "light" ? "text-white" : "text-white"
             } bg-[#21222D] rounded-[10px] relative py-[40px] flex flex-col items-center lg:justify-center mt-[40px]`}
           >
-            <h1 className="text-center text-[24px] font-semibold text-socket-primary">
+            <h1 className="text-center text-[16px] md:text-[24px] font-semibold text-socket-primary">
               No Transaction History Found
             </h1>
-            <p className="my-2 text-center text-socket-secondary lg:text-lg">
+            <p className="my-2 text-center text-socket-secondary text-[13px] md:text-[16px]">
               To view your transaction history, please connect your wallet
             </p>
             <a
-              className="mt-4 text-white w-[522px] cursor-pointer flex items-center justify-center rounded px-8 py-4 font-medium text-socket-btn-primary bg-btn hover:bg-socket-btn-primary-hover"
+              className="mt-4 text-white w-1/2 cursor-pointer flex items-center justify-center rounded px-8 py-4 font-medium text-socket-btn-primary bg-btn hover:bg-socket-btn-primary-hover"
               onClick={(e) => {
                 e.preventDefault();
                 router.push("/");
@@ -355,7 +355,9 @@ export default function TransactionPage() {
                 src="/img/wallet.svg"
                 alt="wallet"
               />
-              <span>&nbsp;&nbsp;Start Transaction</span>
+              <span className="text-[12px] md:text-[16px]">
+                &nbsp;&nbsp;Start Transaction
+              </span>
             </a>
           </div>
         )}

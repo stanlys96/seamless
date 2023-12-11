@@ -247,7 +247,7 @@ export default function TransactionPage() {
               }
               type="text"
               placeholder="Muhammad Rudi"
-              className="flex-1 h-[50px] bg-[#333333] mt-[10px] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+              className="flex-1 h-[50px] text-[13px] md:text-[16px] bg-[#333333] mt-[10px] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
             />
           </div>
           <div className="mt-4 flex gap-x-4 w-full">
@@ -263,7 +263,7 @@ export default function TransactionPage() {
                 }
                 type="text"
                 placeholder="rudirm"
-                className="flex-1 mt-[10px] h-[50px] bg-[#333333] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                className="flex-1 text-[13px] md:text-[16px] mt-[10px] h-[50px] bg-[#333333] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
               />
             </div>
             <div className="flex-1">
@@ -278,7 +278,7 @@ export default function TransactionPage() {
                 }
                 type="email"
                 placeholder="rudi@gmail.com"
-                className="flex-1 mt-[10px] h-[50px] bg-[#333333] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                className="flex-1 text-[13px] md:text-[16px] mt-[10px] h-[50px] bg-[#333333] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
               />
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function TransactionPage() {
                 alt="arrow"
                 className="absolute right-2 bottom-[15px]"
               />
-              <div className="flex-1 gap-x-2 h-full items-center flex bg-transparent border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
+              <div className="flex-1 gap-x-2 text-[13px] md:text-[16px] h-full items-center flex bg-transparent border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
                 {currentSecondaryBank?.imgUrl && (
                   <Image
                     src={currentSecondaryBank?.imgUrl ?? ""}
@@ -413,14 +413,14 @@ export default function TransactionPage() {
             columns={columns}
             rowClassName="bg-[#21222D] text-white border hover:text-black"
           />
-          <div className="flex gap-x-2 p-[10px] border-b items-center mb-[10px]">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-2 p-[10px] border-b items-center mb-[10px]">
             <div
               onClick={() => {
                 setIsSecondaryBank(false);
                 setBankModal(true);
                 setBankAccountName("");
               }}
-              className="relative cursor-pointer w-[260px]"
+              className="relative cursor-pointer w-full md:w-[160px] lg:w-[260px]"
             >
               <Image
                 src="/img/arrow-down.svg"
@@ -429,7 +429,7 @@ export default function TransactionPage() {
                 alt="arrow"
                 className="absolute right-2 bottom-[8px]"
               />
-              <div className="flex-1 items-center flex h-[36px] bg-transparent border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
+              <div className="h-[36px] w-full md:flex-1 items-center flex md:h-[36px] bg-transparent border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden">
                 <p>
                   {!currentSelectedBank?.name
                     ? "Select Destination"
@@ -444,13 +444,13 @@ export default function TransactionPage() {
               }}
               value={bankAccountValue}
               placeholder="Enter Account Number"
-              className="flex-1 h-[36px] border rounded-[8px] px-[10px] text-cute text-socket-primary bg-transparent focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+              className="md:flex-1 h-[36px] border rounded-[8px] px-[10px] text-cute text-socket-primary bg-transparent focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
             />
             <input
               value={bankAccountName}
               disabled
               placeholder="Account Name"
-              className="flex-1 h-[36px] border rounded-[8px] px-[10px] text-cute text-socket-primary bg-transparent focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+              className="md:flex-1 h-[36px] border rounded-[8px] px-[10px] text-cute text-socket-primary bg-transparent focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
             />
             <button
               disabled={isCheckingBankAccount}
@@ -586,7 +586,7 @@ export default function TransactionPage() {
         </div>
         <div className="bg-[#21222D] p-[20px] rounded-[12px] mt-[35px]">
           <p className="text-white font-bold text-[24px]">Referrals</p>
-          <p className="text-[16px] mt-[10px] w-4/5 text-[#CCCCCC]">
+          <p className="text-[16px] mt-[10px] w-full md:w-4/5 text-[#CCCCCC]">
             Earn Seamless Points via our referral program. Seamless Points can
             be redeemed to perks later on. Find complete program details HERE
             for more information.
