@@ -237,7 +237,7 @@ export default function TransactionPage() {
   return (
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
-        <p className="text-[32px] font-bold">Transaction History</p>
+        <p className="text-[32px] font-bold text-white">Transaction History</p>
         <div className="flex flex-col md:flex-row justify-between mt-4">
           <div className="relative w-[260px]">
             <Image
@@ -334,7 +334,7 @@ export default function TransactionPage() {
           <div
             className={`${
               theme.theme === "light" ? "text-white" : "text-white"
-            } bg-[#21222D] rounded-[10px] relative py-[40px] flex flex-col items-center lg:justify-center mt-[40px]`}
+            } bg-[#21222D] rounded-[10px] relative py-[40px] px-[20px] flex flex-col items-center lg:justify-center mt-[40px]`}
           >
             <h1 className="text-center text-[16px] md:text-[24px] font-semibold text-socket-primary">
               No Transaction History Found
