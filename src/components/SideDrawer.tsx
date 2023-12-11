@@ -19,8 +19,8 @@ export default function SideDrawer({ open, handleClose, setOpen }: Props) {
   return (
     <div
       className={[
-        open ? "w-screen z-50 translate-x-0" : "translate-x-full w-0 -z-10",
-        "sidebar fixed h-screen overflow-scroll bg-[#000000] top-0 right-0 text-lg transition-all duration-300 ",
+        open ? "w-full z-50 translate-x-0" : "translate-x-full w-0 -z-10",
+        "sidebar fixed h-full overflow-scroll bg-[#000000] top-0 right-0 text-lg transition-all duration-300 ",
       ].join(" ")}
     >
       <div className="sidebar-header overflow-y-scroll flex justify-between py-4 pl-3 pr-5 border-b border-white/30">
@@ -65,7 +65,9 @@ export default function SideDrawer({ open, handleClose, setOpen }: Props) {
       <div className="py-4 pl-3 pr-5 flex flex-col items-center gap-y-4 w-full">
         {dropdownData.map((theData: any, index: number) => (
           <div className="w-full" key={theData.id}>
-            <p className="font-bold text-[18px] px-[35px]">{theData.name}</p>
+            <p className="font-bold text-[18px] text-white px-[35px]">
+              {theData.name}
+            </p>
             {theData.children &&
               theData.children.map(
                 (childDataFirst: any, firstIndex: number) => (
