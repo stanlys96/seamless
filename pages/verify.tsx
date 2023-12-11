@@ -42,7 +42,7 @@ export default function VerifyPage() {
   return (
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
-        <p className="text-[32px] font-bold">Verify Your Account</p>
+        <p className="text-[32px] font-bold text-white">Verify Your Account</p>
         <div className="bg-[#21222D] p-[10px] rounded-[12px] flex flex-col md:flex-row gap-4 mt-[25px]">
           <div className="bg-[#090D1F] flex flex-col justify-center items-center p-[10px] rounded-[10px] h-fit">
             <label className="" htmlFor="upload-file">
@@ -60,7 +60,7 @@ export default function VerifyPage() {
             />
             <div className="flex justify-center items-center my-[40px]">
               <button className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[30px] items-center">
-                <span>Check</span>
+                <span className="text-white">Check</span>
               </button>
             </div>
           </div>
@@ -160,7 +160,7 @@ export default function VerifyPage() {
             </div>
             <div className="flex justify-end items-center mt-[20px]">
               <button className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[30px] items-center">
-                <span>Submit Verification</span>
+                <span className="text-white">Submit Verification</span>
               </button>
             </div>
           </div>

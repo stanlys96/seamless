@@ -204,7 +204,7 @@ export default function TransactionPage() {
   return (
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
-        <p className="text-[32px] font-bold">Profile Account</p>
+        <p className="text-[32px] font-bold text-white">Profile Account</p>
         <div className="bg-[#21222D] p-[20px] rounded-[12px] flex justify-between">
           <Image src="/img/person.svg" width={124} height={124} alt="person" />
           <Image
@@ -218,7 +218,7 @@ export default function TransactionPage() {
           <p className="text-[#EB5757] font-bold text-[24px]">
             Complete Your Account Verification!
           </p>
-          <p className="text-[14px] mt-[15px]">
+          <p className="text-[14px] mt-[15px] text-white">
             Enhance your account security and access. Verify your account now
             for seamless access.{" "}
             <a
@@ -252,7 +252,7 @@ export default function TransactionPage() {
           </div>
           <div className="mt-4 flex gap-x-4 w-full">
             <div className="flex-1">
-              <p>Username</p>
+              <p className="text-white">Username</p>
               <input
                 value={userData.username}
                 onChange={(e) =>
@@ -267,7 +267,7 @@ export default function TransactionPage() {
               />
             </div>
             <div className="flex-1">
-              <p>Email</p>
+              <p className="text-white">Email</p>
               <input
                 value={userData.email}
                 onChange={(e) =>
@@ -282,7 +282,7 @@ export default function TransactionPage() {
               />
             </div>
           </div>
-          <p className="mt-4">Default Destination</p>
+          <p className="mt-4 text-white">Default Destination</p>
           <div className="flex gap-x-2 h-[50px] bg-[#333333] items-center mt-[15px]">
             <div
               onClick={() => {
@@ -393,7 +393,7 @@ export default function TransactionPage() {
                     height={24}
                     alt="edit"
                   />
-                  <span>
+                  <span className="text-white">
                     {walletPersonalData && walletPersonalData.length > 0
                       ? "Edit"
                       : "Add"}
@@ -502,7 +502,7 @@ export default function TransactionPage() {
                   ]}
                 />
               ) : (
-                <span>Check</span>
+                <span className="text-white">Check</span>
               )}
             </button>
           </div>
@@ -578,7 +578,7 @@ export default function TransactionPage() {
                     ]}
                   />
                 ) : (
-                  <span>Save</span>
+                  <span className="text-white">Save</span>
                 )}
               </span>
             </button>
@@ -602,7 +602,7 @@ export default function TransactionPage() {
             />
           </div>
           <div className="mt-4 flex justify-end mr-[20px] w-full">
-            <button className="flex gap-x-2 linear-gradient-2 justify-center bg-btn rounded-[12px] py-[12px] px-[20px] w-full">
+            <button className="flex gap-x-2 text-white linear-gradient-2 justify-center bg-btn rounded-[12px] py-[12px] px-[20px] w-full">
               Submit Referral Code
             </button>
           </div>
