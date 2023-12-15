@@ -3,7 +3,6 @@ import { MainLayout } from "@/src/layouts/Main";
 import useSWR from "swr";
 import { fetcherStrapi } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData, existBankData } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -194,7 +193,6 @@ export default function TransactionPage() {
   const theme = useSelector((state: RootState) => state.theme);
   const [pageLoading, setPageLoading] = useState(false);
   const router = useRouter();
-  const { account } = useEthers();
   const [userTransactions, setUserTransactions] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { data: transactionsData } = useSWR(
@@ -233,7 +231,7 @@ export default function TransactionPage() {
       setUserTransactions([]);
     }
     setPageLoading(false);
-  }, [transactionsData, account]);
+  }, [transactionsData]);
   return (
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>

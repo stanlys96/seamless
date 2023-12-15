@@ -8,7 +8,6 @@ import {
   fetcherStrapi,
 } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData, existBankData } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -85,7 +84,6 @@ export default function TransactionPage() {
     useState(false);
   const [addDestinationLoading, setAddDestinationLoading] = useState(false);
   const router = useRouter();
-  const { account } = useEthers();
   const [userTransactions, setUserTransactions] = useState<any>([]);
   const [bankAccountValue, setBankAccountValue] = useState("");
   const [bankAccountName, setBankAccountName] = useState("");

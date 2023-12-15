@@ -1,17 +1,18 @@
 import {
-  Mainnet,
-  Goerli,
-  Optimism,
-  BSC,
-  Arbitrum,
-  Polygon,
-  ArbitrumGoerli,
-  OptimismGoerli,
-  Mumbai,
-  BSCTestnet,
-  Aurora,
-  Base,
-} from "@usedapp/core";
+  arbitrum,
+  base,
+  bsc,
+  goerli,
+  linea,
+  optimism,
+  polygon,
+  mainnet,
+  aurora,
+  arbitrumGoerli,
+  optimismGoerli,
+  polygonMumbai,
+  bscTestnet,
+} from "viem/chains";
 
 export const ethTokenData = {
   id: 1,
@@ -86,17 +87,17 @@ export const bnbTokenData = {
 };
 
 export const supportedChains = [
-  Mainnet.chainId,
+  mainnet.id,
   // Goerli.chainId,
-  Optimism.chainId,
-  BSC.chainId,
-  Arbitrum.chainId,
-  Polygon.chainId,
+  optimism.id,
+  bsc.id,
+  arbitrum.id,
+  polygon.id,
   // ArbitrumGoerli.chainId,
   // OptimismGoerli.chainId,
   // Mumbai.chainId,
   // BSCTestnet.chainId,
-  Aurora.chainId,
+  // aurora.id,
   // Base.chainId,
   // 59114,
 ];
@@ -116,7 +117,7 @@ const optimismSeamlessContract =
 export const chainData = [
   {
     id: 1,
-    chainId: Mainnet.chainId,
+    chainId: mainnet.id,
     name: "Ethereum",
     imgUrl: "/img/Ether.svg",
     testNetwork: false,
@@ -152,7 +153,7 @@ export const chainData = [
   },
   {
     id: 2,
-    chainId: Arbitrum.chainId,
+    chainId: arbitrum.id,
     name: "Arbitrum",
     imgUrl: "/img/Arbitrum.svg",
     testNetwork: false,
@@ -188,7 +189,7 @@ export const chainData = [
   },
   {
     id: 3,
-    chainId: Polygon.chainId,
+    chainId: polygon.id,
     name: "Polygon",
     imgUrl: "/img/Polygon.svg",
     testNetwork: false,
@@ -224,7 +225,7 @@ export const chainData = [
   },
   {
     id: 4,
-    chainId: Optimism.chainId,
+    chainId: optimism.id,
     name: "Optimism",
     imgUrl: "/img/Optimism.svg",
     testNetwork: false,
@@ -260,7 +261,7 @@ export const chainData = [
   },
   {
     id: 5,
-    chainId: BSC.chainId,
+    chainId: bsc.id,
     name: "BSC",
     imgUrl: "/img/BSC.svg",
     testNetwork: false,
@@ -292,7 +293,7 @@ export const chainData = [
   },
   {
     id: 6,
-    chainId: Goerli.chainId,
+    chainId: goerli.id,
     name: "Goerli",
     imgUrl: "/img/Ether.svg",
     testNetwork: false,
@@ -328,7 +329,7 @@ export const chainData = [
   },
   {
     id: 7,
-    chainId: ArbitrumGoerli.chainId,
+    chainId: arbitrumGoerli.id,
     testNetwork: true,
     name: "Arbitrum Goerli",
     imgUrl: "/img/Arbitrum.svg",
@@ -363,7 +364,7 @@ export const chainData = [
   },
   {
     id: 8,
-    chainId: OptimismGoerli.chainId,
+    chainId: optimismGoerli.id,
     name: "Optimism Goerli",
     imgUrl: "/img/Optimism.svg",
     testNetwork: true,
@@ -398,7 +399,7 @@ export const chainData = [
   },
   {
     id: 9,
-    chainId: Mumbai.chainId,
+    chainId: polygonMumbai.id,
     name: "Mumbai",
     imgUrl: "/img/Polygon.svg",
     testNetwork: true,
@@ -433,7 +434,7 @@ export const chainData = [
   },
   {
     id: 10,
-    chainId: BSCTestnet.chainId,
+    chainId: bscTestnet.id,
     name: "BSC Testnet",
     imgUrl: "/img/BSC.svg",
     testNetwork: true,
@@ -464,7 +465,7 @@ export const chainData = [
   },
   {
     id: 11,
-    chainId: Aurora.chainId,
+    chainId: aurora.id,
     name: "Aurora",
     imgUrl: "/img/aurora2.png",
     testNetwork: false,
@@ -500,7 +501,7 @@ export const chainData = [
   },
   {
     id: 12,
-    chainId: Base.chainId,
+    chainId: base.id,
     name: "Base",
     imgUrl: "/img/base.png",
     testNetwork: false,

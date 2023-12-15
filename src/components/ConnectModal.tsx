@@ -1,6 +1,5 @@
 import { chainData, supportedChains } from "@/utils/helper";
-import { useEthers } from "@usedapp/core";
-import { useConnect } from "wagmi";
+import { useConnect, useNetwork } from "wagmi";
 
 interface Props {
   connectModal: any;
@@ -15,8 +14,8 @@ export const ConnectModal = ({
     useConnect();
   const resultData = chainData.filter((data: any) => !data.testNetwork);
   // const resultData = chainData;
-  const { chainId, switchNetwork } = useEthers();
-  const chainSupported = supportedChains.includes(chainId ?? 0);
+  const { chain, chains } = useNetwork();
+  const chainSupported = supportedChains.includes((chain?.id ?? 0) as any);
   return (
     <div className={`${connectModal ? "block" : "hidden"}`}>
       <div

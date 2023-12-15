@@ -16,11 +16,12 @@ interface Props {
 export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
   const theme = useSelector((state: RootState) => state.theme);
   const { chain, chains } = useNetwork();
-  const chainSupported = supportedChains.includes(chain?.id ?? 0);
+  const chainSupported = supportedChains.includes((chain?.id ?? 0) as any);
   const [showTestNetwork, setShowTestNetwork] = useState(false);
   const resultData = chainData.filter(
     (data: any) => !data.testNetwork && supportedChains.includes(data.chainId)
   );
+  console.log(chain?.name, "<<< !!!");
   return (
     <div className="relative z-100">
       <button
@@ -86,7 +87,9 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             onClick={async (e) => {
               e.preventDefault();
               try {
+                console.log("???");
                 setDropdownActive(false);
+                console.log(data.chainId);
                 const network = await switchNetwork({
                   chainId: data.chainId,
                 });

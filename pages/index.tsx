@@ -215,7 +215,7 @@ export default function HomePage() {
   const insufficientBalance = parseFloat(cryptoValue ?? "0") > usedBalance;
   const insufficientDisburse =
     parseFloat(idrValue.replaceAll(",", "")) > (balanceData?.data.balance ?? 0);
-  const chainSupported = supportedChains.includes(chain?.id ?? 0);
+  const chainSupported = supportedChains.includes((chain?.id ?? 1) as any);
   const receiveValueError = receiveValue < 10000;
   const [approvalHash, setApprovalHash] = useState("");
   const [encrypted, setEncrypted] = useState("");

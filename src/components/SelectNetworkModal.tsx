@@ -1,5 +1,5 @@
 import { chainData, supportedChains } from "@/utils/helper";
-import { useEthers } from "@usedapp/core";
+import { useNetwork, useSwitchNetwork } from "wagmi";
 
 interface Props {
   networkModal: any;
@@ -13,9 +13,11 @@ export const SelectNetworkModal = ({
   const resultData = chainData.filter(
     (data: any) => !data.testNetwork && supportedChains.includes(data.chainId)
   );
+  const { error, isLoading, pendingChainId, switchNetwork } =
+    useSwitchNetwork();
   // const resultData = chainData;
-  const { chainId, switchNetwork } = useEthers();
-  const chainSupported = supportedChains.includes(chainId ?? 0);
+  const { chain } = useNetwork();
+  console.log(chain?.id, "<<<");
   return (
     <div className={`${networkModal ? "block" : "hidden"}`}>
       <div
@@ -64,11 +66,12 @@ export const SelectNetworkModal = ({
                           onClick={async (e) => {
                             e.preventDefault();
                             setNetworkModal(false);
-                            await switchNetwork(result.chainId);
+                            switchNetwork &&
+                              switchNetwork(result?.chainId ?? 0);
                           }}
                           key={result.id}
                           className={`m-1 transition duration-500  flex min-w-fit items-center rounded-full border py-1 pl-1.5 pr-2  disabled:opacity-40 disabled:hover:bg-transparent sm:px-2 border border-gray ${
-                            chainId === result.chainId
+                            chain?.id?.toString() === result.chainId
                               ? "bg-layer3 hover:border-layer3"
                               : "hover:border-transparent hover:bg-mainGray2"
                           }`}

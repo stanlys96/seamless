@@ -3,7 +3,6 @@ import { MainLayout } from "@/src/layouts/Main";
 import useSWR from "swr";
 import { fetcherStrapi } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useEthers } from "@usedapp/core";
 import { allTokenData, chainData, existBankData } from "@/utils/helper";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";

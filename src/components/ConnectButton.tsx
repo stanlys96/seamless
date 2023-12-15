@@ -51,7 +51,7 @@ export const ConnectButton = () => {
     isLoading: etherIsLoading,
   } = useBalance({ address });
   const [dropdownActive, setDropdownActive] = useState(false);
-  const chainSupported = supportedChains.includes(chain?.id ?? 0);
+  const chainSupported = supportedChains.includes(chain?.id ?? (0 as any));
   const currentNative = chainData
     .find((data) => data.chainId === chain?.id)
     ?.tokenData.find((data) => data.native);
