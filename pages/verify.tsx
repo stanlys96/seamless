@@ -247,7 +247,7 @@ export default function VerifyPage() {
                     className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                   >
                     {provincesResult?.map((province: any, index: number) => (
-                      <option>{province.name}</option>
+                      <option key={province.id}>{province.name}</option>
                     ))}
                   </select>
                 </div>
@@ -281,7 +281,7 @@ export default function VerifyPage() {
                     className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                   >
                     {districtsResult?.map((district: any, index: number) => (
-                      <option>{district.name}</option>
+                      <option key={district.id}>{district.name}</option>
                     ))}
                   </select>
                 </div>
@@ -313,7 +313,7 @@ export default function VerifyPage() {
                     className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                   >
                     {bloodTypes.map((bloodType: string) => (
-                      <option>{bloodType}</option>
+                      <option key={bloodType}>{bloodType}</option>
                     ))}
                   </select>
                 </div>
@@ -334,7 +334,7 @@ export default function VerifyPage() {
                     className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                   >
                     {religions.map((religion: string) => (
-                      <option>{religion}</option>
+                      <option key={religion}>{religion}</option>
                     ))}
                   </select>
                 </div>
