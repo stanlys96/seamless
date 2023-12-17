@@ -5,6 +5,7 @@ import {
   axiosApi,
   axiosSecondary,
   fetcherFlip,
+  fetcherProvinces,
   fetcherStrapi,
 } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -212,22 +213,35 @@ export default function TransactionPage() {
             alt="qr_code"
           />
         </div>
-        <div className="bg-[#21222D] p-[20px] rounded-[12px] mt-[35px]">
-          <p className="text-[#EB5757] font-bold text-[24px]">
-            Complete Your Account Verification!
-          </p>
-          <p className="text-[14px] mt-[15px] text-white">
-            Enhance your account security and access. Verify your account now
-            for seamless access.{" "}
-            <a
-              onClick={() => {
-                router.push("/verify");
-              }}
-              className="cursor-pointer text-[#2F80ED] underline"
-            >
-              Verify your account here.
-            </a>
-          </p>
+        <div>
+          {walletPersonalData &&
+          walletPersonalData.length > 0 &&
+          walletPersonalData[0].attributes.id_number ? (
+            <div className="bg-[#21222D] p-[20px] rounded-[12px] mt-[35px]">
+              <p className="text-[14px] text-white">
+                You have applied for KYC. Please wait until your application is
+                approved!
+              </p>
+            </div>
+          ) : (
+            <div className="bg-[#21222D] p-[20px] rounded-[12px] mt-[35px]">
+              <p className="text-[#EB5757] font-bold text-[24px]">
+                Complete Your Account Verification!
+              </p>
+              <p className="text-[14px] mt-[15px] text-white">
+                Enhance your account security and access. Verify your account
+                now for seamless access.{" "}
+                <a
+                  onClick={() => {
+                    router.push("/verify");
+                  }}
+                  className="cursor-pointer text-[#2F80ED] underline"
+                >
+                  Verify your account here.
+                </a>
+              </p>
+            </div>
+          )}
         </div>
         <div className="bg-[#21222D] p-[20px] rounded-[12px] mt-[35px]">
           <p className="text-white font-bold text-[24px]">

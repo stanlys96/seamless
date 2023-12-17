@@ -1,5 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 
+export const axiosProvinces = axios.create({
+  baseURL: "https://api.binderbyte.com/wilayah",
+});
+
 export const axiosCustom = axios.create({
   baseURL: process.env.NEXT_PUBLIC_AXIOS_CUSTOM,
 });
@@ -22,6 +26,9 @@ export const fetcherFlip = (url: string) =>
 
 export const fetcherStrapi = (url: string) =>
   axiosApi.get(url).then((res) => res);
+
+export const fetcherProvinces = (url: string) =>
+  axiosProvinces.get(url).then((res) => res);
 
 axiosSecondary.interceptors.request.use((requestConfig: any) => {
   (requestConfig.headers as AxiosRequestHeaders)["Authorization"] =
