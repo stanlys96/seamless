@@ -170,12 +170,11 @@ export default function VerifyPage() {
         <div className="bg-[#21222D] p-[10px] rounded-[12px] flex flex-col md:flex-row gap-4 mt-[25px]">
           <div className="bg-[#090D1F] flex flex-col justify-center items-center p-[10px] rounded-[10px] h-fit">
             <label className="" htmlFor="upload-file">
-              <Image
+              <img
+                className="w-[580px] h-[200px]"
                 src={`${
                   !idCard ? "/img/upload_id.svg" : URL.createObjectURL(idCard)
                 }`}
-                width={600}
-                height={300}
                 alt="upload"
               />
             </label>
