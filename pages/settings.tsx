@@ -779,8 +779,8 @@ export default function TransactionPage() {
               referralAffiliatesResult.length === 0 ? (
                 <div>
                   <p className="my-[20px] text-[#CCCCCC] text-center">
-                    Looks like you don't have a referral code to share. Create
-                    one now and start earning rebates!
+                    Looks like you don&apos;t have a referral code to share.
+                    Create one now and start earning rebates!
                   </p>
                   <div className="mt-4 text-white">
                     <p className="text-[#CCCCCC]">Generate Referral Code</p>
