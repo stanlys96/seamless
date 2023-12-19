@@ -741,10 +741,11 @@ export default function TransactionPage() {
                     </button>
                   </div>
                 </div>
-              ) : (
+              ) : referralAffiliatesResult &&
+                referralTradersResult?.length > 0 ? (
                 <div className="flex justify-center items-center my-[20px]">
                   <p className="text-cute">
-                    You have provided a referral code:&nbsp;
+                    You have registered to a referral code:&nbsp;
                     <span className="underline text-white">
                       {
                         referralTradersResult?.[0].attributes.referral_code.data
@@ -753,6 +754,22 @@ export default function TransactionPage() {
                     </span>
                   </p>
                 </div>
+              ) : (
+                <ColorRing
+                  visible={true}
+                  height="24"
+                  width="24"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={[
+                    "#e15b64",
+                    "#f47e60",
+                    "#f8b26a",
+                    "#abbd81",
+                    "#849b87",
+                  ]}
+                />
               )}
             </div>
           )}
@@ -844,7 +861,8 @@ export default function TransactionPage() {
                     </button>
                   </div>
                 </div>
-              ) : (
+              ) : referralAffiliatesResult &&
+                referralAffiliatesResult.length > 0 ? (
                 <div className="flex justify-center items-center my-[20px]">
                   <p className="text-cute">
                     Here is your referral generated code:{" "}
@@ -853,6 +871,22 @@ export default function TransactionPage() {
                     </span>
                   </p>
                 </div>
+              ) : (
+                <ColorRing
+                  visible={true}
+                  height="24"
+                  width="24"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={[
+                    "#e15b64",
+                    "#f47e60",
+                    "#f8b26a",
+                    "#abbd81",
+                    "#849b87",
+                  ]}
+                />
               )}
             </div>
           )}
