@@ -120,7 +120,6 @@ export default function TransactionPage() {
   const referralAffiliatesResult = referralAffiliatesData?.data?.data;
   const referralTradersResult = referralTradersData?.data?.data;
   const walletPersonalData = personalData?.data?.data;
-  console.log(referralTradersResult, "<<< !!");
   let periodCheckBank = 0;
 
   const checkBankInquiry: any = async () => {
@@ -672,7 +671,6 @@ export default function TransactionPage() {
                             `/api/referral-codes?filters[code][$eq]=${referralCode}`
                           );
                           const result = res?.data?.data;
-                          console.log(result);
                           if (result.length === 0) {
                             setReferralCodeLoading(false);
                             return Swal.fire(
@@ -792,7 +790,6 @@ export default function TransactionPage() {
                             `/api/referral-codes?filters[code][$eq]=${referralCode}`
                           );
                           const getResult = getRes?.data?.data;
-                          console.log(getResult);
                           if (getResult.length > 0) {
                             setReferralCodeLoading(false);
                             return Swal.fire(
