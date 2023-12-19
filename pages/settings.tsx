@@ -63,6 +63,7 @@ const columns = [
 export default function TransactionPage() {
   const [bankModal, setBankModal] = useState(false);
   const { address, connector, isConnected } = useAccount();
+  const [referralCodeLoading, setReferralCodeLoading] = useState(false);
   const [userWalletData, setUserWalletData] = useState<any>([]);
   const scrollToTop = useRef<HTMLInputElement>(null);
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
@@ -94,13 +95,32 @@ export default function TransactionPage() {
     fetcherStrapi
   );
 
+  const [referralCode, setReferralCode] = useState("");
+
+  const [referralTab, setReferralTab] = useState<"traders" | "affiliates">(
+    "traders"
+  );
+
   const { data: personalData, mutate: mutatePersonalData } = useSWR(
     `/api/user-wallets?filters[wallet_address][$eq]=${address}`,
     fetcherStrapi
   );
 
-  const walletPersonalData = personalData?.data?.data;
+  const { data: referralAffiliatesData, mutate: mutateReferralAffiliates } =
+    useSWR(
+      `/api/referral-codes?filters[wallet_address][$eq]=${address}`,
+      fetcherStrapi
+    );
 
+  const { data: referralTradersData, mutate: mutateReferralTraders } = useSWR(
+    `/api/wallets-referreds?filters[wallet_address][$eq]=${address}&populate=*`,
+    fetcherStrapi
+  );
+
+  const referralAffiliatesResult = referralAffiliatesData?.data?.data;
+  const referralTradersResult = referralTradersData?.data?.data;
+  const walletPersonalData = personalData?.data?.data;
+  console.log(referralTradersResult, "<<< !!");
   let periodCheckBank = 0;
 
   const checkBankInquiry: any = async () => {
@@ -154,7 +174,6 @@ export default function TransactionPage() {
 
   useEffect(() => {
     if (historyData?.data.data) {
-      console.log(historyData.data.data);
       const temp = [];
       const theHistoryData = historyData?.data?.data;
       for (let currentData of theHistoryData) {
@@ -177,7 +196,6 @@ export default function TransactionPage() {
 
   useEffect(() => {
     if (walletPersonalData && walletPersonalData.length > 0) {
-      console.log(walletPersonalData);
       setUserData({
         displayName: walletPersonalData[0].attributes.display_name,
         username: walletPersonalData[0].attributes.username,
@@ -600,24 +618,247 @@ export default function TransactionPage() {
           <p className="text-white font-bold text-[24px]">Referrals</p>
           <p className="text-[16px] mt-[10px] w-full md:w-4/5 text-[#CCCCCC]">
             Earn Seamless Points via our referral program. Seamless Points can
-            be redeemed to perks later on. Find complete program details HERE
-            for more information.
+            be redeemed to perks later on. Find complete program details{" "}
+            <a className="cursor-pointer text-blue underline">HERE</a>&nbsp; for
+            more information.
           </p>
-          <p className="my-[20px] text-[#CCCCCC] text-center">
-            Kindly provider a referral code for discounted fees
-          </p>
-          <div className="mt-4 text-white">
-            <p className="text-[#CCCCCC]">Enter Referral Code</p>
-            <input
-              placeholder="Eg. ytdb5"
-              className="flex-1 h-[50px] bg-[#333333] mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
-            />
+          <div className="flex gap-x-2 rounded-full p-1 bg-[#4D4D4D] w-fit mx-auto mt-5">
+            <div
+              onClick={() => setReferralTab("traders")}
+              className={`cursor-pointer px-8 py-2 ${
+                referralTab === "traders" && "bg-btn"
+              } rounded-full`}
+            >
+              Traders
+            </div>
+            <div
+              onClick={() => setReferralTab("affiliates")}
+              className={`cursor-pointer px-8 py-2 ${
+                referralTab === "affiliates" && "bg-btn"
+              } rounded-full`}
+            >
+              Affiliates
+            </div>
           </div>
-          <div className="mt-4 flex justify-end mr-[20px] w-full">
-            <button className="flex gap-x-2 text-white linear-gradient-2 justify-center bg-btn rounded-[12px] py-[12px] px-[20px] w-full">
-              Submit Referral Code
-            </button>
-          </div>
+          {referralTab === "traders" && (
+            <div>
+              {referralTradersResult && referralTradersResult?.length === 0 ? (
+                <div>
+                  <p className="my-[20px] text-[#CCCCCC] text-center">
+                    Kindly provide a referral code for discounted fees
+                  </p>
+                  <div className="mt-4 text-white">
+                    <p className="text-[#CCCCCC]">Enter Referral Code</p>
+                    <input
+                      value={referralCode}
+                      onChange={(e) => setReferralCode(e.target.value)}
+                      placeholder="Eg. ytdb5"
+                      className="flex-1 h-[50px] bg-[#333333] mt-[10px] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-end mr-[20px] w-full">
+                    <button
+                      onClick={async () => {
+                        if (referralCode.length === 0) {
+                          return Swal.fire(
+                            "Info!",
+                            "Please fill referral code field!",
+                            "info"
+                          );
+                        }
+                        try {
+                          setReferralCodeLoading(true);
+                          const res = await axiosApi.get(
+                            `/api/referral-codes?filters[code][$eq]=${referralCode}`
+                          );
+                          const result = res?.data?.data;
+                          console.log(result);
+                          if (result.length === 0) {
+                            setReferralCodeLoading(false);
+                            return Swal.fire(
+                              "Info!",
+                              "Referral code does not exist!",
+                              "info"
+                            );
+                          } else {
+                            if (
+                              referralAffiliatesResult &&
+                              referralAffiliatesResult.length > 0
+                            ) {
+                              if (
+                                referralAffiliatesResult[0].attributes.code ===
+                                referralCode
+                              ) {
+                                setReferralCodeLoading(false);
+                                return Swal.fire(
+                                  "Info!",
+                                  "Cannot register to your own referral code!",
+                                  "info"
+                                );
+                              }
+                            }
+                            const postData = await axiosApi.post(
+                              `/api/wallets-referreds`,
+                              {
+                                data: {
+                                  wallet_address: address,
+                                  referral_code: result[0].id,
+                                },
+                              }
+                            );
+                            Swal.fire(
+                              "Success!",
+                              "Successfully added your personal referral code!",
+                              "success"
+                            );
+                          }
+                          mutateReferralTraders();
+                          setReferralCode("");
+                        } catch (e) {
+                          console.log(e);
+                        }
+                        setReferralCodeLoading(false);
+                      }}
+                      className="flex gap-x-2 text-white linear-gradient-2 justify-center bg-btn rounded-[12px] py-[12px] px-[20px] w-full"
+                    >
+                      {referralCodeLoading ? (
+                        <ColorRing
+                          visible={true}
+                          height="24"
+                          width="24"
+                          ariaLabel="blocks-loading"
+                          wrapperStyle={{}}
+                          wrapperClass="blocks-wrapper"
+                          colors={[
+                            "#e15b64",
+                            "#f47e60",
+                            "#f8b26a",
+                            "#abbd81",
+                            "#849b87",
+                          ]}
+                        />
+                      ) : (
+                        "Submit Referral Code"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center my-[20px]">
+                  <p className="text-cute">
+                    You have provided a referral code:&nbsp;
+                    <span className="underline text-white">
+                      {
+                        referralTradersResult?.[0].attributes.referral_code.data
+                          .attributes.code
+                      }
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          {referralTab === "affiliates" && (
+            <div>
+              {referralAffiliatesResult &&
+              referralAffiliatesResult.length === 0 ? (
+                <div>
+                  <p className="my-[20px] text-[#CCCCCC] text-center">
+                    Looks like you don't have a referral code to share. Create
+                    one now and start earning rebates!
+                  </p>
+                  <div className="mt-4 text-white">
+                    <p className="text-[#CCCCCC]">Generate Referral Code</p>
+                    <input
+                      value={referralCode}
+                      onChange={(e) => setReferralCode(e.target.value)}
+                      placeholder="Eg. ytdb5"
+                      className="flex-1 h-[50px] bg-[#333333] mt-[10px] border rounded-[8px] px-[10px] text-white text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-end mr-[20px] w-full">
+                    <button
+                      onClick={async () => {
+                        if (referralCode.length === 0) {
+                          return Swal.fire(
+                            "Info!",
+                            "Please fill referral code field!",
+                            "info"
+                          );
+                        }
+                        try {
+                          setReferralCodeLoading(true);
+                          const getRes = await axiosApi.get(
+                            `/api/referral-codes?filters[code][$eq]=${referralCode}`
+                          );
+                          const getResult = getRes?.data?.data;
+                          console.log(getResult);
+                          if (getResult.length > 0) {
+                            setReferralCodeLoading(false);
+                            return Swal.fire(
+                              "Info!",
+                              "Referral code already exists!",
+                              "info"
+                            );
+                          }
+                          const res = await axiosApi.post(
+                            "/api/referral-codes",
+                            {
+                              data: {
+                                code: referralCode,
+                                wallet_address: address,
+                              },
+                            }
+                          );
+                          Swal.fire(
+                            "Success!",
+                            "Successfully added your personal referral code!",
+                            "success"
+                          );
+                          mutateReferralAffiliates();
+                          setReferralCode("");
+                        } catch (e) {
+                          setReferralCodeLoading(false);
+                          console.log(e);
+                        }
+                        setReferralCodeLoading(false);
+                      }}
+                      className="flex gap-x-2 text-white linear-gradient-2 justify-center bg-btn rounded-[12px] py-[12px] px-[20px] w-full"
+                    >
+                      {referralCodeLoading ? (
+                        <ColorRing
+                          visible={true}
+                          height="24"
+                          width="24"
+                          ariaLabel="blocks-loading"
+                          wrapperStyle={{}}
+                          wrapperClass="blocks-wrapper"
+                          colors={[
+                            "#e15b64",
+                            "#f47e60",
+                            "#f8b26a",
+                            "#abbd81",
+                            "#849b87",
+                          ]}
+                        />
+                      ) : (
+                        "Submit Referral Code"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center my-[20px]">
+                  <p className="text-cute">
+                    Here is your referral generated code:{" "}
+                    <span className="underline text-white">
+                      {referralAffiliatesResult[0].attributes.code}
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <BankModal

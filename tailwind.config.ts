@@ -21,6 +21,7 @@ const config: Config = {
         white: "#FFFFFF",
         cute: "#A6A0BB",
         secondGray: "#696F75",
+        blue: "#2F80ED",
       },
       borderColor: {
         primaryGray: "#1C1C28",
