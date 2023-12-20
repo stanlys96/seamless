@@ -17,6 +17,8 @@ import {
 import { ConnectModal } from "./ConnectModal";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import useSWR from "swr";
+import { fetcherStrapi } from "@/utils/axios";
 
 export const ConnectButton = () => {
   const recoveredAddress = React.useRef<string>();
@@ -57,6 +59,11 @@ export const ConnectButton = () => {
     ?.tokenData.find((data) => data.native);
 
   const [windowWidth, setWindowWidth] = useState(0);
+  const { data: pointsData } = useSWR(
+    `/api/referral-codes?filters[wallet_address][$eq]=${address}`,
+    fetcherStrapi
+  );
+  const pointsResult = pointsData?.data?.data;
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -134,7 +141,12 @@ export const ConnectButton = () => {
       >
         <button className="bg-[#333333] font-bold rounded-[12px] flex items-center gap-x-2 sm:text-lg px-4 text-white">
           <Image src="/img/mini-logo.svg" width={24} height={24} alt="logo" />
-          <span className="text-gradient-2">0 Pts</span>
+          <span className="text-gradient-2">
+            {pointsResult && pointsResult.length > 0
+              ? pointsResult[0].attributes.points
+              : "0"}{" "}
+            Pts
+          </span>
         </button>
         <button className="bg-[#333333] hidden md:block font-bold rounded-[12px] flex items-center gap-x-1 sm:text-lg px-4 text-white">
           <span className="text-gradient-2">{`${etherData?.formatted.slice(
