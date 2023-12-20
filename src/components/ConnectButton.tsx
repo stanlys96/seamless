@@ -143,7 +143,7 @@ export const ConnectButton = () => {
           <Image src="/img/mini-logo.svg" width={24} height={24} alt="logo" />
           <span className="text-gradient-2">
             {pointsResult && pointsResult.length > 0
-              ? pointsResult[0].attributes.points
+              ? pointsResult[0].attributes?.points?.toFixed(2) ?? "0"
               : "0"}{" "}
             Pts
           </span>
