@@ -30,6 +30,12 @@ export const fetcherStrapi = (url: string) =>
 export const fetcherProvinces = (url: string) =>
   axiosProvinces.get(url).then((res) => res);
 
+axiosCustom.interceptors.request.use((requestConfig: any) => {
+  (requestConfig.headers as AxiosRequestHeaders)["user-agent"] = "C";
+
+  return requestConfig;
+});
+
 axiosSecondary.interceptors.request.use((requestConfig: any) => {
   (requestConfig.headers as AxiosRequestHeaders)["Authorization"] =
     process.env.NEXT_PUBLIC_FLIP_AUTH;
