@@ -77,6 +77,7 @@ export default function HomePage() {
   const [transactionData, setTransactionData] = useState<any>();
   const [isCheckingBankAccount, setIsCheckingBankAccount] = useState(false);
   const [hasLatestData, setHasLatestData] = useState(false);
+  const [coingeckoError, setCoingeckoError] = useState(false);
   const [fee, setFee] = useState(6000);
   const [currentSelectedBank, setCurrentSelectedBank] = useState({
     name: "BCA",
@@ -531,6 +532,19 @@ export default function HomePage() {
         });
     }
   }, [statusApprovalData]);
+
+  useEffect(() => {
+    if (address) {
+      if (!data) {
+        setCoingeckoError(true);
+      } else {
+        if (coingeckoError) {
+          setCoingeckoError(false);
+          resetCurrency();
+        }
+      }
+    }
+  }, [address, data]);
 
   return (
     <MainLayout>
@@ -1019,7 +1033,7 @@ export default function HomePage() {
                     );
                     return;
                   }
-                  if (!currentChain?.seamlessContract || !data) {
+                  if (!currentChain?.seamlessContract || coingeckoError) {
                     return Swal.fire(
                       "Internal Error!",
                       "Internal error, please contact admin",
