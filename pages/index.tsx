@@ -1019,7 +1019,7 @@ export default function HomePage() {
                     );
                     return;
                   }
-                  if (!currentChain?.seamlessContract) {
+                  if (!currentChain?.seamlessContract || !data) {
                     return Swal.fire(
                       "Internal Error!",
                       "Internal error, please contact admin",

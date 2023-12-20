@@ -31,7 +31,7 @@ export const fetcherProvinces = (url: string) =>
   axiosProvinces.get(url).then((res) => res);
 
 axiosCustom.interceptors.request.use((requestConfig: any) => {
-  (requestConfig.headers as AxiosRequestHeaders)["user-agent"] = "C";
+  (requestConfig.headers as AxiosRequestHeaders)["user-agent"] = "Chrome";
 
   return requestConfig;
 });
