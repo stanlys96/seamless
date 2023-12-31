@@ -3,18 +3,12 @@ import { MainLayout } from "@/src/layouts/Main";
 import useSWR from "swr";
 import { axiosApi, fetcherProvinces, fetcherStrapi } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
-import { allTokenData, chainData, existBankData } from "@/utils/helper";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { RootState } from "@/src/stores";
-import { Pagination, ConfigProvider, Select, Table, Input, Upload } from "antd";
 import { useAccount } from "wagmi";
 import Image from "next/image";
-import { ColumnsType } from "antd/es/table";
-import { eWallets } from "@/utils/helper";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { ColorRing } from "react-loader-spinner";
+import AWS from "aws-sdk";
 
 export interface DataType {
   key: React.Key;
@@ -81,12 +75,45 @@ export default function VerifyPage() {
       return Swal.fire("Info!", "Please fill all the data!", "info");
     }
     setVerificationLoading(true);
+
+    const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET as string;
+    const REGION = process.env.NEXT_PUBLIC_S3_REGION as string;
+
+    const data = new FormData();
+    data.append("file", idCard, address + ".png");
+    data.append("files", idCard);
+    data.append("ref", "api::user-wallet.user-wallet");
+    data.append("refId", walletPersonalData[0].id);
+    data.append("field", "id_card");
+
+    AWS.config.update({
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
+    });
+
+    const s3 = new AWS.S3({
+      params: { S3_BUCKET },
+      region: REGION,
+    });
+
+    const params = {
+      Bucket: S3_BUCKET,
+      Key: (address + ".png") as any,
+      Body: idCard,
+    };
+
+    const upload = s3
+      .putObject(params)
+      .on("httpUploadProgress", (evt: any) => {
+        console.log("Uploading " + (evt.loaded * 100) / evt.total + "%");
+      })
+      .promise();
+
+    await upload.then((res) => {
+      console.log("Upload success!");
+    });
+
     if (walletPersonalData && walletPersonalData.length > 0) {
-      const data = new FormData();
-      data.append("files", idCard);
-      data.append("ref", "api::user-wallet.user-wallet");
-      data.append("refId", walletPersonalData[0].id);
-      data.append("field", "id_card");
       try {
         const uploadRes = await axiosApi({
           method: "POST",
