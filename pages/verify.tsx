@@ -9,6 +9,7 @@ import Image from "next/image";
 import Swal from "sweetalert2";
 import { ColorRing } from "react-loader-spinner";
 import AWS from "aws-sdk";
+import axios from "axios";
 
 export interface DataType {
   key: React.Key;
@@ -218,7 +219,18 @@ export default function VerifyPage() {
               type="file"
             />
             <div className="flex justify-center items-center my-[40px]">
-              <button className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[30px] items-center">
+              <button
+                onClick={async () => {
+                  const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_EXECUTE}ktp1.png`
+                  );
+
+                  console.log(response, "<<<");
+                  if (idCard) {
+                  }
+                }}
+                className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[30px] items-center"
+              >
                 <span className="text-white">Check</span>
               </button>
             </div>
