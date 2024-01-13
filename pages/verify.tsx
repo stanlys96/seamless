@@ -221,6 +221,7 @@ export default function VerifyPage() {
             <div className="flex justify-center items-center my-[40px]">
               <button
                 onClick={async () => {
+                  // wlao
                   const response = await axios.get(
                     `${process.env.NEXT_PUBLIC_EXECUTE}ktp1.png`
                   );
