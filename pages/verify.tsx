@@ -225,13 +225,12 @@ export default function VerifyPage() {
               <button
                 onClick={async () => {
                   // wlao
-                  const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_EXECUTE}ktp1.png`
-                  );
-
-                  console.log(response, "<<<");
-                  if (idCard) {
-                  }
+                  // const response = await axios.get(
+                  //   `${process.env.NEXT_PUBLIC_EXECUTE}ktp1.png`
+                  // );
+                  // console.log(response, "<<<");
+                  // if (idCard) {
+                  // }
                 }}
                 className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[30px] items-center"
               >
