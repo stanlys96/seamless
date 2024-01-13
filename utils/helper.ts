@@ -14,6 +14,16 @@ import {
   bscTestnet,
 } from "viem/chains";
 
+export const validateEmail = (email: string) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+export const numberTexts = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
 export const ethTokenData = {
   id: 1,
   name: "ETH",

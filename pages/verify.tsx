@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { ColorRing } from "react-loader-spinner";
 import AWS from "aws-sdk";
 import axios from "axios";
+import { numberTexts } from "@/utils/helper";
 
 export interface DataType {
   key: React.Key;
@@ -75,17 +76,13 @@ export default function VerifyPage() {
     if (!name || !idNumber || !userAddress || !idCard) {
       return Swal.fire("Info!", "Please fill all the data!", "info");
     }
+    if (idNumber.length < 16) {
+      return Swal.fire("Info!", "ID Number must be 16 numbers!", "info");
+    }
     setVerificationLoading(true);
 
     const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET as string;
     const REGION = process.env.NEXT_PUBLIC_S3_REGION as string;
-
-    const data = new FormData();
-    data.append("file", idCard, address + ".png");
-    data.append("files", idCard);
-    data.append("ref", "api::user-wallet.user-wallet");
-    data.append("refId", walletPersonalData[0].id);
-    data.append("field", "id_card");
 
     AWS.config.update({
       accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
@@ -114,7 +111,13 @@ export default function VerifyPage() {
       console.log("Upload success!");
     });
 
-    if (walletPersonalData && walletPersonalData.length > 0) {
+    if (walletPersonalData && walletPersonalData?.length > 0) {
+      const data = new FormData();
+      data.append("file", idCard, address + ".png");
+      data.append("files", idCard);
+      data.append("ref", "api::user-wallet.user-wallet");
+      data.append("refId", walletPersonalData[0].id);
+      data.append("field", "id_card");
       try {
         const uploadRes = await axiosApi({
           method: "POST",
@@ -251,9 +254,16 @@ export default function VerifyPage() {
               <p className="text-[#CCCCCC]">ID Number</p>
               <input
                 maxLength={16}
-                type="number"
+                type="text"
                 value={idNumber}
-                onChange={(e) => setIdNumber(e.target.value)}
+                onChange={(e) => {
+                  if (
+                    !numberTexts.includes(e.nativeEvent?.data) &&
+                    e.nativeEvent?.data
+                  )
+                    return;
+                  setIdNumber(e.target.value);
+                }}
                 placeholder="Ex. John Doe"
                 className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
               />

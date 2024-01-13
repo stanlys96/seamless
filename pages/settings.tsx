@@ -9,7 +9,12 @@ import {
   fetcherStrapi,
 } from "@/utils/axios";
 import React, { useEffect, useRef, useState } from "react";
-import { allTokenData, chainData, existBankData } from "@/utils/helper";
+import {
+  allTokenData,
+  chainData,
+  existBankData,
+  validateEmail,
+} from "@/utils/helper";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/stores";
@@ -359,6 +364,9 @@ export default function TransactionPage() {
                     "Please fill all the data!",
                     "info"
                   );
+                }
+                if (!validateEmail(userData.email)) {
+                  return Swal.fire("Info!", "Email format incorrect!", "info");
                 }
                 setPersonalInformationLoading(true);
                 if (walletPersonalData && walletPersonalData.length > 0) {
