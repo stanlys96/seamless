@@ -41,8 +41,12 @@ export default function VerifyPage() {
   const { address, connector, isConnected } = useAccount();
   const [provinceId, setProvinceId] = useState(11);
   const [checkLoading, setCheckLoading] = useState(false);
-  const [selectedProvince, setSelectedProvince] = useState<any>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
+  const [selectedProvince, setSelectedProvince] = useState<any>({
+    name: "",
+  });
+  const [selectedDistrict, setSelectedDistrict] = useState<any>({
+    name: "",
+  });
   const [selectedBloodType, setSelectedBloodType] = useState("A");
   const [selectedReligion, setSelectedReligion] = useState("ISLAM");
   const [name, setName] = useState("");
@@ -246,12 +250,14 @@ export default function VerifyPage() {
                     setName(result["Nama"].replaceAll(":", "").trim());
                     setIdNumber(result["NIK"].replaceAll(":", "").trim());
                     setUserAddress(result["Alamat"].replaceAll(":", "").trim());
-                    setSelectedProvince(
-                      result["Provinsi"].replaceAll(":", "").trim()
-                    );
-                    setSelectedDistrict(
-                      result["Kabupaten"].replaceAll(":", "").trim()
-                    );
+                    setSelectedProvince((prevState: any) => ({
+                      ...prevState,
+                      name: result["Provinsi"].replaceAll(":", "").trim(),
+                    }));
+                    setSelectedDistrict((prevState: any) => ({
+                      ...prevState,
+                      name: result["Kabupaten"].replaceAll(":", "").trim(),
+                    }));
                     setSelectedReligion(
                       result["Agama"].replaceAll(":", "").trim()
                     );
@@ -378,7 +384,7 @@ export default function VerifyPage() {
                   )}
                   {freeTextField && (
                     <input
-                      value={selectedProvince}
+                      value={selectedProvince?.name}
                       onChange={(e) => setSelectedProvince(e.target.value)}
                       placeholder="Ex. John Doe"
                       className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
@@ -426,7 +432,7 @@ export default function VerifyPage() {
                   )}
                   {freeTextDistrict && (
                     <input
-                      value={selectedDistrict}
+                      value={selectedDistrict?.name}
                       onChange={(e) => setSelectedDistrict(e.target.value)}
                       placeholder="Ex. John Doe"
                       className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
