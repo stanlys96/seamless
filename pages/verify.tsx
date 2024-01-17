@@ -9,7 +9,6 @@ import Image from "next/image";
 import Swal from "sweetalert2";
 import { ColorRing } from "react-loader-spinner";
 import AWS from "aws-sdk";
-import axios from "axios";
 import { numberTexts } from "@/utils/helper";
 
 export interface DataType {
@@ -41,6 +40,7 @@ export default function VerifyPage() {
   const [verificationLoading, setVerificationLoading] = useState(false);
   const { address, connector, isConnected } = useAccount();
   const [provinceId, setProvinceId] = useState(11);
+  const [checkLoading, setCheckLoading] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<any>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<any>(null);
   const [selectedBloodType, setSelectedBloodType] = useState("A");
@@ -49,6 +49,9 @@ export default function VerifyPage() {
   const [idNumber, setIdNumber] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [idCard, setSelectedIdCard] = useState<any>(null);
+  const [freeTextField, setFreeTextField] = useState(false);
+  const [freeTextDistrict, setFreeTextDistrict] = useState(false);
+  const [freeTextFieldReligion, setFreeTextFieldReligion] = useState(false);
   const { data: provincesData } = useSWR(
     `/provinsi?api_key=${process.env.NEXT_PUBLIC_PROVINCE_API_KEY}`,
     fetcherProvinces
@@ -80,36 +83,6 @@ export default function VerifyPage() {
       return Swal.fire("Info!", "ID Number must be 16 numbers!", "info");
     }
     setVerificationLoading(true);
-
-    const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET as string;
-    const REGION = process.env.NEXT_PUBLIC_S3_REGION as string;
-
-    AWS.config.update({
-      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
-      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
-    });
-
-    const s3 = new AWS.S3({
-      params: { S3_BUCKET },
-      region: REGION,
-    });
-
-    const params = {
-      Bucket: S3_BUCKET,
-      Key: (address + ".png") as any,
-      Body: idCard,
-    };
-
-    const upload = s3
-      .putObject(params)
-      .on("httpUploadProgress", (evt: any) => {
-        console.log("Uploading " + (evt.loaded * 100) / evt.total + "%");
-      })
-      .promise();
-
-    await upload.then((res) => {
-      console.log("Upload success!");
-    });
 
     if (walletPersonalData && walletPersonalData?.length > 0) {
       const data = new FormData();
@@ -213,9 +186,44 @@ export default function VerifyPage() {
             <input
               accept="image/*"
               multiple={false}
-              onChange={(e) => {
-                console.log(e?.target?.files?.[0]);
+              onChange={async (e) => {
+                setCheckLoading(true);
                 setSelectedIdCard(e?.target?.files?.[0]);
+                const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET as string;
+                const REGION = process.env.NEXT_PUBLIC_S3_REGION as string;
+
+                AWS.config.update({
+                  accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
+                  secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
+                });
+
+                const s3 = new AWS.S3({
+                  params: { S3_BUCKET },
+                  region: REGION,
+                });
+
+                const params = {
+                  Bucket: S3_BUCKET,
+                  Key: (address + ".png") as any,
+                  Body: e?.target?.files?.[0],
+                };
+                try {
+                  const upload = s3
+                    .putObject(params)
+                    .on("httpUploadProgress", (evt: any) => {
+                      console.log(
+                        "Uploading " + (evt.loaded * 100) / evt.total + "%"
+                      );
+                    })
+                    .promise();
+
+                  await upload.then((res) => {
+                    console.log("Upload success!");
+                  });
+                  setCheckLoading(false);
+                } catch (e) {
+                  setCheckLoading(false);
+                }
               }}
               id="upload-file"
               className="border border-dotted"
@@ -223,18 +231,82 @@ export default function VerifyPage() {
             />
             <div className="flex justify-center items-center my-[40px]">
               <button
+                disabled={checkLoading}
                 onClick={async () => {
-                  // wlao
-                  // const response = await axios.get(
-                  //   `${process.env.NEXT_PUBLIC_EXECUTE}ktp1.png`
-                  // );
-                  // console.log(response, "<<<");
-                  // if (idCard) {
-                  // }
+                  setCheckLoading(true);
+                  try {
+                    const response = await axiosApi({
+                      method: "POST",
+                      url: "/api/check-ktp-file",
+                      data: {
+                        fileName: address + ".png",
+                      },
+                    });
+                    const result = response?.data;
+                    console.log(result);
+                    setName(result["Nama"].replaceAll(":", "").trim());
+                    setIdNumber(result["NIK"].replaceAll(":", "").trim());
+                    setUserAddress(result["Alamat"].replaceAll(":", "").trim());
+                    setSelectedProvince(
+                      result["Provinsi"].replaceAll(":", "").trim()
+                    );
+                    setSelectedDistrict(
+                      result["Kabupaten"].replaceAll(":", "").trim()
+                    );
+                    setSelectedReligion(
+                      result["Agama"].replaceAll(":", "").trim()
+                    );
+                    if (
+                      !provincesResult.includes(
+                        result["Provinsi"].replaceAll(":", "").trim()
+                      )
+                    ) {
+                      setFreeTextField(true);
+                    }
+                    if (
+                      !districtsResult.includes(
+                        result["Kabupaten"].replaceAll(":", "").trim()
+                      )
+                    ) {
+                      setFreeTextDistrict(true);
+                    }
+
+                    if (
+                      !religions.includes(
+                        result["Agama"].replaceAll(":", "").trim()
+                      )
+                    ) {
+                      setFreeTextFieldReligion(true);
+                    }
+                    setCheckLoading(false);
+                  } catch (e) {
+                    setCheckLoading(false);
+                    console.log(e);
+                  }
                 }}
                 className="flex gap-x-2 linear-gradient-2 bg-btn rounded-[12px] py-[12px] px-[30px] items-center"
               >
-                <span className="text-white">Check</span>
+                <span className="text-white">
+                  {checkLoading ? (
+                    <ColorRing
+                      visible={true}
+                      height="24"
+                      width="24"
+                      ariaLabel="blocks-loading"
+                      wrapperStyle={{}}
+                      wrapperClass="blocks-wrapper"
+                      colors={[
+                        "#e15b64",
+                        "#f47e60",
+                        "#f8b26a",
+                        "#abbd81",
+                        "#849b87",
+                      ]}
+                    />
+                  ) : (
+                    "Check"
+                  )}
+                </span>
               </button>
             </div>
           </div>
@@ -271,67 +343,96 @@ export default function VerifyPage() {
               <div className="w-full">
                 <p className="text-[#CCCCCC]">Province</p>
                 <div className="relative">
-                  <Image
-                    src="/img/arrow-down.svg"
-                    width={18}
-                    height={17}
-                    alt="arrow"
-                    className="absolute right-2 bottom-[10px]"
-                  />
-                  <select
-                    value={selectedProvince?.name ?? ""}
-                    onChange={async (e) => {
-                      const thePicked = e.target.value;
-                      const theProvinceId = provincesResult?.find(
-                        (provinceData: any) => provinceData.name === thePicked
-                      ).id;
-                      setProvinceId(theProvinceId);
-                      setSelectedProvince({
-                        id: theProvinceId,
-                        name: thePicked,
-                      });
-                      setSelectedDistrict(null);
-                    }}
-                    className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
-                  >
-                    {provincesResult?.map((province: any, index: number) => (
-                      <option key={province.id}>{province.name}</option>
-                    ))}
-                  </select>
+                  {!freeTextField && (
+                    <div>
+                      <Image
+                        src="/img/arrow-down.svg"
+                        width={18}
+                        height={17}
+                        alt="arrow"
+                        className="absolute right-2 bottom-[10px]"
+                      />
+                      <select
+                        value={selectedProvince?.name ?? ""}
+                        onChange={async (e) => {
+                          const thePicked = e.target.value;
+                          const theProvinceId = provincesResult?.find(
+                            (provinceData: any) =>
+                              provinceData.name === thePicked
+                          ).id;
+                          setProvinceId(theProvinceId);
+                          setSelectedProvince({
+                            id: theProvinceId,
+                            name: thePicked,
+                          });
+                          setSelectedDistrict(null);
+                        }}
+                        className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                      >
+                        {provincesResult?.map(
+                          (province: any, index: number) => (
+                            <option key={province.id}>{province.name}</option>
+                          )
+                        )}
+                      </select>
+                    </div>
+                  )}
+                  {freeTextField && (
+                    <input
+                      value={selectedProvince}
+                      onChange={(e) => setSelectedProvince(e.target.value)}
+                      placeholder="Ex. John Doe"
+                      className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                    />
+                  )}
                 </div>
               </div>
               <div className="w-full">
                 <p className="text-[#CCCCCC]">City</p>
                 <div className="relative">
-                  <Image
-                    src="/img/arrow-down.svg"
-                    width={18}
-                    height={17}
-                    alt="arrow"
-                    className="absolute right-2 bottom-[10px]"
-                  />
-                  <select
-                    value={selectedDistrict?.name ?? ""}
-                    onChange={(e) => {
-                      const thePicked = e.target.value;
-                      const theProvinceId = districtsResult?.find(
-                        (district: any) => district.name === thePicked
-                      ).id_provinsi;
-                      const theDistrictId = districtsResult?.find(
-                        (district: any) => district.name === thePicked
-                      ).id;
-                      setSelectedDistrict({
-                        id: theDistrictId,
-                        id_provinsi: theProvinceId,
-                        name: thePicked,
-                      });
-                    }}
-                    className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
-                  >
-                    {districtsResult?.map((district: any, index: number) => (
-                      <option key={district.id}>{district.name}</option>
-                    ))}
-                  </select>
+                  {!freeTextDistrict && (
+                    <div>
+                      <Image
+                        src="/img/arrow-down.svg"
+                        width={18}
+                        height={17}
+                        alt="arrow"
+                        className="absolute right-2 bottom-[10px]"
+                      />
+                      <select
+                        value={selectedDistrict?.name ?? ""}
+                        onChange={(e) => {
+                          const thePicked = e.target.value;
+                          const theProvinceId = districtsResult?.find(
+                            (district: any) => district.name === thePicked
+                          ).id_provinsi;
+                          const theDistrictId = districtsResult?.find(
+                            (district: any) => district.name === thePicked
+                          ).id;
+                          setSelectedDistrict({
+                            id: theDistrictId,
+                            id_provinsi: theProvinceId,
+                            name: thePicked,
+                          });
+                        }}
+                        className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                      >
+                        {districtsResult?.map(
+                          (district: any, index: number) => (
+                            <option key={district.id}>{district.name}</option>
+                          )
+                        )}
+                      </select>
+                    </div>
+                  )}
+                  {freeTextDistrict && (
+                    <input
+                      value={selectedDistrict}
+                      onChange={(e) => setSelectedDistrict(e.target.value)}
+                      placeholder="Ex. John Doe"
+                      className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -369,22 +470,34 @@ export default function VerifyPage() {
               <div className="w-full">
                 <p className="text-[#CCCCCC]">Religion</p>
                 <div className="relative">
-                  <Image
-                    src="/img/arrow-down.svg"
-                    width={18}
-                    height={17}
-                    alt="arrow"
-                    className="absolute right-2 bottom-[10px]"
-                  />
-                  <select
-                    value={selectedReligion}
-                    onChange={(e) => setSelectedReligion(e.target.value)}
-                    className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
-                  >
-                    {religions.map((religion: string) => (
-                      <option key={religion}>{religion}</option>
-                    ))}
-                  </select>
+                  {!freeTextFieldReligion && (
+                    <div>
+                      <Image
+                        src="/img/arrow-down.svg"
+                        width={18}
+                        height={17}
+                        alt="arrow"
+                        className="absolute right-2 bottom-[10px]"
+                      />
+                      <select
+                        value={selectedReligion}
+                        onChange={(e) => setSelectedReligion(e.target.value)}
+                        className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                      >
+                        {religions.map((religion: string) => (
+                          <option key={religion}>{religion}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  {freeTextFieldReligion && (
+                    <input
+                      value={selectedReligion}
+                      onChange={(e) => setSelectedReligion(e.target.value)}
+                      placeholder="Ex. John Doe"
+                      className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                    />
+                  )}
                 </div>
               </div>
             </div>
