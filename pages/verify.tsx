@@ -42,9 +42,11 @@ export default function VerifyPage() {
   const [provinceId, setProvinceId] = useState(11);
   const [checkLoading, setCheckLoading] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState<any>({
+    id: "",
     name: "",
   });
   const [selectedDistrict, setSelectedDistrict] = useState<any>({
+    id: "",
     name: "",
   });
   const [selectedBloodType, setSelectedBloodType] = useState("A");
@@ -385,7 +387,12 @@ export default function VerifyPage() {
                   {freeTextField && (
                     <input
                       value={selectedProvince?.name}
-                      onChange={(e) => setSelectedProvince(e.target.value)}
+                      onChange={(e) =>
+                        setSelectedProvince((prevState: any) => ({
+                          ...prevState,
+                          name: e.target.value,
+                        }))
+                      }
                       placeholder="Ex. John Doe"
                       className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                     />
@@ -433,7 +440,12 @@ export default function VerifyPage() {
                   {freeTextDistrict && (
                     <input
                       value={selectedDistrict?.name}
-                      onChange={(e) => setSelectedDistrict(e.target.value)}
+                      onChange={(e) =>
+                        setSelectedDistrict((prevState: any) => ({
+                          ...prevState,
+                          name: e.target.value,
+                        }))
+                      }
                       placeholder="Ex. John Doe"
                       className="flex-1 h-[40px] bg-transparent mt-[10px] border rounded-[8px] px-[10px] text-cute text-socket-primary focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
                     />
