@@ -243,7 +243,6 @@ export default function VerifyPage() {
                       },
                     });
                     const result = response?.data;
-                    console.log(result);
                     setName(result["Nama"].replaceAll(":", "").trim());
                     setIdNumber(result["NIK"].replaceAll(":", "").trim());
                     setUserAddress(result["Alamat"].replaceAll(":", "").trim());
