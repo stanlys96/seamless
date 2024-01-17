@@ -326,7 +326,7 @@ export default function VerifyPage() {
                 maxLength={16}
                 type="text"
                 value={idNumber}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   if (
                     !numberTexts.includes(e.nativeEvent?.data) &&
                     e.nativeEvent?.data
