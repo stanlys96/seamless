@@ -96,7 +96,7 @@ const wagmiConfig = defaultWagmiConfig({
 });
 
 const config = createConfig({
-  autoConnect: false,
+  autoConnect: true,
   connectors: [
     // new MetaMaskConnector({ chains }),
     new InjectedConnector({ chains }),

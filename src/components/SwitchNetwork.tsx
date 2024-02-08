@@ -76,7 +76,7 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
         )}
       </button>
       <div
-        className={`absolute dropdown-top right-0 top-14 w-[240px] rounded-lg border border-gray transition bg-[#333333] text-white p-3 ${
+        className={`absolute dropdown-top right-0 top-12 w-[240px] rounded-lg border border-gray transition bg-[#333333] text-white p-3 ${
           dropdownActive ? "block" : "hidden"
         }`}
       >
@@ -122,30 +122,6 @@ export const SwitchNetwork = ({ setDropdownActive, dropdownActive }: Props) => {
             </div>
           </button>
         ))}
-        {/* <button
-          onClick={async (e) => {
-            e.preventDefault();
-            setShowTestNetwork((prevState) => !prevState);
-          }}
-          className={`${
-            theme.theme === "dark" ? `hover:bg-mainGray2` : "hover:bg-gray"
-          } flex w-full items-center justify-between rounded p-2 text-sm font-medium transition`}
-        >
-          <div className="flex items-center">
-            <div
-              className={`skt-w flex justify-center items-center rounded-full overflow-hidden mr-2 w-6 h-6 transition  ${
-                theme.theme === "light" ? "text-black" : "text-white"
-              }`}
-            >
-              {!showTestNetwork ? (
-                <IoIosRadioButtonOff />
-              ) : (
-                <IoIosRadioButtonOn />
-              )}
-            </div>
-            Show Test Network
-          </div>
-        </button> */}
       </div>
     </div>
   );
