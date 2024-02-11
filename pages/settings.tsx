@@ -29,6 +29,7 @@ import makeAnimated from "react-select/animated";
 import { BankModal } from "@/src/components/BankModal";
 import { ColorRing } from "react-loader-spinner";
 import Swal from "sweetalert2";
+import QRCode from "react-qr-code";
 
 const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -125,6 +126,7 @@ export default function TransactionPage() {
   const referralAffiliatesResult = referralAffiliatesData?.data?.data;
   const referralTradersResult = referralTradersData?.data?.data;
   const walletPersonalData = personalData?.data?.data;
+  console.log(walletPersonalData);
   let periodCheckBank = 0;
 
   const checkBankInquiry: any = async () => {
@@ -220,20 +222,31 @@ export default function TransactionPage() {
         defaultDestination: "",
       });
     }
-  }, [walletPersonalData]);
+  }, [walletPersonalData, address]);
 
   return (
     <MainLayout>
       <div className="px-[50px] py-[25px]" ref={scrollToTop}>
         <p className="text-[32px] font-bold text-white">Profile Account</p>
-        <div className="bg-[#21222D] p-[20px] rounded-[12px] flex justify-between">
+        <div className="bg-[#21222D] p-[20px] rounded-[12px] flex items-center justify-between md:flex-row flex-col gap-y-4">
           <Image src="/img/person.svg" width={124} height={124} alt="person" />
-          <Image
+          {walletPersonalData?.[0]?.attributes?.username ? (
+            <QRCode
+              value={`https://app.seamless.finance/p/${userData?.username}`}
+              size={124}
+            />
+          ) : (
+            <p className="text-center">
+              Please fill your personal information to generate your own QR
+              code.
+            </p>
+          )}
+          {/* <Image
             src="/img/qr_code.svg"
             width={124}
             height={124}
             alt="qr_code"
-          />
+          /> */}
         </div>
         <div>
           {walletPersonalData &&
@@ -395,8 +408,8 @@ export default function TransactionPage() {
                       default_bank_img_url: currentSecondaryBank?.imgUrl,
                     },
                   });
-                  mutatePersonalData();
                 }
+                mutatePersonalData();
                 Swal.fire(
                   "Success!",
                   "Successfully changes your personal data!",
