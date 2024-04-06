@@ -287,7 +287,7 @@ export default function TransactionPage() {
           </div>
         </div>
         {userTransactions.length > 0 ? (
-          <div className="flex flex-col justify-center w-full">
+          <div className="flex flex-col justify-center w-full hidden md:block">
             <Table
               className="mt-[40px] w-full"
               dataSource={userTransactions}

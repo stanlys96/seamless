@@ -290,14 +290,17 @@ export const chainData = [
       {
         ...daiTokenData,
         contractAddress: "1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+        decimals: 18,
       },
       {
         ...usdcTokenData,
         contractAddress: "8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+        decimals: 18,
       },
       {
         ...usdtTokenData,
         contractAddress: "55d398326f99059fF775485246999027B3197955",
+        decimals: 18,
       },
     ],
   },

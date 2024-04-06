@@ -113,6 +113,7 @@ export default function HomePage() {
     }`,
     abi: erc20Abi,
     functionName: "approve",
+    args: [],
   });
 
   const {
