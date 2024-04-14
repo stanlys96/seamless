@@ -100,7 +100,7 @@ export const supportedChains = [
   mainnet.id,
   // Goerli.chainId,
   optimism.id,
-  // bsc.id,
+  bsc.id,
   arbitrum.id,
   polygon.id,
   // ArbitrumGoerli.chainId,
