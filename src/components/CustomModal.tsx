@@ -5,7 +5,14 @@ interface Props {
   setCurrentSelectedToken: (param1: any) => void;
   currentSelectedToken: any;
   resetCurrency: () => void;
+  buyComponent?: boolean;
 }
+
+const filterToken = (tokenData: any) => {
+  return (
+    tokenData.native || tokenData.name === "USDC" || tokenData.name === "USDT"
+  );
+};
 
 export const CustomModal = ({
   tokenModal,
@@ -14,7 +21,9 @@ export const CustomModal = ({
   setCurrentSelectedToken,
   currentSelectedToken,
   resetCurrency,
+  buyComponent = false,
 }: Props) => {
+  const resultFilter = currentChain?.tokenData?.filter(filterToken);
   return (
     <div className={`${tokenModal ? "block" : "hidden"}`}>
       <div
@@ -58,7 +67,10 @@ export const CustomModal = ({
                 <div>
                   <div className="noScrollbar -mx-2 flex overflow-x-auto flex-wrap">
                     {currentChain?.tokenData &&
-                      currentChain?.tokenData.map((token: any, idx: any) => (
+                      (buyComponent
+                        ? resultFilter
+                        : currentChain?.tokenData
+                      ).map((token: any, idx: any) => (
                         <button
                           onClick={(e) => {
                             e.preventDefault();

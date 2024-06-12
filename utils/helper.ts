@@ -149,7 +149,7 @@ export const chainData = [
       },
       {
         ...usdtTokenData,
-        contractAddress: "dac17f958d2ee523a2206206994597c13d831ec7",
+        contractAddress: "dAC17F958D2ee523a2206206994597C13D831ec7",
       },
       {
         ...wbtcTokenData,
@@ -217,7 +217,7 @@ export const chainData = [
       },
       {
         ...usdcTokenData,
-        contractAddress: "2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+        contractAddress: "3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
       },
       {
         ...usdtTokenData,
@@ -253,7 +253,7 @@ export const chainData = [
       },
       {
         ...usdcTokenData,
-        contractAddress: "7f5c764cbc14f9669b88837ca1490cca17c31607",
+        contractAddress: "0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
       },
       {
         ...usdtTokenData,

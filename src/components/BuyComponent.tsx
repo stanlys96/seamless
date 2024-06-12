@@ -78,6 +78,7 @@ export const BuyComponent = ({
   const [exchangeFee, setExchangeFee] = useState("0");
   const [historyModal, setHistoryModal] = useState(false);
   const [bankAccountValue, setBankAccountValue] = useState("");
+  const [selectedWalletAddress, setSelectedWalletAddress] = useState("");
   const [bankAccountName, setBankAccountName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [transactionData, setTransactionData] = useState<any>();
@@ -96,9 +97,6 @@ export const BuyComponent = ({
   const [transactionLoading, setTransactionLoading] = useState(false);
 
   const currentChain = chainData.find((data) => data.chainId === chain?.id);
-  const [currentSelectedToken, setCurrentSelectedToken] = useState(
-    currentChain?.tokenData.find((data) => data.name === "USDC")
-  );
 
   const {
     data: signMessageData,
@@ -108,21 +106,21 @@ export const BuyComponent = ({
     variables,
   } = useSignMessage();
 
-  const {
-    data: erc20Data,
-    isLoading: erc20Loading,
-    isSuccess: erc20Success,
-    writeAsync: erc20Write,
-    status: erc20Status,
-  } = useContractWrite({
-    address: `0x${
-      currentSelectedToken?.contractAddress ??
-      "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-    }`,
-    abi: erc20Abi,
-    functionName: "approve",
-    args: [],
-  });
+  // const {
+  //   data: erc20Data,
+  //   isLoading: erc20Loading,
+  //   isSuccess: erc20Success,
+  //   writeAsync: erc20Write,
+  //   status: erc20Status,
+  // } = useContractWrite({
+  //   address: `0x${
+  //     currentSelectedToken?.contractAddress ??
+  //     "EeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+  //   }`,
+  //   abi: erc20Abi,
+  //   functionName: "approve",
+  //   args: [],
+  // });
 
   const {
     data: transferERC20Data,
@@ -155,10 +153,15 @@ export const BuyComponent = ({
   const [currentSelectedNetwork, setCurrentSelectedNetwork] =
     useState<any>(ethereumChainData);
 
+  const [currentSelectedToken, setCurrentSelectedToken] = useState(
+    ethereumChainData?.tokenData.find((data: any) => data.name === "USDC")
+  );
+  console.log(ethereumChainData?.tokenData, "<<<");
   const { data, mutate: coingeckoMutate } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
   );
+
   const currentPrice = data?.data[0].current_price;
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const { data: balanceData } = useSWR("/balance", fetcherFlip);
@@ -311,6 +314,7 @@ export const BuyComponent = ({
     setCurrentSelectedToken(
       currentChain?.tokenData.find((data) => data.name === "USDC")
     );
+    console.log(currentChain?.tokenData.find((data) => data.name === "USDC"));
   }, [currentSelectedNetwork?.chainId]);
 
   useEffect(() => {
@@ -349,7 +353,7 @@ export const BuyComponent = ({
                 placeholder="0"
                 value={!receiveValue ? 0 : receiveValue}
                 defaultValue={0}
-                decimalsLimit={6}
+                decimalsLimit={8}
                 disabled={loading}
                 className={`skt-w 
                   ${
@@ -379,11 +383,11 @@ export const BuyComponent = ({
                       (parseFloat(crypto ?? "0") * 0.008).toPrecision(2)
                     );
                     setFee(thisFee);
-                    setReceiveValue(parseFloat(idrValueFloat.toFixed(2)));
+                    setReceiveValue(parseFloat(idrValueFloat.toFixed(5)));
                     setCryptoValue(
                       crypto === "NaN"
                         ? "0"
-                        : (parseFloat(crypto) - thisFee).toFixed(2)
+                        : (parseFloat(crypto) - thisFee).toFixed(5)
                     );
                   }
                 }}
@@ -410,7 +414,44 @@ export const BuyComponent = ({
               Minimal pay value is 10,000 IDR
             </span>
           </div>
-
+          <div className="bg-container my-[25px] flex justify-between items-center md:px-[24px] px-[10px] py-[10px] rounded-[12px]">
+            <div className="text-white">
+              <p className="font-medium text-socket-primary sm:text-lg">
+                Wallet Address: &nbsp;
+              </p>
+              <input
+                disabled={loading}
+                onKeyDown={(evt) => {
+                  ["e", "E", "+", "-"].includes(evt.key) &&
+                    evt.preventDefault();
+                }}
+                value={selectedWalletAddress}
+                onChange={(e) => {
+                  setSelectedWalletAddress(e.target.value);
+                }}
+                className="skt-w w-full text-[20px] md:text-[34px] text-cute skt-w-input text-socket-primary bg-transparent font-bold pt-0.5 focus-visible:outline-none w-full focus:max-w-none overflow-hidden"
+                placeholder="Wallet Address"
+                spellCheck={false}
+                type="text"
+              />
+            </div>
+            <button
+              onClick={async (e) => {
+                if (address) {
+                  setSelectedWalletAddress(address);
+                } else {
+                  Swal.fire(
+                    "Oops!",
+                    "Please click the connect wallet button!",
+                    "warning"
+                  );
+                }
+              }}
+              className="bg-gray py-[12px] px-[16px] bg-btn rounded-xl text-white font-bold"
+            >
+              Use Connected
+            </button>
+          </div>
           <div
             onClick={() => {
               if (currentCategory === "sell") {
@@ -597,7 +638,7 @@ export const BuyComponent = ({
                     setIdrValue(idr === "NaN" ? "0" : idr);
                     const idrPriceValue = thisFee * currentPrice;
                     setReceiveValue(
-                      parseFloat((parseFloat(idr) + idrPriceValue).toFixed(2))
+                      parseFloat((parseFloat(idr) + idrPriceValue).toFixed(5))
                     );
                   }
                 }}
@@ -670,17 +711,61 @@ export const BuyComponent = ({
                     "error"
                   );
                 }
-                const getBankAccount = await axiosSecondary.post(
-                  "/create-payment",
-                  {
-                    title: "Seamless",
-                    type: "SINGLE",
-                    amount: parseInt(idrValue),
-                    redirect_url: "https://app.seamless.finance/transactions",
-                  }
-                );
+                if (!selectedWalletAddress) {
+                  return Swal.fire(
+                    "Not done!",
+                    "Please fill in the wallet address to send the crypto to!",
+                    "warning"
+                  );
+                }
+                Swal.fire({
+                  title: "Confirm Send",
+                  text: `You are about to pay ${parseInt(
+                    idrValue
+                  )} IDR to receive ${cryptoValue} ${
+                    currentSelectedToken?.name
+                  } to 
+                  ${selectedWalletAddress}
+                  Please confirm.`,
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, confirm!",
+                  reverseButtons: true,
+                }).then(async (result) => {
+                  if (result.isConfirmed) {
+                    const getBankAccount = await axiosSecondary.post(
+                      "/create-payment",
+                      {
+                        title: "Seamless",
+                        type: "SINGLE",
+                        amount: parseInt(idrValue),
+                        redirect_url:
+                          "https://app.seamless.finance/transactions",
+                      }
+                    );
 
-                window.open("https://" + getBankAccount.data.link_url);
+                    const res = await axiosApi.post(
+                      `/api/offramp-transactions`,
+                      {
+                        data: {
+                          crypto_value: parseFloat(cryptoValue ?? "0"),
+                          chain_id: currentSelectedNetwork?.chainId,
+                          crypto: currentSelectedToken?.name,
+                          idr_value: parseFloat(idrValue ?? "0"),
+                          link_id: getBankAccount.data.link_id,
+                          crypto_fee: parseFloat(exchangeFee ?? "0"),
+                          chain_name: currentSelectedNetwork?.name,
+                          status: "Pending",
+                          to_address: selectedWalletAddress ?? "",
+                        },
+                      }
+                    );
+                    console.log(res, "<<< RES!!");
+                    window.open("https://" + getBankAccount.data.link_url);
+                  }
+                });
               } catch (e: any) {
                 console.log(e?.message.includes("rejected signing"));
                 setLoading(false);
@@ -732,6 +817,7 @@ export const BuyComponent = ({
         setCurrentSelectedToken={setCurrentSelectedToken}
         currentSelectedToken={currentSelectedToken}
         resetCurrency={resetCurrency}
+        buyComponent
       />
       <HistoryModal
         setPhoneNumber={setPhoneNumber}
