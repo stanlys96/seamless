@@ -150,13 +150,14 @@ export const BuyComponent = ({
     functionName: "vault_address",
   });
   const ethereumChainData = chainData.find((data) => data.chainId === 1);
+  const arbitrumChainData = chainData.find((data) => data.chainId === 42161);
   const [currentSelectedNetwork, setCurrentSelectedNetwork] =
-    useState<any>(ethereumChainData);
+    useState<any>(arbitrumChainData);
 
   const [currentSelectedToken, setCurrentSelectedToken] = useState(
-    ethereumChainData?.tokenData.find((data: any) => data.name === "USDC")
+    arbitrumChainData?.tokenData.find((data: any) => data.name === "USDC")
   );
-  console.log(ethereumChainData?.tokenData, "<<<");
+
   const { data, mutate: coingeckoMutate } = useSWR(
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher

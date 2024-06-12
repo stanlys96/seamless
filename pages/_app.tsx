@@ -70,7 +70,7 @@ const rpcUrlHelper = [
 ];
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, arbitrum, optimism, bsc],
+  [mainnet, polygon, arbitrum, optimism, bsc, base],
   [
     jsonRpcProvider({
       rpc: (chain) => ({

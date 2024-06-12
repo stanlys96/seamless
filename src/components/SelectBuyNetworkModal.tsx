@@ -13,7 +13,10 @@ export const SelectBuyNetworkModal = ({
   setCurrentNetwork,
 }: Props) => {
   const resultData = chainData.filter(
-    (data: any) => !data.testNetwork && supportedChains.includes(data.chainId)
+    (data: any) =>
+      !data.testNetwork &&
+      supportedChains.includes(data.chainId) &&
+      data.chainId !== 1
   );
   const { chain } = useNetwork();
   return (
