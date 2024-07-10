@@ -168,7 +168,7 @@ export const SellComponent = ({
     `/markets?vs_currency=idr&ids=${currentSelectedToken?.coingecko ?? ""}`,
     fetcher
   );
-  const currentPrice = data?.data[0].current_price;
+  const currentPrice = data?.data?.[0]?.current_price;
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const { data: balanceData } = useSWR("/balance", fetcherFlip);
   const { data: historyData } = useSWR(
@@ -551,7 +551,7 @@ export const SellComponent = ({
         }
       }
     }
-  }, [address, data]);
+  }, [address, data, data?.data?.[0]?.current_price]);
   return (
     <div className="the-container relative mb-5">
       <div className="w-full flex flex-col justify-center items-center">
