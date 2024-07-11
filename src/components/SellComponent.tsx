@@ -1034,7 +1034,7 @@ export const SellComponent = ({
                   );
                   return;
                 }
-                if (!currentChain?.seamlessContract || coingeckoError) {
+                if (!currentChain?.seamlessContract || !currentPrice) {
                   return Swal.fire(
                     "Internal Error!",
                     "Internal error, please contact admin",

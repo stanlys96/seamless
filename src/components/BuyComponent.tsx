@@ -165,7 +165,7 @@ export const BuyComponent = ({
     fetcher
   );
 
-  const currentPrice = data?.data[0].current_price;
+  const currentPrice = data?.data?.[0]?.current_price;
   const { data: banksData } = useSWR(`/banks`, fetcherFlip);
   const { data: balanceData } = useSWR("/balance", fetcherFlip);
   const { data: historyData } = useSWR(
@@ -731,7 +731,7 @@ export const BuyComponent = ({
                   );
                   return;
                 }
-                if (coingeckoError) {
+                if (!currentChain?.seamlessContract || !currentPrice) {
                   return Swal.fire(
                     "Internal Error!",
                     "Internal error, please contact admin",
